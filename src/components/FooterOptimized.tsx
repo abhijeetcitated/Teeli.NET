@@ -1,22 +1,49 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
+import Link from 'next/link';
 
-export default function Footer() {
+// Memoized Footer to prevent unnecessary re-renders
+const Footer = memo(function Footer() {
   const [solanaBlockHeight, setSolanaBlockHeight] = useState(287654321);
   const [email, setEmail] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
 
-  // Simulate live Solana block height updates
+  // Only start block height animation when footer is visible
   useEffect(() => {
+    // Use IntersectionObserver to detect when footer is visible
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const footer = document.querySelector('footer');
+    if (footer) {
+      observer.observe(footer);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Only update block height when footer is visible - HUGE performance boost
+  useEffect(() => {
+    if (!isVisible) return;
+    
     const interval = setInterval(() => {
       setSolanaBlockHeight(prev => prev + 1);
-    }, 400); // Update every 400ms (Solana block time)
+    }, 2000); // Slowed down from 400ms to 2000ms - less CPU usage
+    
     return () => clearInterval(interval);
-  }, []);
+  }, [isVisible]);
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Newsletter logic here
     console.log('Newsletter signup:', email);
     setEmail('');
   };
@@ -40,10 +67,10 @@ export default function Footer() {
           <div>
             <h4 className="text-starlight font-semibold mb-4">Product</h4>
             <ul className="space-y-2 text-sm text-starlight/60">
-              <li><a href="#" className="hover:text-signal-teal transition-colors">Features</a></li>
-              <li><a href="#" className="hover:text-signal-teal transition-colors">Pricing</a></li>
-              <li><a href="#" className="hover:text-signal-teal transition-colors">Documentation</a></li>
-              <li><a href="#" className="hover:text-signal-teal transition-colors">API Reference</a></li>
+              <li><Link href="/solutions" className="hover:text-signal-teal transition-colors">Features</Link></li>
+              <li><Link href="/pricing" className="hover:text-signal-teal transition-colors">Pricing</Link></li>
+              <li><Link href="/docs" className="hover:text-signal-teal transition-colors">Documentation</Link></li>
+              <li><Link href="/docs/api" className="hover:text-signal-teal transition-colors">API Reference</Link></li>
             </ul>
           </div>
 
@@ -51,10 +78,10 @@ export default function Footer() {
           <div>
             <h4 className="text-starlight font-semibold mb-4">Company</h4>
             <ul className="space-y-2 text-sm text-starlight/60">
-              <li><a href="#" className="hover:text-signal-teal transition-colors">About</a></li>
-              <li><a href="#" className="hover:text-signal-teal transition-colors">Blog</a></li>
-              <li><a href="#" className="hover:text-signal-teal transition-colors">Careers</a></li>
-              <li><a href="#" className="hover:text-signal-teal transition-colors">Contact</a></li>
+              <li><Link href="/company/about" className="hover:text-signal-teal transition-colors">About</Link></li>
+              <li><Link href="/blog" className="hover:text-signal-teal transition-colors">Blog</Link></li>
+              <li><Link href="/company/careers" className="hover:text-signal-teal transition-colors">Careers</Link></li>
+              <li><Link href="/contact" className="hover:text-signal-teal transition-colors">Contact</Link></li>
             </ul>
           </div>
 
@@ -89,12 +116,14 @@ export default function Footer() {
             © 2024 TEELI. All rights reserved.
           </div>
           <div className="flex gap-6 text-sm text-starlight/60">
-            <a href="#" className="hover:text-signal-teal transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-signal-teal transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-signal-teal transition-colors">Cookie Policy</a>
+            <Link href="/privacy" className="hover:text-signal-teal transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-signal-teal transition-colors">Terms of Service</Link>
+            <Link href="/cookies" className="hover:text-signal-teal transition-colors">Cookie Policy</Link>
           </div>
         </div>
       </div>
     </footer>
   );
-}
+});
+
+export default Footer;

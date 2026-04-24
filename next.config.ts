@@ -16,7 +16,48 @@ const nextConfig: NextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     disableStaticImages: false,
     minimumCacheTTL: 31536000, // 1 year for aggressive caching
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'download.blender.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.worldvectorlogo.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn2.unrealengine.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.vectorlogo.zone',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.chaos.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'corona-renderer.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'home.otoy.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.adobe.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'pixologic.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+      },
+    ],
     domains: [],
     // Performance: Custom quality settings for optimized images
     qualities: [50, 55, 60, 65], // Reduced: 50 (hero), 55, 60, 65

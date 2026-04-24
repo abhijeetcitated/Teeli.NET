@@ -131,99 +131,99 @@ function TopicsDropdown({ isActive, theme }: { isActive: boolean; theme: 'dark' 
       <Link
         href="/blog/topics"
         className={`
-          group relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium
-          transition-all duration-300 overflow-hidden
+          group relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold
+          transition-all duration-200 overflow-hidden
           ${isActive 
             ? theme === 'dark'
-              ? 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]' 
-              : 'text-gray-900 drop-shadow-[0_0_6px_rgba(0,0,0,0.1)]'
+              ? 'text-white' 
+              : 'text-gray-900'
             : theme === 'dark'
-              ? 'text-white/70 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]'
-              : 'text-gray-600 hover:text-gray-900 hover:drop-shadow-[0_0_6px_rgba(0,0,0,0.1)]'
+              ? 'text-white/80 hover:text-white'
+              : 'text-gray-700 hover:text-gray-900'
           }
         `}
       >
         {isActive && (
           <motion.div
             layoutId="activeNav"
-            className={`absolute inset-0 rounded-xl border shadow-lg ${
+            className={`absolute inset-0 rounded-xl ${
               theme === 'dark'
-                ? 'bg-gradient-to-r from-cyan-500/30 to-purple-500/30 border-cyan-400/30 shadow-cyan-500/20'
-                : 'bg-gradient-to-r from-cyan-100 to-purple-100 border-cyan-400/50 shadow-purple-500/20'
+                ? 'bg-white/10 shadow-[0_0_20px_rgba(6,182,212,0.15)]'
+                : 'bg-gradient-to-r from-cyan-50 to-purple-50 shadow-sm'
             }`}
-            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+            transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
           />
         )}
-        <div className={`absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+        <div className={`absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${
           theme === 'dark'
-            ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20'
-            : 'bg-gradient-to-r from-cyan-50 to-purple-50'
+            ? 'bg-white/5'
+            : 'bg-gray-100/50'
         }`} />
         <Layers className="w-4 h-4 relative z-10" />
         <span className="relative z-10">Topics</span>
-        <ChevronDown className={`w-3 h-3 relative z-10 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-3.5 h-3.5 relative z-10 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </Link>
 
       {/* Mega Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.2 }}
-            className={`absolute top-full mt-6 left-1/2 -translate-x-1/2 w-[1100px] max-w-[95vw] rounded-xl border overflow-hidden z-50 ${
+            initial={{ opacity: 0, y: 8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.96 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className={`absolute top-full mt-6 left-1/2 -translate-x-1/2 w-[1100px] max-w-[95vw] rounded-2xl overflow-hidden z-50 ${
               theme === 'dark'
-                ? 'bg-black border-white/10 shadow-xl'
-                : 'bg-white border-gray-200 shadow-xl'
+                ? 'bg-zinc-900/98 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50'
+                : 'bg-white/98 backdrop-blur-2xl border border-gray-200 shadow-2xl shadow-gray-900/10'
             }`}
           >
             {/* Header */}
-            <div className={`px-5 pt-5 pb-3 border-b ${theme === 'dark' ? 'border-white/5' : 'border-gray-100'}`}>
-              <h3 className={`text-base font-semibold mb-1 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Explore Topics</h3>
-              <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>8 technical pillars covering cutting-edge technology</p>
+            <div className={`px-6 pt-5 pb-4 border-b ${theme === 'dark' ? 'border-white/5' : 'border-gray-100'}`}>
+              <h3 className={`text-base font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Explore Topics</h3>
+              <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>8 technical pillars • Cutting-edge technology insights</p>
             </div>
 
-            {/* Grid Content - 4 columns, no scroll */}
-            <div className="p-4 grid grid-cols-4 gap-3">
+            {/* Grid Content - 4 columns */}
+            <div className="p-5 grid grid-cols-4 gap-3">
               {topicCategories.map((topic) => (
                 <Link
                   key={topic.href}
                   href={topic.href}
-                  className={`group relative overflow-hidden p-3 rounded-lg border transition-all duration-300 ${
+                  className={`group relative overflow-hidden p-4 rounded-xl border transition-all duration-200 hover:scale-[1.02] ${
                     theme === 'dark'
-                      ? 'border-white/5 bg-black/30 hover:bg-black/50 hover:border-white/10'
-                      : 'border-gray-100 bg-white hover:bg-gray-50 hover:border-gray-200'
+                      ? 'border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/10 hover:shadow-lg hover:shadow-cyan-500/5'
+                      : 'border-gray-100 bg-gray-50/50 hover:bg-white hover:border-gray-200 hover:shadow-lg hover:shadow-gray-900/5'
                   }`}
                 >
-                  {/* Gradient Background on Hover */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${topic.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+                  {/* Gradient Accent */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${topic.gradient} opacity-0 group-hover:opacity-[0.08] transition-opacity duration-300`} />
                   
                   {/* Content */}
                   <div className="relative z-10">
                     {/* Header */}
-                    <div className="flex items-start justify-between mb-2.5">
-                      <div className="flex items-center gap-2">
-                        <div className={`w-2.5 h-2.5 rounded-full bg-gradient-to-r ${topic.gradient} flex-shrink-0 mt-0.5`} />
-                        <h4 className={`font-bold text-sm transition-all duration-300 leading-tight ${
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${topic.gradient} flex-shrink-0 mt-1 shadow-sm`} />
+                        <h4 className={`font-bold text-sm leading-tight ${
                           theme === 'dark'
-                            ? 'text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-cyan-300 group-hover:to-purple-400'
-                            : 'text-gray-900 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-cyan-600 group-hover:to-purple-600'
+                            ? 'text-white'
+                            : 'text-gray-900'
                         }`}>
                           {topic.label}
                         </h4>
                       </div>
-                      <span className={`text-xs transition-colors flex-shrink-0 ml-1 ${
+                      <span className={`text-[11px] font-medium px-1.5 py-0.5 rounded-md flex-shrink-0 ml-2 ${
                         theme === 'dark'
-                          ? 'text-white/40 group-hover:text-white/60'
-                          : 'text-gray-500 group-hover:text-gray-700'
+                          ? 'text-white/50 bg-white/5'
+                          : 'text-gray-500 bg-gray-100'
                       }`}>
                         {topic.count}
                       </span>
                     </div>
 
                     {/* Description */}
-                    <p className={`text-xs mb-3 leading-relaxed ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                    <p className={`text-[11px] mb-3 leading-relaxed line-clamp-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
                       {topic.description}
                     </p>
 
@@ -232,17 +232,17 @@ function TopicsDropdown({ isActive, theme }: { isActive: boolean; theme: 'dark' 
                       {topic.subcategories.slice(0, 2).map((sub) => (
                         <span
                           key={sub}
-                          className={`px-2 py-1 rounded-md border text-xs transition-all duration-300 ${
+                          className={`px-2 py-0.5 rounded-md text-[10px] font-medium transition-all duration-200 ${
                             theme === 'dark'
-                              ? 'bg-white/5 border-white/10 text-white/60 group-hover:bg-white/10 group-hover:text-white/80'
-                              : 'bg-gray-100 border-gray-200 text-gray-600 group-hover:bg-gray-200 group-hover:text-gray-900'
+                              ? 'bg-white/5 text-white/60 group-hover:bg-white/10 group-hover:text-white/80'
+                              : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200 group-hover:text-gray-900'
                           }`}
                         >
                           {sub}
                         </span>
                       ))}
                       {topic.subcategories.length > 2 && (
-                        <span className={`px-2 py-1 text-xs ${theme === 'dark' ? 'text-white/40' : 'text-gray-500'}`}>
+                        <span className={`px-2 py-0.5 text-[10px] font-medium ${theme === 'dark' ? 'text-white/40' : 'text-gray-500'}`}>
                           +{topic.subcategories.length - 2}
                         </span>
                       )}
@@ -253,17 +253,20 @@ function TopicsDropdown({ isActive, theme }: { isActive: boolean; theme: 'dark' 
             </div>
 
             {/* Footer */}
-            <div className={`px-4 py-3 border-t ${theme === 'dark' ? 'border-white/5 bg-black/30' : 'border-gray-100 bg-gray-50/50'}`}>
+            <div className={`px-5 py-4 border-t ${theme === 'dark' ? 'border-white/5' : 'border-gray-100'}`}>
               <Link
                 href="/blog/topics"
-                className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg border transition-all duration-300 text-sm font-medium ${
+                className={`group/btn flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-200 text-sm font-semibold ${
                   theme === 'dark'
-                    ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border-cyan-400/30 text-cyan-300 hover:from-cyan-500/30 hover:to-purple-500/30 hover:border-cyan-400/50'
-                    : 'bg-gradient-to-r from-cyan-100 to-purple-100 border-cyan-400/30 text-cyan-700 hover:from-cyan-200 hover:to-purple-200 hover:border-cyan-500/50'
+                    ? 'bg-white/5 text-white/90 hover:bg-white/10 hover:shadow-lg hover:shadow-cyan-500/10'
+                    : 'bg-gray-100 text-gray-900 hover:bg-gray-200 hover:shadow-md'
                 }`}
               >
                 <Layers className="w-4 h-4" />
-                View All Topics →
+                <span>View All Topics</span>
+                <svg className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
               </Link>
             </div>
           </motion.div>

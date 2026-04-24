@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { User, Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
+import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -57,14 +57,43 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          const viewportHeight = window.innerHeight;
+          const statsSection = document.getElementById('stats-section');
+          const statsSectionTop = statsSection?.offsetTop || viewportHeight * 2;
+          
+          // Hide header when scrolling down in section 2, show when entering section 3
+          if (currentScrollY >= statsSectionTop - 100) {
+            // Entering or in section 3 - show header
+            setHidden(false);
+          } else if (currentScrollY > lastScrollY && currentScrollY > viewportHeight * 0.5) {
+            // Scrolling down in section 2 - hide header
+            setHidden(true);
+          } else {
+            // Scrolling up - show header
+            setHidden(false);
+          }
+          
+          setScrolled(currentScrollY > 50);
+          setLastScrollY(currentScrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener('scroll', handleScroll);
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [lastScrollY]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -74,12 +103,12 @@ export default function Header() {
     return Object.keys(dropdownItems).includes(item);
   };
 
-  const returnUrl = encodeURIComponent(pathname || '/');
-
   return (
     <header className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 ${
       scrolled ? 'py-2' : 'py-4'
-    }`}>
+    } ${
+      hidden ? '-translate-y-full' : 'translate-y-0'
+    }`} style={{ willChange: 'transform' }}>
       <div className="mx-auto max-w-7xl px-4 md:px-6">
         <div className={`relative flex items-center justify-between rounded-2xl transition-all duration-300 ${
           scrolled 
@@ -158,20 +187,6 @@ export default function Header() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-3">
-            <Link
-              href="/get-started"
-              className="hidden md:block px-5 py-2 text-sm font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg hover:shadow-lg hover:shadow-cyan-500/25 transition-all"
-            >
-              Get Started
-            </Link>
-            
-            <Link
-              href={`/login?returnUrl=${returnUrl}`}
-              className="hidden lg:flex items-center justify-center w-9 h-9 rounded-lg border border-white/10 text-zinc-400 hover:text-white hover:border-white/20 hover:bg-white/5 transition-all"
-            >
-              <User className="h-4 w-4" />
-            </Link>
-            
             <button
               onClick={toggleMenu}
               className="lg:hidden flex items-center justify-center w-9 h-9 rounded-lg border border-white/10 text-zinc-400 hover:text-white hover:border-white/20 hover:bg-white/5 transition-all"
@@ -265,24 +280,6 @@ export default function Header() {
                   ))}
                 </nav>
 
-                <div className="space-y-3 pt-6 border-t border-white/10">
-                  <Link
-                    href={`/login?returnUrl=${returnUrl}`}
-                    onClick={toggleMenu}
-                    className="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-medium text-zinc-400 border border-white/10 rounded-lg hover:text-white hover:bg-white/5 transition-all"
-                  >
-                    <User className="h-4 w-4" />
-                    Sign In
-                  </Link>
-                  
-                  <Link
-                    href="/get-started"
-                    onClick={toggleMenu}
-                    className="block w-full px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg hover:shadow-lg hover:shadow-cyan-500/25 transition-all text-center"
-                  >
-                    Get Started
-                  </Link>
-                </div>
               </div>
             </motion.div>
           </>

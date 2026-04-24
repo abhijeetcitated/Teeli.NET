@@ -8,6 +8,87 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* ==============================================
+   PERFORMANCE OPTIMIZATIONS - CSS Animations
+   Replace Framer Motion where possible for faster FCP
+   ============================================== */
+
+/* Fade in up animation - used for hero */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+/* Animation delays */
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-400 { animation-delay: 400ms; }
+.animation-delay-500 { animation-delay: 500ms; }
+
+/* Optimize for reduced motion - accessibility + performance */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-spin-slow,
+  .animate-rotate-slow,
+  .animate-pulse {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* GPU acceleration hints for smooth animations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+/* Optimize blur effects - reduce on mobile */
+@media (max-width: 768px) {
+  .blur-\[120px\],
+  .blur-\[100px\] {
+    filter: blur(60px) !important;
+  }
+  
+  .backdrop-blur-xl {
+    backdrop-filter: blur(8px) !important;
+  }
+}
+
+/* Simple fade-in for dropdowns */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.15s ease-out forwards;
+}
+
+/* ==============================================
+   END PERFORMANCE OPTIMIZATIONS
+   ============================================== */
+
 /* 3D Transform Utilities */
 .perspective-1000 {
   perspective: 1000px;
