@@ -9,7 +9,7 @@ const techStack = [
   "Trimesh Auto-Repair",
   "WebGPU + Babylon.js",
   "RunPod / io.net GPU Grid",
-  "Solana GreenChain",
+  "High-Performance Edge GPUs",
 ];
 
 export default function TechStackSection() {

@@ -1,46 +1,11 @@
 'use client';
 
-import { useState, useEffect, memo } from 'react';
+import { useState, memo } from 'react';
 import Link from 'next/link';
 
 // Memoized Footer to prevent unnecessary re-renders
 const Footer = memo(function Footer() {
-  const [solanaBlockHeight, setSolanaBlockHeight] = useState(287654321);
   const [email, setEmail] = useState('');
-  const [isVisible, setIsVisible] = useState(false);
-
-  // Only start block height animation when footer is visible
-  useEffect(() => {
-    // Use IntersectionObserver to detect when footer is visible
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    const footer = document.querySelector('footer');
-    if (footer) {
-      observer.observe(footer);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Only update block height when footer is visible - HUGE performance boost
-  useEffect(() => {
-    if (!isVisible) return;
-    
-    const interval = setInterval(() => {
-      setSolanaBlockHeight(prev => prev + 1);
-    }, 2000); // Slowed down from 400ms to 2000ms - less CPU usage
-    
-    return () => clearInterval(interval);
-  }, [isVisible]);
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,12 +20,6 @@ const Footer = memo(function Footer() {
           {/* Column 1 - Brand */}
           <div>
             <h3 className="text-signal-teal font-bold text-xl mb-4">TEELI</h3>
-            <p className="text-starlight/60 text-sm mb-4">
-              Decentralized render farm powered by Solana blockchain
-            </p>
-            <div className="text-xs text-starlight/40 font-mono">
-              Block: #{solanaBlockHeight.toLocaleString()}
-            </div>
           </div>
 
           {/* Column 2 - Product */}

@@ -1,18 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function Footer() {
-  const [solanaBlockHeight, setSolanaBlockHeight] = useState(287654321);
   const [email, setEmail] = useState('');
-
-  // Simulate live Solana block height updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSolanaBlockHeight(prev => prev + 1);
-    }, 400); // Update every 400ms (Solana block time)
-    return () => clearInterval(interval);
-  }, []);
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,12 +19,6 @@ export default function Footer() {
           {/* Column 1 - Brand */}
           <div>
             <h3 className="text-signal-teal font-bold text-xl mb-4">TEELI</h3>
-            <p className="text-starlight/60 text-sm mb-4">
-              Decentralized render farm powered by Solana blockchain
-            </p>
-            <div className="text-xs text-starlight/40 font-mono">
-              Block: #{solanaBlockHeight.toLocaleString()}
-            </div>
           </div>
 
           {/* Column 2 - Product */}

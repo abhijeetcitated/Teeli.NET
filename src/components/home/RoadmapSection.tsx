@@ -25,7 +25,7 @@ const phases = [
     icon: ShieldIcon,
     phase: "Phase 3",
     status: "Future",
-    title: "Decentralized Compute + Blockchain Proofs",
+    title: "Distributed Compute Clusters",
     gradient: "from-purple-500 via-fuchsia-500 to-pink-500",
     bloom: "bg-purple-500/20"
   },
