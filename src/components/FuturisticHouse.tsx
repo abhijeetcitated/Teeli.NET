@@ -6,12 +6,12 @@
  * NO POOL - just the building with glass windows
  */
 
-import { useRef, useMemo } from "react";
+import React, { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Edges } from "@react-three/drei";
 import * as THREE from "three";
 
-export default function FuturisticHouse(props: JSX.IntrinsicElements["group"]) {
+export default function FuturisticHouse(props: React.JSX.IntrinsicElements["group"]) {
   const groupRef = useRef<THREE.Group>(null);
 
   // Realistic materials with proper PBR properties
