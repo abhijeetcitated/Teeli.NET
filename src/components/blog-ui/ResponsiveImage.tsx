@@ -46,13 +46,12 @@ export default function ResponsiveImage({
   const is43RatioBlog = pathname?.includes('rendering-drawing-definition-purpose-workflow-architectural-visualisation-2025');
   
   // PERFORMANCE: Detect hero images for optimized loading
-  // Hero images are small static WebP files (20-50KB) - use native <img> for fastest LCP
   const isHeroImage = priority || src.includes('-hero.webp') || src.includes('-hero.avif');
   
   // PERFORMANCE: Quality settings for Next.js Image
-  // Hero images don't use Next.js Image (native <img> faster for small files)
-  // Other images: 55 quality - maximum performance
-  const imageQuality = 55;
+  // Hero images: 45 quality (LCP critical path — smaller = faster)
+  // Other images: 55 quality
+  const imageQuality = isHeroImage ? 45 : 55;
   
   // Apply 4:3 ratio for specific blog (1200x900), default 16:9 (1200x675)
   if (is43RatioBlog && width === 1200 && height === 675) {
@@ -66,10 +65,9 @@ export default function ResponsiveImage({
   const isWebP = src.toLowerCase().endsWith('.webp');
   const isAVIF = src.toLowerCase().endsWith('.avif');
 
-  // PERFORMANCE FIX: Hero images (small static files 20-50KB) use unoptimized={true}
-  // - Eliminates Next.js Image processing delay (200-400ms) by serving directly
-  // - Retains automatic <link rel="preload"> injection in <head> for instant LCP
-  const isUnoptimized = isHeroImage && (isWebP || isAVIF);
+  // IMPORTANT: Do NOT use unoptimized for hero images!
+  // unoptimized skips responsive sizing — mobile gets full 1200px image (247KB vs needed 50KB)
+  // Next.js Image optimization handles responsive srcset, AVIF/WebP conversion, and sizing
 
   // CRITICAL: SVG hero images should use object tag with proper sizing to prevent blocking
   // For hero images, we want to ensure SVG loads asynchronously
@@ -176,7 +174,7 @@ export default function ResponsiveImage({
         decoding={priority ? "sync" : "async"}
         fetchPriority={priority ? "high" : "auto"}
         sizes={priority
-          ? "(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
+          ? "(max-width: 480px) 100vw, (max-width: 768px) 90vw, (max-width: 1024px) 85vw, 800px"
           : "(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1024px) 800px, 1200px"
         }
         placeholder={blurDataURL ? "blur" : "empty"}
@@ -199,7 +197,6 @@ export default function ResponsiveImage({
           setIsLoading(false);
         }}
         quality={imageQuality}
-        unoptimized={isUnoptimized}
         style={{
           objectFit: 'cover',
           maxWidth: '100%',

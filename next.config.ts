@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   // Image optimization for performance
   images: {
     formats: ['image/avif', 'image/webp'], // AVIF first (30% smaller than WebP)
-    deviceSizes: [640, 750, 828, 1080, 1200],
+    deviceSizes: [480, 640, 750, 828, 1080, 1200],
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
     unoptimized: false,
     dangerouslyAllowSVG: true,
@@ -60,7 +60,7 @@ const nextConfig: NextConfig = {
     ],
     domains: [],
     // Performance: Custom quality settings for optimized images
-    qualities: [50, 55, 60, 65], // Reduced: 50 (hero), 55, 60, 65
+    qualities: [45, 50, 55, 60, 65], // 45 (hero/LCP), 50, 55 (default), 60, 65
   },
   
   // Aggressive caching headers for static assets

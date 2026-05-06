@@ -4,7 +4,6 @@ import type { Metadata } from 'next';
 import BlogPostClient from './BlogPostClient';
 import fs from 'fs';
 import path from 'path';
-import { preload } from 'react-dom';
 
 // Generate static params for all blog posts
 export async function generateStaticParams() {
@@ -184,14 +183,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       />
       
       {/* 
-        PERFORMANCE FIX #1: Optimized Hero Image Preload via ReactDOM
-        - Ensures preload is correctly hoisted to the document <head>
-        - fetchpriority="high" for LCP optimization
+        LCP OPTIMIZATION: Next.js Image with priority={true} handles preloading automatically.
+        Do NOT add manual ReactDOM.preload() here — it preloads the raw image URL while
+        Next.js Image serves through /_next/image (different URL), causing DOUBLE download.
       */}
-      {post.image && (() => {
-        preload(post.image, { as: 'image', fetchPriority: 'high' });
-        return null;
-      })()}
       <BlogPostClient post={post} relatedPosts={relatedPosts} />
     </>
   );
