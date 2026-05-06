@@ -132,6 +132,7 @@ const nextConfig: NextConfig = {
   
   // Turbopack configuration (Next.js 16 default)
   turbopack: {
+    root: process.cwd(), // Fix for Next.js 16 inferred workspace root error
     resolveAlias: {
       // Optimize Three.js imports for Turbopack
       'three': 'three/build/three.module.js',

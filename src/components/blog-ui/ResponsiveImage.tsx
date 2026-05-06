@@ -66,74 +66,14 @@ export default function ResponsiveImage({
   const isWebP = src.toLowerCase().endsWith('.webp');
   const isAVIF = src.toLowerCase().endsWith('.avif');
 
-  // CRITICAL: Hero images (small static files 20-50KB) use native <img> for instant LCP
-  // Native <img> avoids Next.js Image processing overhead (~200-400ms saved)
-  const useNativeImg = isHeroImage && (isWebP || isAVIF);
-  
+  // PERFORMANCE FIX: Hero images (small static files 20-50KB) use unoptimized={true}
+  // - Eliminates Next.js Image processing delay (200-400ms) by serving directly
+  // - Retains automatic <link rel="preload"> injection in <head> for instant LCP
+  const isUnoptimized = isHeroImage && (isWebP || isAVIF);
+
   // CRITICAL: SVG hero images should use object tag with proper sizing to prevent blocking
   // For hero images, we want to ensure SVG loads asynchronously
   const isHeroSVG = isSVG && isHeroImage;
-
-  // Development logging
-  if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
-    console.log(`[ResponsiveImage] ${priority ? 'Priority' : 'Lazy'} ${isSVG ? 'SVG' : useNativeImg ? 'Native WebP/AVIF' : 'Next.js Image'} - ${src.split('/').pop()}`);
-  }
-  
-  // PERFORMANCE FIX: Hero WebP/AVIF images use native <img> tag
-  // - Eliminates Next.js Image processing delay (200-400ms)
-  // - Direct browser decode (faster for small files)
-  // - Instant LCP improvement
-  if (useNativeImg) {
-    // If hero image fails, show placeholder
-    if (hasError) {
-      return (
-        <div className={`relative overflow-hidden flex items-center justify-center bg-gradient-to-br from-gray-900/50 to-gray-800/50 border-2 border-gray-700/30 rounded-xl sm:rounded-2xl ${className}`} style={{ minHeight: '400px' }}>
-          <div className="text-center p-8">
-            <svg className="w-20 h-20 mx-auto mb-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <p className="text-base text-gray-400 font-semibold">{alt || 'Hero image'}</p>
-            <p className="text-sm text-gray-600 mt-2">Image coming soon</p>
-          </div>
-        </div>
-      );
-    }
-    
-    return (
-      <div className="relative overflow-hidden">
-        <img
-          src={src}
-          alt={alt}
-          width={width}
-          height={height}
-          loading="eager"
-          decoding="async"
-          fetchPriority="high"
-          className={className}
-          onLoad={() => {
-            setIsLoading(false);
-            if (process.env.NODE_ENV === 'development') {
-              console.log(`[ResponsiveImage] Native Hero Loaded - ${src.split('/').pop()}`);
-            }
-          }}
-          onError={(e) => {
-            // Silent error - show placeholder instead
-            if (process.env.NODE_ENV === 'development') {
-              console.log(`[ResponsiveImage] Hero not found (showing placeholder) - ${src.split('/').pop()}`);
-            }
-            setHasError(true);
-            setIsLoading(false);
-          }}
-          style={{
-            width: '100%',
-            height: 'auto',
-            display: 'block',
-            objectFit: 'cover'
-          }}
-        />
-      </div>
-    );
-  }
 
   // SVG files: Use object tag for hero SVGs to prevent LCP blocking
   if (isHeroSVG) {
@@ -152,7 +92,7 @@ export default function ResponsiveImage({
           }}
         >
           {/* Fallback for browsers that don't support object tag */}
-          <img src={src} alt={alt} className={className} loading="eager" />
+          <img src={src} alt={alt} width={width} height={height} className={className} loading="eager" />
         </object>
       </div>
     );
@@ -238,6 +178,7 @@ export default function ResponsiveImage({
         sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1024px) 800px, 1200px"
         placeholder={blurDataURL ? "blur" : "empty"}
         blurDataURL={blurDataURL}
+        unoptimized={isUnoptimized}
         className={`${className} transition-opacity duration-300 ${
           isLoading ? 'opacity-0' : 'opacity-100'
         }`}

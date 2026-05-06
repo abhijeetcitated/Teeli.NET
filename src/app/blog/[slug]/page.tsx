@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import BlogPostClient from './BlogPostClient';
 import fs from 'fs';
 import path from 'path';
+import { preload } from 'react-dom';
 
 // Generate static params for all blog posts
 export async function generateStaticParams() {
@@ -183,22 +184,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       />
       
       {/* 
-        PERFORMANCE FIX #1: Optimized Hero Image Preload
-        - Direct preload without query parameters (static WebP files)
+        PERFORMANCE FIX #1: Optimized Hero Image Preload via ReactDOM
+        - Ensures preload is correctly hoisted to the document <head>
         - fetchpriority="high" for LCP optimization
-        - WebP format with instant decode (20-50KB files)
-        - Future-proof: Works for all blogs automatically
       */}
-      {post.image && (
-        <link
-          rel="preload"
-          as="image"
-          href={post.image}
-          type="image/webp"
-          // @ts-ignore
-          fetchPriority="high"
-        />
-      )}
+      {post.image && (() => {
+        preload(post.image, { as: 'image', fetchPriority: 'high' });
+        return null;
+      })()}
       <BlogPostClient post={post} relatedPosts={relatedPosts} />
     </>
   );

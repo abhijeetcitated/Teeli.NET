@@ -629,16 +629,6 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
 
   return (
     <>
-      {/* CRITICAL: Preload hero image for LCP optimization */}
-      {post.image && (
-        <link 
-          rel="preload" 
-          as="image" 
-          href={post.image}
-          fetchPriority="high"
-        />
-      )}
-      
       <div className={`min-h-screen font-body transition-colors duration-300 ${
         theme === 'dark' ? 'bg-black' : 'bg-gradient-to-br from-gray-50 to-gray-100'
       }`}>
