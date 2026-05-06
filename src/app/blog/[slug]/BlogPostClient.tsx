@@ -583,7 +583,7 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
       if (matchedText.startsWith('**') && matchedText.endsWith('**')) {
         const boldText = matchedText.slice(2, -2);
         parts.push(
-          <strong key={key++} className="font-bold text-gray-900 dark:text-white">
+          <strong key={key++} className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
             {boldText}
           </strong>
         );
