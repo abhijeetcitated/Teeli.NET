@@ -27,9 +27,6 @@ export default function IconBullet({
   const Component = as;
   const { theme } = useBlogTheme();
 
-  // No ARIA listitem role added to generic divs to prevent ARIA spec violations
-  // inside non-list parent containers.
-  const accessibilityProps = {};
 
   // Theme-aware text color
   const textColor = theme === 'dark' ? 'text-neutral-200' : 'text-neutral-800';
@@ -40,7 +37,7 @@ export default function IconBullet({
         'flex items-start gap-3 mb-3',
         className
       )}
-      {...accessibilityProps}
+      suppressHydrationWarning
     >
       {/* Green checkmark circle icon - larger size */}
       <span className="mt-0.5 inline-flex h-5 w-5 shrink-0">

@@ -401,7 +401,9 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
             theme === 'dark' ? 'text-neutral-200' : 'text-neutral-800'
           }`}>
             <a href={trimmedLine.match(/\(([^)]+)\)/)?.[1]} target="_blank" rel="noopener noreferrer" 
-              className="text-cyan-400 hover:text-cyan-300 underline break-all">
+              className={`underline break-all ${
+                theme === 'dark' ? 'text-cyan-400 hover:text-cyan-300' : 'text-blue-600 hover:text-blue-700'
+              }`}>
               {trimmedLine}
             </a>
           </p>
@@ -412,7 +414,9 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
             theme === 'dark' ? 'text-neutral-200' : 'text-neutral-800'
           }`}>
             <a href={trimmedLine.match(/\(([^)]+)\)/)?.[1]} target="_blank" rel="noopener noreferrer" 
-              className="text-cyan-400 hover:text-cyan-300 underline break-all">
+              className={`underline break-all ${
+                theme === 'dark' ? 'text-cyan-400 hover:text-cyan-300' : 'text-blue-600 hover:text-blue-700'
+              }`}>
               {trimmedLine}
             </a>
           </p>

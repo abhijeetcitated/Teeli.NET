@@ -131,6 +131,7 @@ function IconListItem({
         textColor,
         className
       )}
+      suppressHydrationWarning
     >
       {numbered && number !== undefined ? (
         // Numbered list icon - circular badge with number

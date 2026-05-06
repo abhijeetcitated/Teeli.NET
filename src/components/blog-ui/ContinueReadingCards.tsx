@@ -48,7 +48,9 @@ export default function ContinueReadingCards({ posts }: ContinueReadingCardsProp
                   
                   <div className="relative z-10">
                     {/* Category Badge */}
-                    <div className="text-cyan-400 text-xs font-semibold mb-3">{post.category}</div>
+                    <div className={`text-xs font-semibold mb-3 ${
+                      theme === 'dark' ? 'text-cyan-400' : 'text-cyan-700'
+                    }`}>{post.category}</div>
                     
                     {/* Title */}
                     <h3 className={`font-heading text-xl md:text-2xl font-bold mb-3 group-hover:text-cyan-600 transition-colors line-clamp-2 ${
@@ -73,7 +75,9 @@ export default function ContinueReadingCards({ posts }: ContinueReadingCardsProp
                     </div>
                     
                     {/* Read More Link */}
-                    <div className="flex items-center text-cyan-400 text-sm font-semibold group-hover:text-cyan-600 transition-colors">
+                    <div className={`flex items-center text-sm font-semibold transition-colors ${
+                      theme === 'dark' ? 'text-cyan-400 group-hover:text-cyan-300' : 'text-cyan-700 group-hover:text-cyan-800'
+                    }`}>
                       Read more <span className="ml-2 group-hover:translate-x-2 transition-transform">→</span>
                     </div>
                   </div>
