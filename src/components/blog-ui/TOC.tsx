@@ -53,21 +53,31 @@ export default function TOC({ contentRef }: TOCProps) {
   useEffect(() => {
     if (tocItems.length === 0) return;
 
+    let ticking = false;
+    
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 100;
 
       for (let i = tocItems.length - 1; i >= 0; i--) {
         const element = document.getElementById(tocItems[i].id);
         if (element && element.offsetTop <= scrollPosition) {
-          setActiveId(tocItems[i].id);
-          return;
+          setActiveId(prev => prev !== tocItems[i].id ? tocItems[i].id : prev);
+          break;
         }
+      }
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(handleScroll);
+        ticking = true;
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, [tocItems]);
 
   const handleClick = (id: string) => {

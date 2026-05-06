@@ -1,6 +1,5 @@
 import { BlogThemeProvider } from '@/components/BlogThemeProvider';
 import BlogHeader from '@/components/blog/BlogHeader';
-import BlogFooter from '@/components/blog/BlogFooter';
 import BlogLayoutClient from './BlogLayoutClient';
 import type { Metadata } from 'next';
 

@@ -175,7 +175,10 @@ export default function ResponsiveImage({
         loading={priority ? "eager" : "lazy"}
         decoding={priority ? "sync" : "async"}
         fetchPriority={priority ? "high" : "auto"}
-        sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1024px) 800px, 1200px"
+        sizes={priority
+          ? "(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
+          : "(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1024px) 800px, 1200px"
+        }
         placeholder={blurDataURL ? "blur" : "empty"}
         blurDataURL={blurDataURL}
         className={`${className} ${
@@ -196,6 +199,7 @@ export default function ResponsiveImage({
           setIsLoading(false);
         }}
         quality={imageQuality}
+        unoptimized={isUnoptimized}
         style={{
           objectFit: 'cover',
           maxWidth: '100%',
