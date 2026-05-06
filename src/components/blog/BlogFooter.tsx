@@ -85,7 +85,7 @@ export default function BlogFooter({ forceDark = false }: { forceDark?: boolean 
           <div className="flex flex-col items-center md:items-end">
             <div className={`font-semibold mb-4 ${effectiveTheme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Follow Us</div>
             <div className="flex gap-4">
-              <a href="#" className={`w-10 h-10 rounded-full flex items-center justify-center transition-all group ${
+              <a href="#" aria-label="Twitter" className={`w-10 h-10 rounded-full flex items-center justify-center transition-all group ${
                 effectiveTheme === 'dark'
                   ? 'border border-white/20 bg-white/5 hover:border-cyan-500 hover:bg-cyan-500/10'
                   : 'border border-gray-300 bg-white shadow-sm hover:border-cyan-500 hover:bg-cyan-50'
@@ -94,7 +94,7 @@ export default function BlogFooter({ forceDark = false }: { forceDark?: boolean 
                   effectiveTheme === 'dark' ? 'text-zinc-300 group-hover:text-cyan-400' : 'text-gray-600 group-hover:text-cyan-600'
                 }`} />
               </a>
-              <a href="#" className={`w-10 h-10 rounded-full flex items-center justify-center transition-all group ${
+              <a href="#" aria-label="LinkedIn" className={`w-10 h-10 rounded-full flex items-center justify-center transition-all group ${
                 effectiveTheme === 'dark'
                   ? 'border border-white/20 bg-white/5 hover:border-blue-500 hover:bg-blue-500/10'
                   : 'border border-gray-300 bg-white shadow-sm hover:border-blue-500 hover:bg-blue-50'
@@ -103,7 +103,7 @@ export default function BlogFooter({ forceDark = false }: { forceDark?: boolean 
                   effectiveTheme === 'dark' ? 'text-zinc-300 group-hover:text-blue-400' : 'text-gray-600 group-hover:text-blue-600'
                 }`} />
               </a>
-              <a href="#" className={`w-10 h-10 rounded-full flex items-center justify-center transition-all group ${
+              <a href="#" aria-label="Instagram" className={`w-10 h-10 rounded-full flex items-center justify-center transition-all group ${
                 effectiveTheme === 'dark'
                   ? 'border border-white/20 bg-white/5 hover:border-pink-500 hover:bg-pink-500/10'
                   : 'border border-gray-300 bg-white shadow-sm hover:border-pink-500 hover:bg-pink-50'
@@ -112,7 +112,7 @@ export default function BlogFooter({ forceDark = false }: { forceDark?: boolean 
                   effectiveTheme === 'dark' ? 'text-zinc-300 group-hover:text-pink-400' : 'text-gray-600 group-hover:text-pink-600'
                 }`} />
               </a>
-              <a href="#" className={`w-10 h-10 rounded-full flex items-center justify-center transition-all group ${
+              <a href="#" aria-label="GitHub" className={`w-10 h-10 rounded-full flex items-center justify-center transition-all group ${
                 effectiveTheme === 'dark'
                   ? 'border border-white/20 bg-white/5 hover:border-purple-500 hover:bg-purple-500/10'
                   : 'border border-gray-300 bg-white shadow-sm hover:border-purple-500 hover:bg-purple-50'

@@ -105,11 +105,11 @@ export default function ResponsiveImage({
       return (
         <div className={`relative overflow-hidden flex items-center justify-center bg-gray-900/30 border-2 border-dashed border-gray-700/50 rounded-xl sm:rounded-2xl ${className}`} style={{ minHeight: '300px' }}>
           <div className="text-center p-6">
-            <svg className="w-16 h-16 mx-auto mb-3 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-16 h-16 mx-auto mb-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            <p className="text-sm text-gray-500 font-medium">{alt || 'Diagram placeholder'}</p>
-            <p className="text-xs text-gray-600 mt-1">Image coming soon</p>
+            <p className="text-sm text-gray-400 font-medium">{alt || 'Diagram placeholder'}</p>
+            <p className="text-xs text-gray-500 mt-1">Image coming soon</p>
           </div>
         </div>
       );
@@ -178,9 +178,9 @@ export default function ResponsiveImage({
         sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1024px) 800px, 1200px"
         placeholder={blurDataURL ? "blur" : "empty"}
         blurDataURL={blurDataURL}
-        unoptimized={isUnoptimized}
-        className={`${className} transition-opacity duration-300 ${
-          isLoading ? 'opacity-0' : 'opacity-100'
+        className={`${className} ${
+          // Prevent LCP element render delay by disabling fade-in for priority images
+          priority ? '' : `transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`
         }`}
         onLoad={() => {
           setIsLoading(false);

@@ -82,9 +82,6 @@ const VideoPlayer = dynamic(() => import('@/components/blog-ui/VideoPlayer'), {
   ssr: false,
   loading: () => <div className="h-64 w-full animate-pulse bg-gray-900 rounded-xl" />
 });
-const MobileOnlyDefer = dynamic(() => import('@/components/performance/MobileOnlyDefer'), { 
-  ssr: false 
-});
 const IndustryUseCasesIllustration = dynamic(() => import('@/components/blog-ui/IndustryUseCasesIllustration'), { 
   ssr: false,
   loading: () => <div className="h-96 w-full animate-pulse bg-gray-800/20 rounded-xl my-8" />
@@ -159,10 +156,6 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
   }, [post]);
 
   const renderContent = (content: string) => {
-    // DISABLED: Auto-resolve image paths - now using /blog/ folder directly
-    // const keywordCategory = post.keywordCategory || '3d-render';
-    // const resolvedContent = resolveImagePaths(content, keywordCategory);
-    
     // Use content directly without transformation
     const resolvedContent = content;
     
@@ -315,9 +308,7 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
         // End of table, render it using SmartTable component
         if (tableRows.length > 0) {
           elements.push(
-            <MobileOnlyDefer key={key++} mode="onVisible">
-              <SmartTable rows={tableRows} />
-            </MobileOnlyDefer>
+            <SmartTable key={key++} rows={tableRows} />
           );
         }
         inTable = false;
@@ -335,9 +326,7 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
       } else if (trimmedLine.startsWith('## ')) {
         if (isFirstH2) {
           elements.push(
-            <MobileOnlyDefer key={`toc-${key++}`} mode="onVisible">
-              <TOC contentRef={contentRef} />
-            </MobileOnlyDefer>
+            <TOC key={`toc-${key++}`} contentRef={contentRef} />
           );
           isFirstH2 = false;
         }
@@ -379,7 +368,7 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
         if (isH3BoldPoint) {
           // Green checkmark icon with IconBullet for all H3 bold points
           elements.push(
-            <IconBullet key={key++} as="li">
+            <IconBullet key={key++} as="div">
               {renderInlineMarkdown(listContent)}
             </IconBullet>
           );
@@ -590,7 +579,7 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
       if (matchedText.startsWith('**') && matchedText.endsWith('**')) {
         const boldText = matchedText.slice(2, -2);
         parts.push(
-          <strong key={key++} className="font-bold text-blue-600 dark:text-blue-400">
+          <strong key={key++} className="font-bold text-gray-900 dark:text-white">
             {boldText}
           </strong>
         );
@@ -699,20 +688,14 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
           </div>
 
           {post.faq && post.faq.length > 0 && (
-            <MobileOnlyDefer mode="onVisible">
-              <FAQAccordion faq={post.faq} />
-            </MobileOnlyDefer>
+            <FAQAccordion faq={post.faq} />
           )}
 
-          {/* CTA Section - Defer on mobile only */}
-          <MobileOnlyDefer mode="onVisible">
-            <CTASection />
-          </MobileOnlyDefer>
+          {/* CTA Section */}
+          <CTASection />
 
-          {/* Continue Reading Section - Defer on mobile only */}
-          <MobileOnlyDefer mode="onVisible">
-            <ContinueReadingCards posts={relatedPosts} />
-          </MobileOnlyDefer>
+          {/* Continue Reading Section */}
+          <ContinueReadingCards posts={relatedPosts} />
         </article>
 
         {/* Structured Data Schemas - Injected on client-side only */}

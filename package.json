@@ -10,6 +10,7 @@
     "optimize:images": "node scripts/optimize-images.mjs"
   },
   "dependencies": {
+    "@next/third-parties": "^16.2.4",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
     "@react-three/gltfjsx": "^4.3.4",
@@ -57,13 +58,11 @@
     }
   },
   "browserslist": [
-    ">0.5%",
+    "defaults and fully supports es6-module",
     "not dead",
-    "not IE 11",
-    "not op_mini all",
-    "Chrome >= 87",
-    "Firefox >= 78",
-    "Safari >= 14",
-    "Edge >= 88"
+    "Chrome >= 92",
+    "Firefox >= 90",
+    "Safari >= 15.4",
+    "Edge >= 92"
   ]
 }

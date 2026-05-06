@@ -27,10 +27,9 @@ export default function IconBullet({
   const Component = as;
   const { theme } = useBlogTheme();
 
-  // If component is 'div', add listitem role for accessibility
-  const accessibilityProps = Component === 'div' 
-    ? { role: 'listitem' as const } 
-    : {};
+  // No ARIA listitem role added to generic divs to prevent ARIA spec violations
+  // inside non-list parent containers.
+  const accessibilityProps = {};
 
   // Theme-aware text color
   const textColor = theme === 'dark' ? 'text-neutral-200' : 'text-neutral-800';

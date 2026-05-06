@@ -46,15 +46,23 @@ function IconListItem({
     ? blogTypography.body.list.icons.h2 
     : blogTypography.body.list.icons.h3;
   
-  // Define color classes based on color prop
+  // Define color classes based on color prop, with high contrast for dark mode
   const colorClasses = {
-    red: iconConfig.color,
-    blue: iconConfig.color,
-    green: theme === 'dark' ? 'text-green-400' : 'text-green-600'
+    red: theme === 'dark' ? 'text-red-400' : 'text-red-600',
+    blue: theme === 'dark' ? 'text-blue-400' : 'text-blue-600',
+    green: theme === 'dark' ? 'text-green-400' : 'text-green-700'
   };
   
-  const iconColor = color === "green" ? colorClasses.green : iconConfig.color;
+  const iconColor = colorClasses[color];
   const iconSize = size === "large" ? iconConfig.size : "w-5 h-5";
+  
+  const borderClasses = {
+    red: theme === 'dark' ? 'border-red-400' : 'border-red-600',
+    blue: theme === 'dark' ? 'border-blue-400' : 'border-blue-600',
+    green: theme === 'dark' ? 'border-green-400' : 'border-green-700'
+  };
+  
+  const borderColor = borderClasses[color];
   
   // Get text color from typography
   const textColor = theme === "dark" 
@@ -116,7 +124,7 @@ function IconListItem({
   };
 
   return (
-    <li
+    <div
       className={clsx(
         "flex items-start gap-2",
         blogTypography.body.list.spacing,
@@ -131,7 +139,7 @@ function IconListItem({
             iconSize,
             "mt-1 shrink-0 flex items-center justify-center font-bold rounded-full border-2",
             iconColor,
-            color === "red" ? "border-red-500" : color === "green" ? "border-green-500" : "border-blue-500"
+            borderColor
           )}
         >
           {number}
@@ -144,7 +152,7 @@ function IconListItem({
       )}>
         {children}
       </span>
-    </li>
+    </div>
   );
 }
 
