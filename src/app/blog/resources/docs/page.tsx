@@ -62,7 +62,7 @@ export default function DocsPage() {
           type: "Python/JavaScript",
           description: "Integrate AI models into your rendering pipeline",
           topics: ["Image Upscaling", "Denoising", "Style Transfer", "Auto-tagging"],
-          href: "/blog/topics/ai-ml"
+          href: "/blog/topics/ai-in-3d"
         },
         {
           name: "Cloud Rendering Scripts",
@@ -134,7 +134,7 @@ export default function DocsPage() {
           type: "Glossary",
           description: "Machine learning concepts for 3D artists",
           topics: ["Neural Networks", "Training", "Inference", "Models", "Datasets", "Transfer Learning"],
-          href: "/blog/topics/ai-ml"
+          href: "/blog/topics/ai-in-3d"
         },
         {
           name: "Cloud Computing Terms",

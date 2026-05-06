@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useState } from "react";
 import { useBlogTheme } from '@/components/BlogThemeProvider';
 
@@ -72,7 +72,14 @@ function FAQItem({ q, a, theme }: { q: string; a: string; theme: string }) {
       >
         <p className={`text-sm sm:text-base leading-relaxed ${
           theme === 'dark' ? 'text-neutral-200' : 'text-neutral-800'
-        }`}>{a}</p>
+        }`}>
+          {a.split(/(\*\*.*?\*\*)/g).map((part, i) => {
+            if (part.startsWith('**') && part.endsWith('**')) {
+              return <strong key={i} className={theme === 'dark' ? 'text-white' : 'text-black'}>{part.slice(2, -2)}</strong>;
+            }
+            return part;
+          })}
+        </p>
       </div>
     </div>
   );

@@ -140,8 +140,7 @@ function IconListItem({
         renderIcon()
       )}
       <span className={clsx(
-        blogTypography.body.list.sizes,
-        "font-semibold"
+        blogTypography.body.list.sizes
       )}>
         {children}
       </span>

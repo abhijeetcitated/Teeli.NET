@@ -21,8 +21,8 @@ const topicConfig: Record<string, {
     gradient: "from-cyan-500 to-blue-600",
     keywords: ["3d rendering", "visualization", "photorealistic", "architectural", "product rendering"],
   },
-  "ai-ml": {
-    title: "AI & Machine Learning",
+  "ai-in-3d": {
+    title: "AI in 3D",
     description: "Explore agentic AI, generative design, neural networks, and intelligent automation",
     icon: Brain,
     gradient: "from-purple-500 to-pink-600",

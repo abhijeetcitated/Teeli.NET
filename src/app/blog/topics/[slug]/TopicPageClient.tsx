@@ -30,7 +30,7 @@ interface TopicPageClientProps {
 // Icon mapping
 const iconMap: Record<string, any> = {
   '3d-rendering': Box,
-  'ai-ml': Brain,
+  'ai-in-3d': Brain,
   'cloud-devops': Cloud,
   'quantum': Atom,
   'digital-twins': Building2,

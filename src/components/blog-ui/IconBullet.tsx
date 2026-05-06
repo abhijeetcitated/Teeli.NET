@@ -61,10 +61,9 @@ export default function IconBullet({
         </svg>
       </span>
 
-      {/* Bold text content */}
       <span
         className={clsx(
-          'font-semibold leading-relaxed text-[15px] md:text-[16px]',
+          'leading-relaxed text-[15px] md:text-[16px]',
           textColor
         )}
       >

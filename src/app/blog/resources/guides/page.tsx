@@ -30,7 +30,7 @@ export default function GuidesPage() {
       description: "Integrate AI tools into your 3D workflow. From AI-powered denoising to neural rendering and automated asset generation.",
       topics: ["AI Denoising", "Neural Rendering", "Auto-Generation", "Style Transfer", "Upscaling", "Workflow Integration"],
       featured: true,
-      href: "/blog/topics/ai-ml"
+      href: "/blog/topics/ai-in-3d"
     },
     {
       title: "Cloud Rendering Setup Walkthrough",

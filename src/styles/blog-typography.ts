@@ -25,15 +25,15 @@ export const blogTypography = {
       },
     },
     h2: {
-      // Section headings - Blue for light mode, White for dark mode
-      sizes: 'text-[28px] sm:text-[32px] md:text-[36px]',
-      weight: 'font-bold',
-      spacing: 'mb-4 sm:mb-5 mt-[32px] sm:mt-[40px]',
+      // Section headings - Brand Blue
+      sizes: 'text-[26px] sm:text-[30px] md:text-[34px]',
+      weight: 'font-[800]',
+      spacing: 'mb-[18px] mt-[56px]',
       alignment: 'text-center md:text-left',
       scroll: 'scroll-mt-24',
       colors: {
-        light: 'text-blue-700',    // Blue for light mode
-        dark: 'text-white',        // White for dark mode
+        light: 'text-[#0b57ff]',
+        dark: 'text-cyan-400',
       },
     },
     h3: {

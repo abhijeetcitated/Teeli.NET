@@ -22,65 +22,57 @@ const topicCategories = [
     href: "/blog/topics/3d-rendering", 
     count: 11, 
     gradient: "from-cyan-500 to-blue-600",
-    description: "Photorealistic visualization, architectural rendering & 3D techniques",
-    subcategories: ["Interior Rendering", "Software Tools", "Lighting Setup"]
+    description: "Interior, Architecture, Workflows & Visualization",
+    subcategories: ["Interior", "Architecture", "Workflows"]
   },
   { 
-    label: "AI & ML", 
-    href: "/blog/topics/ai-ml", 
+    label: "AI in 3D", 
+    href: "/blog/topics/ai-in-3d", 
     count: 1, 
     gradient: "from-purple-500 to-pink-600",
-    description: "Neural networks, generative AI & intelligent automation",
-    subcategories: ["Agentic AI", "Neural Rendering", "AI Tools"]
+    description: "Neural Rendering, Generative AI for Textures & Models",
+    subcategories: ["Neural Rendering", "Generative AI", "Textures"]
   },
   { 
-    label: "Cloud & DevOps", 
-    href: "/blog/topics/cloud-devops", 
+    label: "GPU Compute & Cloud", 
+    href: "/blog/topics/gpu-compute", 
     count: 1, 
     gradient: "from-blue-500 to-indigo-600",
-    description: "Cloud rendering farms, distributed computing & infrastructure",
-    subcategories: ["AWS Rendering", "GPU Cloud", "CI/CD"]
+    description: "AWS vs Edge, Runpod, Multi-GPU setups",
+    subcategories: ["Edge Computing", "Runpod", "Multi-GPU"]
+  },
+  { 
+    label: "DePIN Compute", 
+    href: "/blog/topics/depin", 
+    count: 1, 
+    gradient: "from-emerald-500 to-teal-600",
+    description: "Future of Decentralized GPU networks and Cost saving",
+    subcategories: ["Decentralized Compute", "GPU Networks", "Cost Analysis"]
+  },
+  { 
+    label: "Spatial Computing", 
+    href: "/blog/topics/spatial-computing", 
+    count: 1, 
+    gradient: "from-orange-500 to-red-600",
+    description: "WebGPU, AR/VR integration, and Web3D technologies",
+    subcategories: ["WebGPU", "Web3D", "AR/VR"]
   },
   { 
     label: "Digital Twins", 
     href: "/blog/topics/digital-twins", 
     count: 1, 
-    gradient: "from-emerald-500 to-teal-600",
-    description: "Real-time simulation, IoT integration & virtual replicas",
-    subcategories: ["BIM Integration", "IoT Sensors", "Simulation"]
-  },
-  { 
-    label: "Metaverse", 
-    href: "/blog/topics/metaverse", 
-    count: 1, 
-    gradient: "from-orange-500 to-red-600",
-    description: "Virtual worlds, 3D web experiences & immersive tech",
-    subcategories: ["VR/AR", "Web3", "Virtual Spaces"]
-  },
-  { 
-    label: "Quantum", 
-    href: "/blog/topics/quantum", 
-    count: 1, 
     gradient: "from-violet-500 to-purple-600",
-    description: "Quantum algorithms, simulation & next-gen computing",
-    subcategories: ["Algorithms", "Optimization", "Physics"]
+    description: "Industrial 3D, BIM Integration, and Smart Cities",
+    subcategories: ["Industrial 3D", "BIM", "Smart Cities"]
   },
   { 
-    label: "Sustainability", 
+    label: "Green Cloud Computing", 
     href: "/blog/topics/sustainability", 
     count: 1, 
     gradient: "from-green-500 to-emerald-600",
-    description: "Green computing, energy-efficient workflows & carbon-neutral tech",
+    description: "Energy-efficient rendering & carbon-neutral workflows",
     subcategories: ["Green Tech", "Carbon Tracking", "Energy Efficiency"]
-  },
-  { 
-    label: "Blockchain", 
-    href: "/blog/topics/blockchain", 
-    count: 1, 
-    gradient: "from-yellow-500 to-orange-600",
-    description: "Decentralized systems, smart contracts & distributed ledgers",
-    subcategories: ["Smart Contracts", "DLT", "Web3"]
-  },
+  }
 ];
 
 const resourceCategories = [

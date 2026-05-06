@@ -73,10 +73,7 @@ const FAQAccordion = dynamic(() => import('@/components/blog-ui/FAQAccordion'), 
 // 🚀 FIX #3: CODE SPLITTING - Heavy/below-fold components lazy loaded
 // Bundle size reduction: ~40-60KB (154KB → 94KB estimated)
 // These components are NOT needed for initial render (LCP improvement)
-const IntroBox = dynamic(() => import('@/components/blog-ui/IntroBox'), { 
-  ssr: false,
-  loading: () => <div className="h-24 w-full animate-pulse bg-gray-800/20 rounded-xl" />
-});
+// IntroBox removed per user request
 const Callout = dynamic(() => import('@/components/blog-ui/Callout'), { 
   ssr: false,
   loading: () => <div className="h-20 w-full animate-pulse bg-cyan-500/10 rounded-lg" />
@@ -172,7 +169,6 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
     const lines = resolvedContent.split('\n');
     const elements: ReactNode[] = [];
     let key = 0;
-    let isFirstParagraph = true;
     let isFirstH2 = true;
     let inTable = false;
     let tableRows: string[] = [];
@@ -181,15 +177,14 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
     let inFAQContainer = false;
     let inCallout = false;
     let calloutContent: string[] = [];
+    let inAiAnswer = false;
+    let aiAnswerContent: string[] = [];
     let currentHeadingLevel: 'h2' | 'h3' | null = null;
 
     const processLine = (line: string) => {
       const trimmedLine = line.trim();
       
       if (!trimmedLine) {
-        if (!inTable && !inScript && !inCallout) {
-          elements.push(<br key={key++} />);
-        }
         return;
       }
 
@@ -212,6 +207,31 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
           calloutContent = [];
         } else {
           calloutContent.push(trimmedLine);
+        }
+        return;
+      }
+
+      // Handle ai-answer blocks
+      if (trimmedLine === ':::ai-answer') {
+        inAiAnswer = true;
+        aiAnswerContent = [];
+        return;
+      }
+
+      if (inAiAnswer) {
+        if (trimmedLine === ':::') {
+          // End ai-answer block
+          elements.push(
+            <div key={key++} className="ai-answer-block">
+              {aiAnswerContent.map((line, idx) => (
+                <p key={idx}>{renderInlineMarkdown(line)}</p>
+              ))}
+            </div>
+          );
+          inAiAnswer = false;
+          aiAnswerContent = [];
+        } else {
+          aiAnswerContent.push(trimmedLine);
         }
         return;
       }
@@ -346,8 +366,9 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
             {renderInlineMarkdown(headingText)}
           </Heading>
         );
-      } else if (trimmedLine.startsWith("- ") || trimmedLine.startsWith("* ")) {
+      } else if (trimmedLine.startsWith("- ") || trimmedLine.startsWith("* ") || trimmedLine.startsWith("+ ")) {
         const listContent = trimmedLine.slice(2);
+        const isBluePoint = trimmedLine.startsWith("+ ");
         
         // Detect ANY bold text starting pattern: **Text**: or **Text** at the beginning
         const hasBoldStart = listContent.trim().startsWith('**');
@@ -364,7 +385,7 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
           );
         } else {
           // H2 ke neeche red icon (large), H3 ke neeche blue icon (default)
-          const iconColor = currentHeadingLevel === 'h2' ? 'red' : 'blue';
+          const iconColor = isBluePoint ? 'blue' : 'green';
           const iconSize = currentHeadingLevel === 'h2' ? 'large' : 'default';
           elements.push(
             <IconListItem key={key++} color={iconColor} size={iconSize}>
@@ -376,7 +397,7 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
         const match = trimmedLine.match(/^(\d+)\.\s*(.+)$/);
         if (match) {
           // H2 ke neeche red numbered icon (large), H3 ke neeche blue numbered icon (default)
-          const iconColor = currentHeadingLevel === 'h2' ? 'red' : 'blue';
+          const iconColor = 'green';
           const iconSize = currentHeadingLevel === 'h2' ? 'large' : 'default';
           const numberValue = parseInt(match[1], 10);
           elements.push(
@@ -406,6 +427,13 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
               {trimmedLine}
             </a>
           </p>
+        );
+      } else if (trimmedLine.startsWith('>')) {
+        const blockquoteContent = trimmedLine.slice(1).trim();
+        elements.push(
+          <Callout key={key++}>
+            {renderInlineMarkdown(blockquoteContent)}
+          </Callout>
         );
       } else if (trimmedLine.startsWith('![')) {
         // Image markdown: ![alt](src)
@@ -450,7 +478,7 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
         }
       } else {
         // Check if paragraph starts with bold text under H3 (any **Text**: pattern)
-        const isBoldParagraph = trimmedLine.trim().startsWith('**') && currentHeadingLevel === 'h3';
+        const isBoldParagraph = trimmedLine.trim().startsWith('**') && currentHeadingLevel === 'h3' && !trimmedLine.includes('The Bottom Line');
         
         if (isBoldParagraph) {
           // Render as IconBullet with green checkmark for H3 bold paragraphs
@@ -459,14 +487,6 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
               {renderInlineMarkdown(trimmedLine)}
             </IconBullet>
           );
-        } else if (isFirstParagraph) {
-          // First general paragraph becomes IntroBox
-          elements.push(
-            <IntroBox key={key++}>
-              {renderInlineMarkdown(trimmedLine)}
-            </IntroBox>
-          );
-          isFirstParagraph = false;
         } else {
           elements.push(
             <p key={key++} className={`mb-6 leading-relaxed text-[17px] md:text-[19px] ${
@@ -570,7 +590,7 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
       if (matchedText.startsWith('**') && matchedText.endsWith('**')) {
         const boldText = matchedText.slice(2, -2);
         parts.push(
-          <strong key={key++} className="font-bold">
+          <strong key={key++} className="font-bold text-blue-600 dark:text-blue-400">
             {boldText}
           </strong>
         );

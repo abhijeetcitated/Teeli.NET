@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useBlogTheme } from '@/components/BlogThemeProvider';
@@ -87,26 +87,20 @@ export default function TOC({ contentRef }: TOCProps) {
   return (
     <>
       {/* Desktop: Inline accordion */}
-      <div className="hidden lg:block mb-8 sm:mb-10">
-        <div className={`rounded-xl sm:rounded-2xl border overflow-hidden transition-all shadow-sm ${
+      <div className="hidden lg:block mt-[28px] mb-[38px]">
+        <div className={`rounded-xl border overflow-hidden transition-all ${
           theme === 'dark'
-            ? 'bg-gray-900/60 border-cyan-500/30 shadow-cyan-500/10'
-            : 'bg-gray-50 border-gray-300 shadow-gray-200/50'
+            ? 'border-gray-800 bg-gray-900/30'
+            : 'border-gray-200 bg-gray-50/50'
         }`}>
           {/* Clear Header with Icon */}
-          <div className={`px-6 py-4 ${
-            theme === 'dark' ? 'bg-gradient-to-r from-gray-800/50 to-gray-900/50' : 'bg-gradient-to-r from-gray-100 to-gray-50'
-          }`}>
+          <div className="px-4 py-3">
             <div className="flex items-center gap-3">
-              <div className={`p-2 rounded-lg ${
-                theme === 'dark' ? 'bg-red-500/10' : 'bg-red-50'
-              }`}>
-                <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-              </div>
-              <h3 className={`text-lg font-bold ${
-                theme === 'dark' ? 'text-zinc-100' : 'text-gray-900'
+              <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <h3 className={`text-base font-semibold ${
+                theme === 'dark' ? 'text-zinc-200' : 'text-gray-800'
               }`}>
                 Table of Contents
               </h3>
@@ -141,7 +135,7 @@ export default function TOC({ contentRef }: TOCProps) {
             }`}
             style={{ transitionProperty: 'max-height, opacity' }}
           >
-            <nav className="px-5 py-4">
+            <nav className="px-4 pb-4">
               <div className="overflow-y-auto max-h-[400px] pr-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent hover:scrollbar-thumb-gray-500">
                 <ul className="space-y-1">
                   {tocItems.map((item, index) => (
@@ -151,14 +145,14 @@ export default function TOC({ contentRef }: TOCProps) {
                     >
                       <button
                         onClick={() => handleClick(item.id)}
-                        className={`text-left w-full text-sm transition-all duration-200 py-2.5 px-3 rounded-lg flex items-start gap-2 cursor-pointer ${
+                        className={`text-left w-full text-sm transition-all duration-200 py-1.5 px-3 rounded flex items-start gap-2 cursor-pointer ${
                           activeId === item.id
                             ? theme === 'dark'
-                              ? 'bg-cyan-900/40 text-cyan-300 font-semibold shadow-sm'
-                              : 'bg-gray-200 text-gray-900 font-semibold shadow-sm'
+                              ? 'text-cyan-400 font-semibold'
+                              : 'text-blue-600 font-semibold'
                             : theme === 'dark'
-                            ? 'text-zinc-200 hover:text-cyan-300 hover:bg-gray-800/50'
-                            : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                            ? 'text-zinc-400 hover:text-zinc-200'
+                            : 'text-gray-600 hover:text-gray-900'
                         } ${
                           item.level === 2
                             ? 'font-medium'
