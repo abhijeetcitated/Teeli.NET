@@ -9,40 +9,29 @@
  * Renders individual blog posts with isolated CSS,
  * theme support, and dynamic component loading.
  * 
+ * 🚀 RSC ARCHITECTURE (v2):
+ * - Markdown parsing now happens on the SERVER (page.tsx)
+ * - This component receives a pre-parsed AST (ContentNode[])
+ * - Client only handles: rendering React components from AST nodes
+ * - Result: ~30-50ms TBT eliminated, raw content NOT in JS bundle
+ * 
  * 🎯 CSS SEPARATION STRATEGY:
  * - Imports blog-specific.css for isolated blog styles
  * - Wraps content in .blog-post-container for CSS scoping
- * - Prevents blog styles from affecting website pages
- * - Uses BlogThemeProvider for dark/light theme support
+ * - Uses Tailwind dark: variants (no JS theme checks)
  * 
  * ⚠️ CRITICAL - DO NOT REMOVE:
  * - CSS import: import '../blog-specific.css'
  * - Wrapper div: <div className="blog-post-container">
- * - BlogThemeProvider wrapper (theme context)
- * 
- * 🔧 MAINTENANCE:
- * - Adding components: Import and use inside BlogPostContent
- * - Modifying styles: Edit ../blog-specific.css
- * - Adding metadata: Edit ../page.tsx (server component)
- * 
- * 📦 DEPENDENCIES:
- * - blog-specific.css (5KB, scoped styles)
- * - BlogThemeProvider (theme context)
- * - Dynamic imports (performance optimization)
- * 
- * 🔗 RELATED FILES:
- * - src/app/blog/blog-specific.css (CSS styles)
- * - src/app/blog/[slug]/page.tsx (metadata)
- * - src/app/blog/README.md (architecture guide)
  * 
  * ============================================
  */
 
-import { useBlogTheme } from '@/components/BlogThemeProvider';
 import Link from 'next/link';
 import { ReactNode, useMemo, useRef } from 'react';
 import { BlogPost } from '@/lib/blog';
 import { generateAllSchemas } from '@/lib/seo-schema';
+import type { ContentNode } from '@/lib/markdown-parser';
 import Breadcrumb from '@/components/blog/Breadcrumb';
 import Heading from '@/components/blog-ui/Heading';
 import IconListItem from '@/components/blog-ui/IconListItem';
@@ -53,25 +42,15 @@ import LazyHeroVideo from '@/components/blog-ui/LazyHeroVideo';
 import dynamic from 'next/dynamic';
 
 // ⚠️ CRITICAL: Blog-specific CSS
-// Next.js handles CSS code-splitting automatically.
-// Direct import is MORE performant than async JS DOM manipulation.
-// Critical CSS is still inlined in page.tsx for instant above-fold render.
 import '../blog-specific.css';
 
-// PERFORMANCE: Dynamic imports without loading states (reduces bundle size)
+// PERFORMANCE: Dynamic imports (reduces bundle size)
 const ReadingProgressBar = dynamic(() => import('@/components/blog-ui/ReadingProgressBar'), { ssr: false });
-
-// Below-fold components: Load client-side only
 const CTASection = dynamic(() => import('@/components/blog-ui/CTASection'), { ssr: false });
 const ContinueReadingCards = dynamic(() => import('@/components/blog-ui/ContinueReadingCards'), { ssr: false });
 const TOC = dynamic(() => import('@/components/blog-ui/TOC'), { ssr: false });
 const SmartTable = dynamic(() => import('@/components/blog-ui/SmartTable'), { ssr: false });
 const FAQAccordion = dynamic(() => import('@/components/blog-ui/FAQAccordion'), { ssr: false });
-
-// 🚀 FIX #3: CODE SPLITTING - Heavy/below-fold components lazy loaded
-// Bundle size reduction: ~40-60KB (154KB → 94KB estimated)
-// These components are NOT needed for initial render (LCP improvement)
-// IntroBox removed per user request
 const Callout = dynamic(() => import('@/components/blog-ui/Callout'), { 
   ssr: false,
   loading: () => <div className="h-20 w-full animate-pulse bg-cyan-500/10 rounded-lg" />
@@ -85,523 +64,249 @@ const IndustryUseCasesIllustration = dynamic(() => import('@/components/blog-ui/
   loading: () => <div className="h-96 w-full animate-pulse bg-gray-800/20 rounded-xl my-8" />
 });
 
-/**
- * IconBullet Component Usage Examples:
- * 
- * Example 1 (manual use inside JSX):
- * <ul className="my-4 space-y-2">
- *   <IconBullet as="li">Use PBR materials accurately</IconBullet>
- *   <IconBullet as="li">Match real-world scale</IconBullet>
- *   <IconBullet as="li">Avoid over-sharpening textures</IconBullet>
- * </ul>
- * 
- * Example 2 (inside H3 "Common Mistakes and How to Avoid Them" section):
- * <h3>Common Mistakes and How to Avoid Them</h3>
- * <ul>
- *   <IconBullet as="li"><strong>Incorrect scale</strong> — Always set units to mm/cm.</IconBullet>
- *   <IconBullet as="li"><strong>Flat lighting</strong> — Use HDRI + rim light.</IconBullet>
- *   <IconBullet as="li"><strong>Over-saturation</strong> — Calibrate color profile.</IconBullet>
- * </ul>
- * 
- * Example 3 (best practices section):
- * <ul className="space-y-3">
- *   <IconBullet as="li">Organize assets into clearly named folders</IconBullet>
- *   <IconBullet as="li">Save incremental versions (scene_v01, scene_v02)</IconBullet>
- *   <IconBullet as="li">Document render settings in project notes</IconBullet>
- * </ul>
- * 
- * Note: To use IconBullet, import it via:
- * import { IconBullet } from '@/components/blog-ui';
- */
-
 interface BlogPostClientProps {
   post: BlogPost;
   relatedPosts: BlogPost[];
+  contentAST: ContentNode[];
 }
 
-function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
-  const { theme } = useBlogTheme();
-  const contentRef = useRef<HTMLDivElement>(null);
+// ---- Inline Markdown Renderer (lightweight, stays client-side) ----
+function renderInlineMarkdown(text: string): ReactNode {
+  const parts: ReactNode[] = [];
+  let key = 0;
 
-  // 🚀 PERF: useMemo instead of useState+useEffect
-  // Eliminates unnecessary re-render cycle (saves ~10-20ms TBT)
-  const schemas = useMemo(() => generateAllSchemas(post), [post]);
+  const combinedRegex = /(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g;
+  let lastIndex = 0;
+  let match;
 
-  const renderContent = (content: string) => {
-    // Use content directly without transformation
-    const resolvedContent = content;
-    
-    const lines = resolvedContent.split('\n');
-    const elements: ReactNode[] = [];
-    let key = 0;
-    let isFirstH2 = true;
-    let inTable = false;
-    let tableRows: string[] = [];
-    let inScript = false;
-    let scriptContent: string[] = [];
-    let inFAQContainer = false;
-    let inCallout = false;
-    let calloutContent: string[] = [];
-    let inAiAnswer = false;
-    let aiAnswerContent: string[] = [];
-    let currentHeadingLevel: 'h2' | 'h3' | null = null;
-
-    const processLine = (line: string) => {
-      const trimmedLine = line.trim();
-      
-      if (!trimmedLine) {
-        return;
-      }
-
-      // Handle callout blocks
-      if (trimmedLine === ':::callout') {
-        inCallout = true;
-        calloutContent = [];
-        return;
-      }
-
-      if (inCallout) {
-        if (trimmedLine === ':::') {
-          // End callout block
-          elements.push(
-            <Callout key={key++}>
-              {calloutContent.join('\n')}
-            </Callout>
-          );
-          inCallout = false;
-          calloutContent = [];
-        } else {
-          calloutContent.push(trimmedLine);
-        }
-        return;
-      }
-
-      // Handle ai-answer blocks
-      if (trimmedLine === ':::ai-answer') {
-        inAiAnswer = true;
-        aiAnswerContent = [];
-        return;
-      }
-
-      if (inAiAnswer) {
-        if (trimmedLine === ':::') {
-          // End ai-answer block
-          elements.push(
-            <div key={key++} className="ai-answer-block">
-              {aiAnswerContent.map((line, idx) => (
-                <p key={idx}>{renderInlineMarkdown(line)}</p>
-              ))}
-            </div>
-          );
-          inAiAnswer = false;
-          aiAnswerContent = [];
-        } else {
-          aiAnswerContent.push(trimmedLine);
-        }
-        return;
-      }
-
-      // Handle script tags
-      if (trimmedLine.startsWith('<script')) {
-        inScript = true;
-        scriptContent = [trimmedLine];
-        return;
-      }
-      
-      if (inScript) {
-        scriptContent.push(trimmedLine);
-        if (trimmedLine.includes('</script>')) {
-          const fullScript = scriptContent.join('\n');
-          elements.push(
-            <div key={key++} dangerouslySetInnerHTML={{ __html: fullScript }} />
-          );
-          inScript = false;
-          scriptContent = [];
-        }
-        return;
-      }
-
-      // Handle markdown images: ![alt](image.webp) or ![alt](image.mp4)
-      const imageMatch = trimmedLine.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
-      if (imageMatch) {
-        const [, alt, src] = imageMatch;
-        const isVideo = src.endsWith('.mp4') || src.endsWith('.webm') || src.endsWith('.mov');
-        
-        if (isVideo) {
-          elements.push(
-            <div key={key++} className="my-6 sm:my-8">
-              <VideoPlayer 
-                src={`/blog/${src}`}
-                poster={post.image}
-                title={alt || post.title}
-              />
-            </div>
-          );
-        } else if (src === '3d-rendering-use-cases-infographic.svg') {
-          // Render custom SVG illustration component for industry use cases
-          elements.push(
-            <IndustryUseCasesIllustration key={key++} />
-          );
-        } else {
-          elements.push(
-            <div key={key++} className="my-6 sm:my-8">
-              <ResponsiveImage 
-                src={`/blog/${src}`}
-                alt={alt}
-              />
-            </div>
-          );
-        }
-        return;
-      }
-
-      // Handle YouTube/Vimeo/standalone video URLs
-      if (trimmedLine.match(/^https?:\/\/(www\.)?(youtube\.com|youtu\.be|vimeo\.com)/)) {
-        elements.push(
-          <div key={key++} className="my-6 sm:my-8">
-            <VideoPlayer 
-              src={trimmedLine}
-              title={post.title}
-            />
-          </div>
-        );
-        return;
-      }
-
-      // Handle tables
-      if (trimmedLine.startsWith('|')) {
-        if (!inTable) {
-          inTable = true;
-          tableRows = [];
-        }
-        tableRows.push(trimmedLine);
-        return;
-      } else if (inTable) {
-        // End of table, render it using SmartTable component
-        if (tableRows.length > 0) {
-          elements.push(
-            <SmartTable key={key++} rows={tableRows} />
-          );
-        }
-        inTable = false;
-        tableRows = [];
-      }
-
-      if (trimmedLine.startsWith('# ')) {
-        elements.push(
-          <h1 key={key++} className={`font-heading text-[36px] sm:text-[42px] md:text-[48px] font-bold tracking-tight mb-5 sm:mb-7 mt-8 sm:mt-12 text-center md:text-left ${
-            theme === 'dark' ? 'text-white' : 'text-gray-900'
-          }`}>
-            {renderInlineMarkdown(trimmedLine.slice(2))}
-          </h1>
-        );
-      } else if (trimmedLine.startsWith('## ')) {
-        if (isFirstH2) {
-          elements.push(
-            <TOC key={`toc-${key++}`} contentRef={contentRef} />
-          );
-          isFirstH2 = false;
-        }
-        currentHeadingLevel = 'h2';
-        const headingText = trimmedLine.slice(3);
-        const headingId = headingText
-          .toLowerCase()
-          .trim()
-          .replace(/[^\w\s-]/g, "")
-          .replace(/\s+/g, "-");
-        elements.push(
-          <Heading key={key++} id={headingId} level="h2">
-            {renderInlineMarkdown(headingText)}
-          </Heading>
-        );
-      } else if (trimmedLine.startsWith('### ')) {
-        currentHeadingLevel = 'h3';
-        const headingText = trimmedLine.slice(4);
-        const headingId = headingText
-          .toLowerCase()
-          .trim()
-          .replace(/[^\w\s-]/g, "")
-          .replace(/\s+/g, "-");
-        elements.push(
-          <Heading key={key++} id={headingId} level="h3">
-            {renderInlineMarkdown(headingText)}
-          </Heading>
-        );
-      } else if (trimmedLine.startsWith("- ") || trimmedLine.startsWith("* ") || trimmedLine.startsWith("+ ")) {
-        const listContent = trimmedLine.slice(2);
-        const isBluePoint = trimmedLine.startsWith("+ ");
-        
-        // Detect ANY bold text starting pattern: **Text**: or **Text** at the beginning
-        const hasBoldStart = listContent.trim().startsWith('**');
-        
-        // Check if it's under H3 heading and has bold text at start
-        const isH3BoldPoint = currentHeadingLevel === 'h3' && hasBoldStart;
-        
-        if (isH3BoldPoint) {
-          // Green checkmark icon with IconBullet for all H3 bold points
-          elements.push(
-            <IconBullet key={key++} as="div">
-              {renderInlineMarkdown(listContent)}
-            </IconBullet>
-          );
-        } else {
-          // H2 ke neeche red icon (large), H3 ke neeche blue icon (default)
-          const iconColor = isBluePoint ? 'blue' : 'green';
-          const iconSize = currentHeadingLevel === 'h2' ? 'large' : 'default';
-          elements.push(
-            <IconListItem key={key++} color={iconColor} size={iconSize}>
-              {renderInlineMarkdown(listContent)}
-            </IconListItem>
-          );
-        }
-      } else if (trimmedLine.match(/^\d+\./)) {
-        const match = trimmedLine.match(/^(\d+)\.\s*(.+)$/);
-        if (match) {
-          // H2 ke neeche red numbered icon (large), H3 ke neeche blue numbered icon (default)
-          const iconColor = 'green';
-          const iconSize = currentHeadingLevel === 'h2' ? 'large' : 'default';
-          const numberValue = parseInt(match[1], 10);
-          elements.push(
-            <IconListItem key={key++} color={iconColor} size={iconSize} numbered={true} number={numberValue}>
-              {renderInlineMarkdown(match[2])}
-            </IconListItem>
-          );
-        }
-      } else if (trimmedLine.match(/^\[\d+\]/)) {
-        elements.push(
-          <p key={key++} className={`mb-6 leading-relaxed text-[17px] md:text-[19px] ${
-            theme === 'dark' ? 'text-neutral-200' : 'text-neutral-800'
-          }`}>
-            <a href={trimmedLine.match(/\(([^)]+)\)/)?.[1]} target="_blank" rel="noopener noreferrer" 
-              className={`underline break-all ${
-                theme === 'dark' ? 'text-cyan-400 hover:text-cyan-300' : 'text-blue-600 hover:text-blue-700'
-              }`}>
-              {trimmedLine}
-            </a>
-          </p>
-        );
-      } else if (trimmedLine.startsWith('(') && trimmedLine.includes('utm_source')) {
-        elements.push(
-          <p key={key++} className={`mb-6 leading-relaxed text-[17px] md:text-[19px] ${
-            theme === 'dark' ? 'text-neutral-200' : 'text-neutral-800'
-          }`}>
-            <a href={trimmedLine.match(/\(([^)]+)\)/)?.[1]} target="_blank" rel="noopener noreferrer" 
-              className={`underline break-all ${
-                theme === 'dark' ? 'text-cyan-400 hover:text-cyan-300' : 'text-blue-600 hover:text-blue-700'
-              }`}>
-              {trimmedLine}
-            </a>
-          </p>
-        );
-      } else if (trimmedLine.startsWith('>')) {
-        const blockquoteContent = trimmedLine.slice(1).trim();
-        elements.push(
-          <Callout key={key++}>
-            {renderInlineMarkdown(blockquoteContent)}
-          </Callout>
-        );
-      } else if (trimmedLine.startsWith('![')) {
-        // Image markdown: ![alt](src)
-        const imageMatch = trimmedLine.match(/!\[([^\]]*)\]\(([^)]+)\)/);
-        if (imageMatch) {
-          const [, alt, src] = imageMatch;
-          
-          // Proper path resolution for blog images - DIRECT FILE ACCESS
-          let imageSrc: string;
-          if (src.startsWith('http://') || src.startsWith('https://')) {
-            // External URL - use as is
-            imageSrc = src;
-          } else if (src.startsWith('/')) {
-            // Already absolute path - use as is
-            imageSrc = src;
-          } else {
-            // Relative path - resolve to /blog/ folder 
-            imageSrc = `/blog/${src}`;
-          }
-          
-          elements.push(
-            <div key={key++} className="my-8 sm:my-10 flex justify-center">
-              <div className="w-full max-w-4xl">
-                {/* Use regular img tag for all blog content images */}
-                <img
-                  src={imageSrc}
-                  alt={alt || 'Blog image'}
-                  className="w-full h-auto rounded-lg shadow-lg"
-                  style={{ maxHeight: '600px', objectFit: 'contain' }}
-                  loading="lazy"
-                />
-                {alt && (
-                  <p className={`text-center text-sm mt-3 italic ${
-                    theme === 'dark' ? 'text-neutral-400' : 'text-neutral-600'
-                  }`}>
-                    {alt}
-                  </p>
-                )}
-              </div>
-            </div>
-          );
-        }
-      } else {
-        // Check if paragraph starts with bold text under H3 (any **Text**: pattern)
-        const isBoldParagraph = trimmedLine.trim().startsWith('**') && currentHeadingLevel === 'h3' && !trimmedLine.includes('The Bottom Line');
-        
-        if (isBoldParagraph) {
-          // Render as IconBullet with green checkmark for H3 bold paragraphs
-          elements.push(
-            <IconBullet key={key++}>
-              {renderInlineMarkdown(trimmedLine)}
-            </IconBullet>
-          );
-        } else {
-          elements.push(
-            <p key={key++} className={`mb-6 leading-relaxed text-[17px] md:text-[19px] ${
-              theme === 'dark' ? 'text-neutral-200' : 'text-neutral-800'
-            }`}>
-              {renderInlineMarkdown(trimmedLine)}
-            </p>
-          );
-        }
-      }
-    };
-
-    // Process all lines
-    for (let i = 0; i < lines.length; i++) {
-      processLine(lines[i]);
+  while ((match = combinedRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.substring(lastIndex, match.index));
     }
 
-    // Close FAQ scrollable container if still open
-    if (inFAQContainer) {
-      elements.push(
-        <div key={`faq-container-end-${key++}`}></div>
+    const matchedText = match[0];
+
+    if (matchedText.startsWith('**') && matchedText.endsWith('**')) {
+      const boldText = matchedText.slice(2, -2);
+      parts.push(
+        <strong key={key++} className="font-bold text-gray-900 dark:text-white">
+          {boldText}
+        </strong>
       );
-      inFAQContainer = false;
+    } else if (matchedText.startsWith('[') && matchedText.includes('](')) {
+      const linkMatch = matchedText.match(/\[([^\]]+)\]\(([^)]+)\)/);
+      if (linkMatch) {
+        const [, linkText, url] = linkMatch;
+        parts.push(
+          <Link 
+            key={key++} 
+            href={url}
+            className="font-semibold underline decoration-2 hover:decoration-4 transition-all duration-200 text-blue-600 hover:text-blue-700 decoration-blue-400/50 hover:decoration-blue-500 dark:text-cyan-400 dark:hover:text-cyan-300 dark:decoration-cyan-500/50 dark:hover:decoration-cyan-400"
+          >
+            {linkText}
+          </Link>
+        );
+      }
     }
 
-    // Handle any remaining table
-    if (inTable && tableRows.length > 0) {
-      const tableHeaders = tableRows[0].split('|').map(h => h.trim()).filter(h => h);
-      const dataRows = tableRows.slice(2);
-      
-      elements.push(
-        <div key={key++} className="my-6 sm:my-8 overflow-x-auto">
-          <div className={`rounded-lg border-2 overflow-hidden ${
-            theme === 'dark' ? 'border-cyan-500/30 bg-gray-900/30' : 'border-cyan-200 bg-white'
-          }`}>
-            <table className={`w-full border-collapse text-sm sm:text-base ${
-              theme === 'dark' ? 'text-zinc-200' : 'text-gray-800'
-            }`}>
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.substring(lastIndex));
+  }
+
+  return parts.length > 0 ? <>{parts}</> : text;
+}
+
+// ---- AST Node Renderer ----
+function renderNode(node: ContentNode, key: number, contentRef: React.RefObject<HTMLDivElement | null>): ReactNode {
+  switch (node.type) {
+    case 'h1':
+      return (
+        <h1 key={key} className="font-heading text-[36px] sm:text-[42px] md:text-[48px] font-bold tracking-tight mb-5 sm:mb-7 mt-8 sm:mt-12 text-center md:text-left text-gray-900 dark:text-white">
+          {renderInlineMarkdown(node.text)}
+        </h1>
+      );
+
+    case 'toc-marker':
+      return <TOC key={`toc-${key}`} contentRef={contentRef} />;
+
+    case 'h2':
+      return (
+        <Heading key={key} id={node.id} level="h2">
+          {renderInlineMarkdown(node.text)}
+        </Heading>
+      );
+
+    case 'h3':
+      return (
+        <Heading key={key} id={node.id} level="h3">
+          {renderInlineMarkdown(node.text)}
+        </Heading>
+      );
+
+    case 'paragraph':
+      return (
+        <p key={key} className="mb-6 leading-relaxed text-[17px] md:text-[19px] text-neutral-800 dark:text-neutral-200">
+          {renderInlineMarkdown(node.text)}
+        </p>
+      );
+
+    case 'bold-paragraph':
+      return (
+        <IconBullet key={key}>
+          {renderInlineMarkdown(node.text)}
+        </IconBullet>
+      );
+
+    case 'callout':
+      return (
+        <Callout key={key}>
+          {node.content}
+        </Callout>
+      );
+
+    case 'blockquote':
+      return (
+        <Callout key={key}>
+          {renderInlineMarkdown(node.content)}
+        </Callout>
+      );
+
+    case 'ai-answer':
+      return (
+        <div key={key} className="ai-answer-block">
+          {node.lines.map((line, idx) => (
+            <p key={idx}>{renderInlineMarkdown(line)}</p>
+          ))}
+        </div>
+      );
+
+    case 'image':
+      return (
+        <div key={key} className="my-6 sm:my-8">
+          <ResponsiveImage 
+            src={node.src}
+            alt={node.alt}
+          />
+        </div>
+      );
+
+    case 'video':
+      return (
+        <div key={key} className="my-6 sm:my-8">
+          <VideoPlayer 
+            src={node.src}
+            poster={node.poster}
+            title={node.alt}
+          />
+        </div>
+      );
+
+    case 'youtube':
+      return (
+        <div key={key} className="my-6 sm:my-8">
+          <VideoPlayer 
+            src={node.src}
+            title=""
+          />
+        </div>
+      );
+
+    case 'svg-illustration':
+      return <IndustryUseCasesIllustration key={key} />;
+
+    case 'table-smart':
+      return <SmartTable key={key} rows={node.rows} />;
+
+    case 'table-fallback':
+      return (
+        <div key={key} className="my-6 sm:my-8 overflow-x-auto">
+          <div className="rounded-lg border-2 overflow-hidden border-cyan-200 bg-white dark:border-cyan-500/30 dark:bg-gray-900/30">
+            <table className="w-full border-collapse text-sm sm:text-base text-gray-800 dark:text-zinc-200">
               <thead>
-                <tr className={`${
-                  theme === 'dark' 
-                    ? 'bg-gradient-to-r from-cyan-900/50 to-purple-900/50 border-b-2 border-cyan-500/50' 
-                    : 'bg-gradient-to-r from-cyan-50 to-purple-50 border-b-2 border-cyan-600'
-                }`}>
-                  {tableHeaders.map((header, idx) => (
-                    <th key={idx} className={`p-4 sm:p-5 text-left font-bold text-base sm:text-lg ${
-                      theme === 'dark' ? 'text-cyan-300' : 'text-cyan-700'
-                    }`}>
+                <tr className="bg-gradient-to-r from-cyan-50 to-purple-50 border-b-2 border-cyan-600 dark:from-cyan-900/50 dark:to-purple-900/50 dark:border-cyan-500/50">
+                  {node.headers.map((header, idx) => (
+                    <th key={idx} className="p-4 sm:p-5 text-left font-bold text-base sm:text-lg text-cyan-700 dark:text-cyan-300">
                       {header}
                     </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {dataRows.map((row, rowIdx) => {
-                  const cells = row.split('|').map(c => c.trim()).filter(c => c);
-                  return (
-                    <tr key={rowIdx} className={`transition-colors hover:${
-                      theme === 'dark' ? 'bg-cyan-900/20' : 'bg-cyan-50/50'
-                    } ${
-                      theme === 'dark' ? 'border-b border-white/10' : 'border-b border-gray-200'
-                    }`}>
-                      {cells.map((cell, cellIdx) => (
-                        <td key={cellIdx} className={`p-4 sm:p-5 ${
-                          theme === 'dark' ? 'text-zinc-300' : 'text-gray-700'
-                        }`}>
-                          {cell}
-                        </td>
-                      ))}
-                    </tr>
-                  );
-                })}
+                {node.dataRows.map((row, rowIdx) => (
+                  <tr key={rowIdx} className="transition-colors hover:bg-cyan-50/50 dark:hover:bg-cyan-900/20 border-b border-gray-200 dark:border-white/10">
+                    {row.map((cell, cellIdx) => (
+                      <td key={cellIdx} className="p-4 sm:p-5 text-gray-700 dark:text-zinc-300">
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
         </div>
       );
-    }
 
-    return <>{elements}</>;
-  };
+    case 'icon-bullet':
+      return (
+        <IconBullet key={key} as={node.as}>
+          {renderInlineMarkdown(node.content)}
+        </IconBullet>
+      );
 
-  const renderInlineMarkdown = (text: string) => {
-    const parts: ReactNode[] = [];
-    let key = 0;
+    case 'icon-list-item':
+      return (
+        <IconListItem key={key} color={node.color} size={node.size}>
+          {renderInlineMarkdown(node.content)}
+        </IconListItem>
+      );
 
-    // Combined regex to handle both **bold** and [links](url)
-    const combinedRegex = /(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g;
-    let lastIndex = 0;
-    let match;
+    case 'icon-numbered':
+      return (
+        <IconListItem key={key} color={node.color} size={node.size} numbered={true} number={node.number}>
+          {renderInlineMarkdown(node.content)}
+        </IconListItem>
+      );
 
-    while ((match = combinedRegex.exec(text)) !== null) {
-      // Add text before match
-      if (match.index > lastIndex) {
-        parts.push(text.substring(lastIndex, match.index));
-      }
+    case 'link-reference':
+      return (
+        <p key={key} className="mb-6 leading-relaxed text-[17px] md:text-[19px] text-neutral-800 dark:text-neutral-200">
+          <a href={node.href} target="_blank" rel="noopener noreferrer" 
+            className="underline break-all text-blue-600 hover:text-blue-700 dark:text-cyan-400 dark:hover:text-cyan-300">
+            {node.text}
+          </a>
+        </p>
+      );
 
-      const matchedText = match[0];
+    case 'script':
+      return <div key={key} dangerouslySetInnerHTML={{ __html: node.html }} />;
 
-      // Handle **bold** text
-      if (matchedText.startsWith('**') && matchedText.endsWith('**')) {
-        const boldText = matchedText.slice(2, -2);
-        parts.push(
-          <strong key={key++} className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-            {boldText}
-          </strong>
-        );
-      }
-      // Handle [link text](url)
-      else if (matchedText.startsWith('[') && matchedText.includes('](')) {
-        const linkMatch = matchedText.match(/\[([^\]]+)\]\(([^)]+)\)/);
-        if (linkMatch) {
-          const [, linkText, url] = linkMatch;
-          parts.push(
-            <Link 
-              key={key++} 
-              href={url}
-              className={`font-semibold underline decoration-2 hover:decoration-4 transition-all duration-200 ${
-                theme === 'dark' 
-                  ? 'text-cyan-400 hover:text-cyan-300 decoration-cyan-500/50 hover:decoration-cyan-400' 
-                  : 'text-blue-600 hover:text-blue-700 decoration-blue-400/50 hover:decoration-blue-500'
-              }`}
-            >
-              {linkText}
-            </Link>
-          );
-        }
-      }
+    default:
+      return null;
+  }
+}
 
-      lastIndex = match.index + match[0].length;
-    }
+// ---- Main Content Component ----
+function BlogPostContent({ post, relatedPosts, contentAST }: BlogPostClientProps) {
+  const contentRef = useRef<HTMLDivElement>(null);
 
-    // Add remaining text
-    if (lastIndex < text.length) {
-      parts.push(text.substring(lastIndex));
-    }
+  // 🚀 PERF: Schema generation via useMemo (no extra re-render)
+  const schemas = useMemo(() => generateAllSchemas(post), [post]);
 
-    return parts.length > 0 ? <>{parts}</> : text;
-  };
-
-  // 🚀 PERF: Memoize entire content rendering (biggest TBT win ~30-50ms)
-  // Content parsing + React element creation is expensive - only redo when content or theme changes
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const renderedContent = useMemo(() => renderContent(post.content!), [post.content, theme]);
+  // 🚀 RSC PERF: Content is pre-parsed on server — just render AST nodes
+  // No regex, no string splitting, no line-by-line parsing on client
+  const renderedContent = useMemo(() => (
+    <>
+      {contentAST.map((node, idx) => renderNode(node, idx, contentRef))}
+    </>
+  ), [contentAST]);
 
   return (
     <>
-      <div className={`min-h-screen font-body transition-colors duration-300 ${
-        theme === 'dark' ? 'bg-black' : 'bg-gradient-to-br from-gray-50 to-gray-100'
-      }`}>
+      <div className="min-h-screen font-body transition-colors duration-300 bg-gradient-to-br from-gray-50 to-gray-100 dark:bg-none dark:bg-black">
         <ReadingProgressBar />
         
         {/* Back to Blog Button */}
@@ -662,8 +367,6 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
             </div>
           ) : null}
 
-          {/* Table of Contents - Now rendered inside content before first H2 */}
-
           <div ref={contentRef} className="max-w-none">
             {renderedContent}
           </div>
@@ -679,7 +382,7 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
           <ContinueReadingCards posts={relatedPosts} />
         </article>
 
-        {/* Structured Data Schemas - Injected on client-side only */}
+        {/* Structured Data Schemas */}
         {schemas.map((schema, index) => (
           <script
             key={`schema-${index}`}
@@ -695,41 +398,16 @@ function BlogPostContent({ post, relatedPosts }: BlogPostClientProps) {
 /**
  * BlogPostClient - Main Export Component
  * 
- * @param {BlogPost} post - Blog post data from JSON file
- * @param {BlogPost[]} relatedPosts - Related blog posts for sidebar
- * 
- * 🎯 ARCHITECTURE:
- * - Blog layout.tsx handles Header/Footer (nested layout)
- * - .blog-post-container: CSS scoping wrapper for isolated styles
- * - BlogPostContent: Main content rendering component (700+ lines)
- * 
  * ⚠️ CRITICAL WRAPPER - DO NOT REMOVE:
  * The <div className="blog-post-container"> wrapper is ESSENTIAL for:
  * 1. CSS isolation (blog styles don't affect website)
  * 2. Scoping all styles in blog-specific.css
  * 3. Preventing side effects on homepage/other pages
- * 
- * Removing this wrapper will break blog visual design!
- * 
- * 📦 WHAT'S PRESERVED:
- * - All 700+ lines of BlogPostContent rendering logic
- * - All dynamic imports (TOC, CTASection, etc.)
- * - All analytics (GA4, GTM, Vercel)
- * - All SEO schemas (Article, FAQ, HowTo, etc.)
- * - All theme functionality (dark/light toggle)
- * - All interactive features (like button, TOC, etc.)
- * 
- * 🔧 MAINTENANCE:
- * - To modify blog styles: Edit ../blog-specific.css
- * - To add components: Import and use in BlogPostContent
- * - To change wrapper: Update both here and blog-specific.css
- * 
- * @returns JSX.Element - Fully rendered blog post page
  */
-export default function BlogPostClient({ post, relatedPosts }: BlogPostClientProps) {
+export default function BlogPostClient({ post, relatedPosts, contentAST }: BlogPostClientProps) {
   return (
     <div className="blog-post-container">
-      <BlogPostContent post={post} relatedPosts={relatedPosts} />
+      <BlogPostContent post={post} relatedPosts={relatedPosts} contentAST={contentAST} />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getBlogPostBySlug, getAllBlogPosts, getRelatedBlogPosts } from '@/lib/blog';
 import type { Metadata } from 'next';
 import BlogPostClient from './BlogPostClient';
+import { parseMarkdownToAST } from '@/lib/markdown-parser';
 import fs from 'fs';
 import path from 'path';
 
@@ -103,7 +104,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description,
       siteName: 'TEELI.NET',
       publishedTime: publishDate,
-      modifiedTime: publishDate, // Can be updated with lastModified field later
+      modifiedTime: publishDate,
       authors: [post.author],
       section: post.category,
       tags: uniqueKeywords,
@@ -123,7 +124,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     // Twitter Card (optimized for X/Twitter)
     twitter: {
       card: 'summary_large_image',
-      site: '@teeli_net', // Add your Twitter handle
+      site: '@teeli_net',
       creator: '@teeli_net',
       title: post.metaTitle || post.title,
       description,
@@ -165,6 +166,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   // Get related blog posts
   const relatedPosts = getRelatedBlogPosts(slug, 3);
 
+  // 🚀 RSC PERF: Parse markdown on the SERVER
+  // This eliminates ~30-50ms TBT from client-side regex parsing.
+  // The client receives structured AST nodes instead of raw markdown string.
+  const contentAST = parseMarkdownToAST(post.content);
+
   // 🎯 FIX #2: Critical CSS Inlining - Read and minify at build time
   const criticalCSS = fs.readFileSync(
     path.join(process.cwd(), 'src/app/blog/critical-blog.css'),
@@ -187,7 +193,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         Do NOT add manual ReactDOM.preload() here — it preloads the raw image URL while
         Next.js Image serves through /_next/image (different URL), causing DOUBLE download.
       */}
-      <BlogPostClient post={post} relatedPosts={relatedPosts} />
+      <BlogPostClient post={post} relatedPosts={relatedPosts} contentAST={contentAST} />
     </>
   );
 }

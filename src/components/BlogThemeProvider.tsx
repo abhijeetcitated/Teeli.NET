@@ -34,10 +34,12 @@ export function BlogThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!mounted) return;
     
-    if (theme === 'light') {
-      document.documentElement.classList.add('light-theme');
-    } else {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
       document.documentElement.classList.remove('light-theme');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light-theme');
     }
     localStorage.setItem('blog-theme', theme);
   }, [theme, mounted]);
