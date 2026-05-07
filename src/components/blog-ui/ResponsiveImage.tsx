@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import { usePathname } from 'next/navigation';
 
 interface ResponsiveImageProps {
   src: string;
@@ -40,10 +39,10 @@ export default function ResponsiveImage({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [imgError, setImgError] = useState(false);
-  const pathname = usePathname();
   
-  // Check if current blog needs 4:3 ratio
-  const is43RatioBlog = pathname?.includes('rendering-drawing-definition-purpose-workflow-architectural-visualisation-2025');
+  // 🚀 PERF: Check via src prop instead of usePathname() 
+  // Removes client-side routing context dependency for every image render
+  const is43RatioBlog = src.includes('rendering-drawing-definition-purpose-workflow-architectural-visualisation-2025');
   
   // PERFORMANCE: Detect hero images for optimized loading
   const isHeroImage = priority || src.includes('-hero.webp') || src.includes('-hero.avif');
@@ -171,7 +170,7 @@ export default function ResponsiveImage({
         width={width}
         height={height}
         loading={priority ? "eager" : "lazy"}
-        decoding={priority ? "sync" : "async"}
+        decoding="async"
         fetchPriority={priority ? "high" : "auto"}
         sizes={priority
           ? "(max-width: 480px) 100vw, (max-width: 768px) 90vw, (max-width: 1024px) 85vw, 800px"

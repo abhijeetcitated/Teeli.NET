@@ -53,31 +53,35 @@ export default function TOC({ contentRef }: TOCProps) {
   useEffect(() => {
     if (tocItems.length === 0) return;
 
-    let ticking = false;
-    
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + 100;
-
-      for (let i = tocItems.length - 1; i >= 0; i--) {
-        const element = document.getElementById(tocItems[i].id);
-        if (element && element.offsetTop <= scrollPosition) {
-          setActiveId(prev => prev !== tocItems[i].id ? tocItems[i].id : prev);
-          break;
+    // 🚀 PERF: IntersectionObserver instead of scroll + offsetTop
+    // Eliminates forced reflow (was 33ms per PageSpeed audit)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Find the topmost visible heading
+        const visibleEntries = entries
+          .filter(entry => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        
+        if (visibleEntries.length > 0) {
+          setActiveId(prev => {
+            const newId = visibleEntries[0].target.id;
+            return prev !== newId ? newId : prev;
+          });
         }
+      },
+      {
+        rootMargin: '-80px 0px -70% 0px', // Top offset for sticky header, bottom bias
+        threshold: 0,
       }
-      ticking = false;
-    };
+    );
 
-    const onScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(handleScroll);
-        ticking = true;
-      }
-    };
+    // Observe all heading elements
+    tocItems.forEach(item => {
+      const element = document.getElementById(item.id);
+      if (element) observer.observe(element);
+    });
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => observer.disconnect();
   }, [tocItems]);
 
   const handleClick = (id: string) => {
