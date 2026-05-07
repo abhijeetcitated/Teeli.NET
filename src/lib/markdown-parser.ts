@@ -32,8 +32,8 @@ export type ContentNode =
   | { type: 'table-smart'; rows: string[] }
   | { type: 'table-fallback'; headers: string[]; dataRows: string[][] }
   | { type: 'icon-bullet'; content: string; as: 'div' | 'li' }
-  | { type: 'icon-list-item'; content: string; color: string; size: string }
-  | { type: 'icon-numbered'; content: string; number: number; color: string; size: string }
+  | { type: 'icon-list-item'; content: string; color: 'blue' | 'red' | 'green'; size: 'default' | 'large' }
+  | { type: 'icon-numbered'; content: string; number: number; color: 'blue' | 'red' | 'green'; size: 'default' | 'large' }
   | { type: 'link-reference'; text: string; href: string }
   | { type: 'bold-paragraph'; text: string }
   | { type: 'script'; html: string }
@@ -191,8 +191,8 @@ export function parseMarkdownToAST(content: string): ContentNode[] {
       if (isH3BoldPoint) {
         nodes.push({ type: 'icon-bullet', content: listContent, as: 'div' });
       } else {
-        const iconColor = isBluePoint ? 'blue' : 'green';
-        const iconSize = currentHeadingLevel === 'h2' ? 'large' : 'default';
+        const iconColor: 'blue' | 'red' | 'green' = isBluePoint ? 'blue' : 'green';
+        const iconSize: 'default' | 'large' = currentHeadingLevel === 'h2' ? 'large' : 'default';
         nodes.push({ type: 'icon-list-item', content: listContent, color: iconColor, size: iconSize });
       }
     }
@@ -200,8 +200,8 @@ export function parseMarkdownToAST(content: string): ContentNode[] {
     else if (trimmedLine.match(/^\d+\./)) {
       const match = trimmedLine.match(/^(\d+)\.\s*(.+)$/);
       if (match) {
-        const iconColor = 'green';
-        const iconSize = currentHeadingLevel === 'h2' ? 'large' : 'default';
+        const iconColor: 'blue' | 'red' | 'green' = 'green';
+        const iconSize: 'default' | 'large' = currentHeadingLevel === 'h2' ? 'large' : 'default';
         const numberValue = parseInt(match[1], 10);
         nodes.push({ type: 'icon-numbered', content: match[2], number: numberValue, color: iconColor, size: iconSize });
       }
