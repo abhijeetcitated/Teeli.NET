@@ -15,7 +15,7 @@ type TermsSection = {
 
 const sectionIcons = [FileText, Scale, CheckCircle, Ban, Shield, AlertTriangle];
 
-const sections: TermsSection[] = [
+const sections: Omit<TermsSection, 'icon'>[] = [
   {
     title: '1. Agreement to These Terms',
     paragraphs: [
