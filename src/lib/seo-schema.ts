@@ -1,5 +1,6 @@
 import { BlogPost, FAQItem } from './blog';
 import { extractVideosFromContent, VideoInfo } from './extract-video';
+import { LINKEDIN_COMPANY_URL } from './social-links';
 
 // Extract keywords from content headings
 export function extractKeywords(content: string): string[] {
@@ -158,8 +159,7 @@ export function generateArticleSchema(post: BlogPost, canonicalUrl: string) {
       },
       "sameAs": [
         "https://twitter.com/teeli_net",
-        "https://linkedin.com/company/teeli",
-        "https://github.com/teeli-net"
+        LINKEDIN_COMPANY_URL
       ]
     },
     "mainEntityOfPage": {
