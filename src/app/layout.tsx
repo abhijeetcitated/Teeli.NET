@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
+import SiteHeader from "@/components/SiteHeader";
 import Script from 'next/script';
 import "./globals.css";
 
@@ -93,6 +94,7 @@ export default function RootLayout({
 
         {/* Analytics Provider for automatic route tracking */}
         <AnalyticsProvider>
+          <SiteHeader />
           {children}
         </AnalyticsProvider>
         

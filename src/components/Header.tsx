@@ -5,52 +5,13 @@ import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-
-const navItems = ["Home", "Solutions", "Technology", "Projects", "Insights", "Company"];
-
-const hiddenNavItems = new Set(["Projects"]);
-
-const hiddenDropdownHrefs: Record<string, Set<string>> = {
-  Company: new Set(["/company/team", "/company/careers"]),
-  Insights: new Set(["/insights/reports", "/insights/press"]),
-};
-
-// Dropdown menu items for each section
-const dropdownItems: Record<string, { label: string; href: string; icon?: string }[]> = {
-  "Solutions": [
-    { label: "AI Rendering", href: "/solutions/ai-rendering" },
-    { label: "Image → 3D Conversion", href: "/solutions/image-to-3d" },
-    { label: "Cloud GPU Rendering", href: "/solutions/cloud-gpu" },
-    { label: "Virtual Production", href: "/solutions/virtual-production" },
-    { label: "Sustainability Pipeline", href: "/solutions/sustainability" }
-  ],
-  "Technology": [
-    { label: "Rendering Engine", href: "/technology/rendering-engine" },
-    { label: "AI & ML Stack", href: "/technology/ai-ml" },
-    { label: "Multi-Cloud Infrastructure", href: "/technology/multi-cloud" },
-    { label: "Research & Innovation", href: "/technology/research" }
-  ],
-  "Projects": [
-    { label: "Case Studies", href: "/projects/case-studies" },
-    { label: "Showreel / Gallery", href: "/projects/showreel" },
-    { label: "Interactive Viewer", href: "/projects/viewer" }
-  ],
-  "Insights": [
-    { label: "Blog", href: "/blog" },
-    { label: "Industry Reports", href: "/insights/reports" },
-    { label: "Press & News", href: "/insights/press" }
-  ],
-  "Company": [
-    { label: "About Us", href: "/company/about" },
-    { label: "Team / Culture", href: "/company/team" },
-    { label: "Careers", href: "/company/careers" }
-  ]
-};
-
-const getVisibleDropdownItems = (section: string) =>
-  dropdownItems[section]?.filter((sub) => !hiddenDropdownHrefs[section]?.has(sub.href)) ?? [];
-
-const getNavLink = (item: string) => (item === "Home" ? "/" : "#");
+import {
+  headerNavItems as navItems,
+  hiddenNavItems,
+  dropdownItems,
+  getVisibleDropdownItems,
+  getNavLink,
+} from '@/lib/site-nav';
 
 export default function Header() {
   const pathname = usePathname();

@@ -2,7 +2,6 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import {
   FileText,
@@ -205,7 +204,6 @@ export default function IndustryReportsPage() {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-emerald-950 via-teal-950 to-slate-950 text-white overflow-hidden">
-      <Header />
 
       {/* Unique Hero - Dashboard Header */}
       <section className="relative pt-32 md:pt-32 lg:pt-40 px-4 sm:px-6 lg:px-8">

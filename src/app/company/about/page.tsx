@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import Header from '@/components/Header';
 import { Rocket, Users, Zap, Target, Award, Globe, TrendingUp, Code2 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -42,7 +41,6 @@ export default function AboutPage() {
 
   return (
     <>
-      <Header />
       
       {/* Hero Section */}
       <section className="relative min-h-screen w-full bg-black flex items-center justify-center px-4 py-24 pt-32 overflow-hidden">

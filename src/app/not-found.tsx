@@ -1,13 +1,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import './not-found.css';
 
 export default function NotFound() {
   return (
     <>
-      <Header />
       <main className="nf-page">
 
         {/* ═══════════════════════════════════════════

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import Header from '@/components/Header';
 import { Mail, HeadphonesIcon, Send, MapPin } from 'lucide-react';
 
 const showContactForm = false;
@@ -49,7 +48,6 @@ export default function ContactPage() {
 
   return (
     <>
-      <Header />
       
       {/* Hero Section */}
       <section className="relative min-h-screen w-full bg-black flex items-center justify-center px-4 py-24 pt-32 overflow-hidden">

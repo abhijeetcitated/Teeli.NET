@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { 
   Brain, 
@@ -29,7 +28,6 @@ import Link from 'next/link';
 export default function AIRenderingPage() {
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden">
-      <Header />
 
       {/* Unique Hero - Side Split Design */}
       <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 px-4 sm:px-6 lg:px-8">
@@ -49,25 +47,25 @@ export default function AIRenderingPage() {
               </div>
               
               <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-                Neural Rendering
+                AI-Assisted Rendering
                 <span className="block bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400">
-                  Reimagined
+                  In the Browser
                 </span>
               </h1>
               
               <p className="text-xl text-zinc-400 mb-8 leading-relaxed">
-                Harness the power of artificial intelligence to generate photorealistic renders in seconds, not hours. 
-                Our neural rendering engines understand light, materials, and composition like never before.
+                Upload 3D assets, diagnose and repair geometry, configure scenes, and run cloud renders—all in one browser workflow. 
+                AI-assisted denoising and mesh tools help you iterate faster without replacing proven ray-tracing pipelines.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/contact">
+                <Link href="https://app.teeli.net/">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="px-8 py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg shadow-lg shadow-purple-500/30 hover:shadow-xl transition-all flex items-center gap-2"
                   >
-                    Experience AI Rendering
+                    Try Teeli Free
                     <ArrowRight className="w-5 h-5" />
                   </motion.button>
                 </Link>
@@ -82,10 +80,10 @@ export default function AIRenderingPage() {
               className="grid grid-cols-2 gap-6"
             >
               {[
-                { value: "100x", label: "Faster", icon: Zap, color: "from-purple-500 to-purple-700" },
-                { value: "99.8%", label: "Accuracy", icon: Target, color: "from-pink-500 to-pink-700" },
-                { value: "24/7", label: "Learning", icon: Brain, color: "from-purple-500 to-pink-500" },
-                { value: "∞", label: "Iterations", icon: Infinity, color: "from-pink-500 to-purple-700" }
+                { value: "Browser", label: "Based workflow", icon: Zap, color: "from-purple-500 to-purple-700" },
+                { value: "AI", label: "Mesh & denoise", icon: Target, color: "from-pink-500 to-pink-700" },
+                { value: "24/7", label: "Cloud queues", icon: Brain, color: "from-purple-500 to-pink-500" },
+                { value: "GPU", label: "On demand", icon: Infinity, color: "from-pink-500 to-purple-700" }
               ].map((stat, index) => (
                 <motion.div
                   key={index}
@@ -115,10 +113,10 @@ export default function AIRenderingPage() {
             className="text-center mb-16"
           >
             <h2 className="font-heading text-4xl md:text-5xl font-bold mb-4 text-white">
-              How AI Transforms Rendering
+              How AI Assists Rendering
             </h2>
             <p className="text-lg text-zinc-400 max-w-3xl mx-auto">
-              Traditional rendering relies on computational physics. AI rendering learns from millions of real-world scenes.
+              Production rendering still relies on physically based light transport. AI helps by reducing noise, speeding previews, and automating geometry checks—not by replacing ray tracing entirely.
             </p>
           </motion.div>
 
@@ -130,20 +128,20 @@ export default function AIRenderingPage() {
             {[
               {
                 title: "Traditional Rendering",
-                description: "Calculate every light ray, reflection, and material interaction. Hours of computation for a single frame.",
-                time: "8-24 hours",
+                description: "Path-traced or ray-traced frames converge sample-by-sample. Final production quality often takes hours per frame at high resolution.",
+                time: "Hours per frame",
                 color: "border-red-500/30 bg-red-950/20"
               },
               {
-                title: "AI Rendering",
-                description: "Neural networks predict light behavior, material properties, and scene composition. Generate photorealistic results instantly.",
-                time: "30-120 seconds",
+                title: "AI-Assisted Previews",
+                description: "Fewer samples plus AI denoising produce cleaner previews faster—useful for lighting and composition iteration before final renders.",
+                time: "Minutes (preview)",
                 color: "border-purple-500/30 bg-purple-950/20"
               },
               {
                 title: "Hybrid Approach",
-                description: "Combine AI predictions with traditional ray tracing for ultimate quality and speed.",
-                time: "2-5 minutes",
+                description: "Combine cloud ray tracing with AI denoising and Teeli's mesh repair pipeline for a practical balance of quality and turnaround.",
+                time: "Varies by scene",
                 color: "border-pink-500/30 bg-pink-950/20"
               }
             ].map((item, index) => (
@@ -182,10 +180,10 @@ export default function AIRenderingPage() {
             className="text-center mb-16"
           >
             <h2 className="font-heading text-4xl md:text-5xl font-bold mb-4 text-white">
-              Neural Network Capabilities
+              AI in the Teeli Pipeline
             </h2>
             <p className="text-lg text-zinc-400">
-              Powered by advanced deep learning architectures
+              Assistive automation across upload, diagnosis, repair, and render—not a black-box replacement for your DCC tools
             </p>
           </motion.div>
 
@@ -195,20 +193,20 @@ export default function AIRenderingPage() {
               {
                 icon: Eye,
                 title: "Scene Understanding",
-                description: "AI analyzes your scene geometry, lighting setup, and materials to predict optimal rendering parameters.",
-                connections: ["Light Prediction", "Material Analysis", "Geometry Recognition"]
+                description: "Automated geometry analysis flags non-manifold meshes, holes, and other issues before they break your render queue.",
+                connections: ["Geometry checks", "Issue detection", "Repair suggestions"]
               },
               {
                 icon: Sparkles,
-                title: "Light Estimation",
-                description: "Neural networks learn from millions of real-world lighting scenarios to predict accurate light behavior.",
-                connections: ["Global Illumination", "Shadow Calculation", "Reflection Mapping"]
+                title: "AI Denoising",
+                description: "Industry-standard AI denoising reduces noise in low-sample previews so you can review lighting and materials sooner.",
+                connections: ["Preview acceleration", "Noise reduction", "Iterative feedback"]
               },
               {
                 icon: Layers,
                 title: "Material Intelligence",
-                description: "AI understands material properties and how they interact with light across different environments.",
-                connections: ["PBR Materials", "Texture Synthesis", "Surface Response"]
+                description: "PBR-aware processing helps preserve material response through repair and export steps in your browser workflow.",
+                connections: ["PBR materials", "Texture handling", "Export readiness"]
               }
             ].map((feature, index) => (
               <motion.div
@@ -350,7 +348,7 @@ export default function AIRenderingPage() {
             className="text-center mb-16"
           >
             <h2 className="font-heading text-4xl md:text-5xl font-bold mb-4 text-white">
-              AI Rendering Process
+              Teeli Rendering Workflow
             </h2>
           </motion.div>
 
@@ -359,26 +357,26 @@ export default function AIRenderingPage() {
             {[
               { 
                 step: "01", 
-                title: "Input Scene", 
-                description: "Upload your 3D scene or provide design specifications.",
+                title: "Upload Assets", 
+                description: "Upload models, meshes, and scenes directly in the browser—no desktop install required.",
                 icon: Network
               },
               { 
                 step: "02", 
-                title: "AI Analysis", 
-                description: "Neural networks analyze geometry, lighting, and materials.",
+                title: "Diagnose & Repair", 
+                description: "Automated geometry checks and repair heuristics surface issues before rendering starts.",
                 icon: Brain
               },
               { 
                 step: "03", 
-                title: "Predict Rendering", 
-                description: "AI predicts optimal rendering parameters and light behavior.",
+                title: "Configure & Queue", 
+                description: "Set render settings and submit jobs to cloud GPU infrastructure when you are ready.",
                 icon: Zap
               },
               { 
                 step: "04", 
-                title: "Generate Output", 
-                description: "Receive photorealistic renders in seconds.",
+                title: "Export Results", 
+                description: "Download renders and diagnostics. Review outputs before using them in production workflows.",
                 icon: Sparkles
               }
             ].map((item, index) => (
@@ -424,10 +422,10 @@ export default function AIRenderingPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
             {[
-              { name: "Neural Networks", icon: Brain },
-              { name: "Deep Learning", icon: Network },
+              { name: "Cloud GPUs", icon: Brain },
+              { name: "AI Denoising", icon: Network },
               { name: "Ray Tracing", icon: Eye },
-              { name: "Path Tracing", icon: Sparkles },
+              { name: "Mesh Repair", icon: Sparkles },
               { name: "PBR Materials", icon: Layers }
             ].map((tech, index) => (
               <motion.div
@@ -463,14 +461,14 @@ export default function AIRenderingPage() {
                 </span>
               </h2>
               <p className="text-xl text-zinc-400 mb-8 leading-relaxed">
-                Transform your workflow with neural rendering technology. Faster, smarter, more accurate.
+                A browser-based 3D workflow with cloud rendering and AI-assisted tools. Faster iteration—not magic shortcuts.
               </p>
               <div className="space-y-4">
                 {[
-                  "100x faster than traditional rendering",
-                  "Photorealistic quality guaranteed",
-                  "Cost-effective per render",
-                  "Scalable to any project size"
+                  "Automated mesh diagnosis and repair",
+                  "AI denoising for faster preview feedback",
+                  "Cloud GPU rendering on demand",
+                  "Browser-based—no desktop installs"
                 ].map((benefit, index) => (
                   <div key={index} className="flex items-center gap-3">
                     <CheckCircle2 className="w-6 h-6 text-purple-400 flex-shrink-0" />
@@ -492,9 +490,9 @@ export default function AIRenderingPage() {
                 Start Your AI Rendering Journey
               </h3>
               <p className="text-zinc-300 mb-8">
-                Get started with our AI rendering platform today.
+                Start with a free account and test the full upload-to-render workflow at app.teeli.net.
               </p>
-              <Link href="/contact">
+              <Link href="https://app.teeli.net/">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}

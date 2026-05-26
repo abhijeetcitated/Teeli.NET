@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { notFound } from 'next/navigation';
-import Header from '@/components/Header';
 import { Book, Code, Layers, Database, Cloud, Shield, Zap, Settings } from 'lucide-react';
 import Link from 'next/link';
 
@@ -43,7 +42,7 @@ export default function TechDocsPage() {
     {
       icon: Zap,
       title: 'AI & ML Features',
-      description: 'Neural rendering, image-to-3D conversion, and AI pipelines',
+      description: 'Neural rendering, mesh repair, and AI-assisted render pipelines',
       href: '/docs/ai-features',
       color: 'from-yellow-500 to-amber-600'
     },
@@ -81,7 +80,6 @@ export default function TechDocsPage() {
 
   return (
     <>
-      <Header />
       
       {/* Hero Section */}
       <section className="relative min-h-screen w-full bg-black flex items-center justify-center px-4 py-24 pt-32 overflow-hidden">

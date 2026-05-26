@@ -2,7 +2,6 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import {
   Play,
@@ -198,7 +197,6 @@ export default function ShowreelPage() {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-red-950 via-rose-950 to-black text-white overflow-hidden">
-      <Header />
 
       {/* Unique Hero - Featured Video Player */}
       <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-32 md:pt-32 lg:pt-40 px-4 sm:px-6 lg:px-8">

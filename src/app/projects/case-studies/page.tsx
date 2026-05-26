@@ -2,7 +2,6 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import {
   ArrowRight,
@@ -156,7 +155,6 @@ export default function CaseStudiesPage() {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-amber-950 via-yellow-950 to-black text-white overflow-hidden">
-      <Header />
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-32 md:pt-32 lg:pt-40 px-4 sm:px-6 lg:px-8">

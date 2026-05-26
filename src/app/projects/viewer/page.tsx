@@ -2,7 +2,6 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import {
   Box,
@@ -129,7 +128,6 @@ export default function InteractiveViewerPage() {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-slate-950 via-blue-950 to-black text-white overflow-hidden">
-      <Header />
 
       {/* Unique Hero - Minimal Tech Header */}
       <section className="relative pt-32 md:pt-32 lg:pt-40 px-4 sm:px-6 lg:px-8">

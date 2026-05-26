@@ -2,7 +2,6 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import {
   Newspaper,
@@ -214,7 +213,6 @@ export default function PressNewsPage() {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-purple-950 via-violet-950 to-slate-950 text-white overflow-hidden">
-      <Header />
 
       {/* News Ticker */}
       <div className="fixed top-0 left-0 right-0 z-40 bg-gradient-to-r from-purple-900/90 via-violet-900/90 to-purple-900/90 backdrop-blur-sm border-b border-purple-700/30">

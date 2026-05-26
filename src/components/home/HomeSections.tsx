@@ -10,12 +10,6 @@ import { OptimizedSection } from '@/components/home';
 // Since page.tsx is now a Server Component, we need this wrapper
 // ============================================
 
-// Navbar - Optimized version with CSS animations instead of Framer Motion
-const FloatingNavbar = dynamic(() => import('@/components/FloatingNavbarOptimized'), {
-  ssr: false,
-  loading: () => null
-});
-
 // Lazy load sections - only load JS when section is about to be visible
 const ProblemSection = dynamic(() => import('@/components/home/ProblemSection'), {
   ssr: false
@@ -61,9 +55,6 @@ const Footer = dynamic(() => import('@/components/FooterOptimized'), {
 export default function HomeSections() {
   return (
     <>
-      {/* Navbar - client-side for interactions */}
-      <FloatingNavbar />
-      
       {/* Below-fold content - Lazy loaded with intersection observer */}
       <OptimizedSection id="problem">
         <ProblemSection />

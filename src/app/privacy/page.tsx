@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import Header from '@/components/Header';
 import { Shield, Eye, Lock, Database, FileText, UserCheck } from 'lucide-react';
 import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
@@ -226,7 +225,6 @@ const sectionsWithIcons: PrivacySection[] = privacySections.map((section, index)
 export default function PrivacyPage() {
   return (
     <>
-      <Header />
 
       {/* Hero Section */}
       <section className="relative min-h-screen w-full bg-black flex items-center justify-center px-4 py-24 pt-32 overflow-hidden">

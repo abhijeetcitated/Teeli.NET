@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles, X } from 'lucide-react';
-import Header from '@/components/Header';
 
 function LoginPageContent() {
   const router = useRouter();
@@ -60,7 +59,6 @@ function LoginPageContent() {
 
   return (
     <>
-      <Header />
       <main className="relative min-h-screen w-full bg-black flex items-center justify-center px-4 py-12 md:py-16 lg:py-8 xl:py-12 pt-24 md:pt-28 lg:pt-28 xl:pt-32">
         {/* Animated background gradient */}
         <div className="absolute inset-0 overflow-hidden">

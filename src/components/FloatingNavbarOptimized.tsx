@@ -4,57 +4,12 @@ import { useState, useEffect, useCallback, memo, type MouseEvent } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-
-const navItems = [
-  { label: "Solutions" },
-  { label: "Technology" },
-  { label: "Projects" },
-  { label: "Insights" },
-  { label: "Company" },
-  { label: "GreenChain", href: "/solutions/sustainability" },
-];
-
-const hiddenNavItems = new Set(["Projects"]);
-
-const hiddenDropdownHrefs: Record<string, Set<string>> = {
-  Company: new Set(["/company/team", "/company/careers"]),
-  Insights: new Set(["/insights/reports", "/insights/press"]),
-};
-
-const dropdownItems: Record<string, { label: string; href: string; description?: string }[]> = {
-  "Solutions": [
-    { label: "AI Rendering", href: "/solutions/ai-rendering", description: "Neural-powered render optimization" },
-    { label: "Image → 3D", href: "/solutions/image-to-3d", description: "Convert photos to 3D models" },
-    { label: "Cloud GPU", href: "/solutions/cloud-gpu", description: "Distributed GPU infrastructure" },
-    { label: "Virtual Production", href: "/solutions/virtual-production", description: "Real-time visualization" },
-    { label: "Sustainability", href: "/solutions/sustainability", description: "Carbon-neutral rendering" },
-  ],
-  "Technology": [
-    { label: "Rendering Engine", href: "/technology/rendering-engine", description: "Core rendering pipeline" },
-    { label: "AI & ML Stack", href: "/technology/ai-ml", description: "Machine learning infrastructure" },
-    { label: "Multi-Cloud", href: "/technology/multi-cloud", description: "AWS, GCP, Azure integration" },
-    { label: "Research", href: "/technology/research", description: "Innovation & R&D" },
-  ],
-  "Projects": [
-    { label: "Case Studies", href: "/projects/case-studies", description: "Client success stories" },
-    { label: "Showreel", href: "/projects/showreel", description: "Portfolio gallery" },
-    { label: "Interactive Viewer", href: "/projects/viewer", description: "3D model explorer" },
-  ],
-  "Insights": [
-    { label: "Blog", href: "/blog", description: "Latest articles & tutorials" },
-    { label: "Industry Reports", href: "/insights/reports", description: "Research & analysis" },
-    { label: "Press & News", href: "/insights/press", description: "Media coverage" },
-  ],
-  "Company": [
-    { label: "About Us", href: "/company/about", description: "Our story & mission" },
-    { label: "Team", href: "/company/team", description: "Meet the team" },
-    { label: "Careers", href: "/company/careers", description: "Join us" },
-    { label: "Contact", href: "/contact", description: "Get in touch" },
-  ],
-};
-
-const getVisibleDropdownItems = (section: string) =>
-  dropdownItems[section]?.filter((sub) => !hiddenDropdownHrefs[section]?.has(sub.href)) ?? [];
+import {
+  floatingNavItems as navItems,
+  hiddenNavItems,
+  dropdownItems,
+  getVisibleDropdownItems,
+} from '@/lib/site-nav';
 
 // Static Logo - No animation overhead
 const StaticLogo = memo(function StaticLogo() {

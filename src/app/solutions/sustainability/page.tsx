@@ -1,123 +1,111 @@
 "use client";
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useState, useRef } from 'react';
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import {
   Leaf,
-  Recycle,
   Zap,
   TrendingDown,
   Globe,
   BarChart3,
   CheckCircle2,
   ArrowRight,
-  Wind,
-  Droplets,
-  Sun,
-  TreePine,
   Activity,
   Target,
   Gauge,
-  Sparkles,
   Earth,
-  Factory,
-  Lightbulb
+  DollarSign,
+  Wrench,
+  Server,
+  Sparkles,
 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function SustainabilityPage() {
   const [selectedMetric, setSelectedMetric] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
 
   const pipelineSteps = [
     {
       id: 0,
-      title: "Energy Assessment",
-      description: "Analyze current energy consumption and carbon footprint",
+      title: "Run Scan",
+      description: "Geometry diagnostics run before rendering so you know what will be processed.",
       icon: Gauge,
       color: "from-emerald-500 to-green-600",
-      metric: "Track Baseline"
+      metric: "Diagnostic"
     },
     {
       id: 1,
-      title: "Green Infrastructure",
-      description: "Migrate to renewable energy-powered GPU farms",
-      icon: Wind,
+      title: "Auto-Heal",
+      description: "Automated mesh repair reduces failed jobs and repeated GPU work.",
+      icon: Wrench,
       color: "from-teal-500 to-cyan-600",
-      metric: "100% Renewable"
+      metric: "AI-Repair"
     },
     {
       id: 2,
-      title: "Optimization Engine",
-      description: "AI-driven resource allocation and efficiency tuning",
-      icon: Zap,
+      title: "Cloud Render",
+      description: "GPU-accelerated renders run on AWS cloud infrastructure when queue capacity is available.",
+      icon: Server,
       color: "from-lime-500 to-emerald-600",
-      metric: "40% Reduction"
+      metric: "GPU job"
     },
     {
       id: 3,
-      title: "Carbon Offset",
-      description: "Automatic carbon credit allocation and tracking",
-      icon: TreePine,
+      title: "CO₂ Estimate",
+      description: "Per-job gram-level CO₂ estimate with efficiency and green node type in your dashboard.",
+      icon: Leaf,
       color: "from-green-600 to-teal-600",
-      metric: "Net Zero"
+      metric: "Eco card"
     },
     {
       id: 4,
-      title: "Sustainability Report",
-      description: "Real-time dashboard and compliance documentation",
-      icon: BarChart3,
+      title: "Cost Estimate",
+      description: "Line-item billing for diagnostic, repair, and render steps in credits and USD.",
+      icon: DollarSign,
       color: "from-emerald-600 to-green-700",
-      metric: "Full Transparency"
+      metric: "Pay-per-use"
     }
   ];
 
   const sustainabilityMetrics = [
     {
-      title: "Carbon Footprint",
-      value: "-65%",
-      description: "Reduction in CO₂ emissions",
-      icon: Factory,
+      title: "CO₂ Estimate",
+      value: "Per job",
+      description: "Gram-level emissions estimate shown alongside each render in the app",
+      icon: Leaf,
       trend: "down",
-      color: "from-red-500 to-orange-600"
+      color: "from-emerald-500 to-teal-600"
     },
     {
-      title: "Energy Efficiency",
-      value: "+85%",
-      description: "Improvement in power usage",
-      icon: Lightbulb,
+      title: "Efficiency Score",
+      value: "Node-based",
+      description: "Efficiency rating tied to the green node profile assigned to your job",
+      icon: Zap,
       trend: "up",
       color: "from-yellow-500 to-amber-600"
     },
     {
-      title: "Renewable Energy",
-      value: "100%",
-      description: "Green energy adoption",
-      icon: Sun,
+      title: "Green Node Type",
+      value: "Labeled",
+      description: "See which infrastructure profile processed your render before you commit credits",
+      icon: Globe,
       trend: "up",
       color: "from-cyan-500 to-blue-600"
     },
     {
-      title: "Water Conservation",
-      value: "-70%",
-      description: "Reduction in cooling water usage",
-      icon: Droplets,
+      title: "Cost Breakdown",
+      value: "CR + USD",
+      description: "Diagnostic, AI-repair, and GPU render costs summarized before you submit",
+      icon: DollarSign,
       trend: "down",
-      color: "from-blue-500 to-cyan-600"
+      color: "from-green-500 to-emerald-600"
     }
   ];
 
-  const circularProgress = useTransform(scrollYProgress, [0, 1], [0, 360]);
-
   return (
     <div ref={containerRef} className="relative min-h-screen bg-gradient-to-b from-emerald-950 via-green-950 to-black text-white overflow-hidden">
-      <Header />
 
       {/* Unique Hero - Circular Pipeline Visualization */}
       <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-32 md:pt-32 lg:pt-40 px-4 sm:px-6 lg:px-8">
@@ -153,7 +141,7 @@ export default function SustainabilityPage() {
           >
             <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-sm">
               <Leaf className="w-5 h-5 text-emerald-400" />
-              <span className="text-emerald-400 font-semibold text-sm uppercase tracking-wider">Sustainable Rendering Pipeline</span>
+              <span className="text-emerald-400 font-semibold text-sm uppercase tracking-wider">Cost & CO₂ Transparency</span>
             </div>
           </motion.div>
 
@@ -165,9 +153,9 @@ export default function SustainabilityPage() {
             className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 text-center leading-tight"
           >
             <span className="block bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400">
-              Carbon-Neutral
+              Render Cost &
             </span>
-            <span className="block text-white mt-2">Rendering Pipeline</span>
+            <span className="block text-white mt-2">CO₂ Estimates</span>
           </motion.h1>
 
           <motion.p
@@ -176,7 +164,7 @@ export default function SustainabilityPage() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-xl md:text-2xl text-emerald-200/80 mb-12 text-center max-w-3xl mx-auto leading-relaxed"
           >
-            Transform your rendering workflow into an eco-friendly, carbon-negative operation with AI-optimized energy management and renewable infrastructure.
+            See diagnostic, repair, and GPU render costs in credits and USD—plus a per-job CO₂ estimate—directly in your Teeli dashboard before you queue a render.
           </motion.p>
 
           {/* Circular Pipeline Visualization */}
@@ -213,8 +201,8 @@ export default function SustainabilityPage() {
             {/* Pipeline Steps in Circle */}
             <div className="absolute inset-0">
               {pipelineSteps.map((step, index) => {
-                const angle = (index * 360) / pipelineSteps.length - 90; // Start from top
-                const radius = 42; // Percentage from center
+                const angle = (index * 360) / pipelineSteps.length - 90;
+                const radius = 42;
                 const x = 50 + radius * Math.cos((angle * Math.PI) / 180);
                 const y = 50 + radius * Math.sin((angle * Math.PI) / 180);
                 const Icon = step.icon;
@@ -251,7 +239,6 @@ export default function SustainabilityPage() {
                         />
                       )}
                     </motion.div>
-                    {/* Step Label */}
                     <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-4 w-32 md:w-40">
                       <p className={`text-xs md:text-sm font-bold text-center ${isSelected ? 'text-emerald-400' : 'text-emerald-300/70'}`}>
                         {step.title}
@@ -268,11 +255,11 @@ export default function SustainabilityPage() {
                 animate={selectedMetric !== null ? { scale: [1, 1.1, 1] } : { scale: 1 }}
                 className="relative w-48 h-48 md:w-64 md:h-64 rounded-full bg-gradient-to-br from-emerald-900/80 to-green-950/80 backdrop-blur-xl border-4 border-emerald-500/30 flex flex-col items-center justify-center p-8"
               >
-                <div className="text-5xl md:text-6xl font-bold text-emerald-400 mb-2">
-                  {pipelineSteps[selectedMetric]?.metric || "65%"}
+                <div className="text-3xl md:text-4xl font-bold text-emerald-400 mb-2 text-center leading-tight">
+                  {pipelineSteps[selectedMetric]?.metric || "Estimate"}
                 </div>
                 <div className="text-xs md:text-sm text-emerald-300/80 text-center font-semibold uppercase tracking-wider">
-                  {pipelineSteps[selectedMetric]?.title || "Carbon Reduction"}
+                  {pipelineSteps[selectedMetric]?.title || "Dashboard"}
                 </div>
                 <Leaf className="w-8 h-8 md:w-10 md:h-10 text-emerald-400 mt-4" />
               </motion.div>
@@ -286,20 +273,20 @@ export default function SustainabilityPage() {
             transition={{ duration: 0.8, delay: 1 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <Link href="/contact">
+            <Link href="https://app.teeli.net/">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-lg shadow-lg shadow-emerald-500/30 hover:shadow-xl transition-all flex items-center gap-2"
               >
-                Start Green Pipeline
+                Try Teeli Free
                 <ArrowRight className="w-5 h-5" />
               </motion.button>
             </Link>
-            <Link href="/contact">
+            <Link href="https://app.teeli.net/">
               <button className="px-8 py-4 rounded-xl border-2 border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-bold text-lg hover:bg-emerald-500/20 transition-all flex items-center gap-2">
                 <BarChart3 className="w-5 h-5" />
-                View Metrics
+                Open Dashboard
               </button>
             </Link>
           </motion.div>
@@ -317,10 +304,10 @@ export default function SustainabilityPage() {
             className="text-center mb-16"
           >
             <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white">
-              Real-Time Impact Metrics
+              In-App Estimate Cards
             </h2>
             <p className="text-lg text-emerald-200/80 max-w-3xl mx-auto">
-              Track your sustainability improvements with live, transparent data
+              CO₂ and billing transparency built into the render panel—not a separate audit service or compliance portal.
             </p>
           </motion.div>
 
@@ -336,7 +323,6 @@ export default function SustainabilityPage() {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="relative rounded-2xl border-2 border-emerald-700/30 bg-gradient-to-br from-emerald-950/60 to-black/60 backdrop-blur-xl p-6 hover:border-emerald-500/50 transition-all group overflow-hidden"
                 >
-                  {/* Animated Background */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${metric.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
                   
                   <div className="relative z-10">
@@ -344,9 +330,9 @@ export default function SustainabilityPage() {
                       <Icon className="w-7 h-7 text-white" />
                     </div>
                     <div className="flex items-baseline gap-2 mb-2">
-                      <h3 className="text-3xl font-bold text-emerald-400">{metric.value}</h3>
+                      <h3 className="text-2xl font-bold text-emerald-400">{metric.value}</h3>
                       {metric.trend === "down" ? (
-                        <TrendingDown className="w-5 h-5 text-red-400" />
+                        <TrendingDown className="w-5 h-5 text-emerald-400" />
                       ) : (
                         <TrendingDown className="w-5 h-5 text-emerald-400 rotate-180" />
                       )}
@@ -358,6 +344,10 @@ export default function SustainabilityPage() {
               );
             })}
           </div>
+
+          <p className="text-sm text-emerald-200/50 text-center mt-10 max-w-2xl mx-auto">
+            CO₂ figures are indicative estimates based on job settings, node type, and infrastructure profile. They are not audited carbon accounting or regulatory compliance reports.
+          </p>
         </div>
       </section>
 
@@ -372,19 +362,17 @@ export default function SustainabilityPage() {
             className="text-center mb-16"
           >
             <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white">
-              Pipeline Architecture
+              How Estimates Fit the Workflow
             </h2>
             <p className="text-lg text-emerald-200/80 max-w-3xl mx-auto">
-              Step-by-step transformation to a sustainable rendering ecosystem
+              Scan, repair, render, and review cost plus CO₂ context in the same browser session.
             </p>
           </motion.div>
 
           <div className="relative">
-            {/* Vertical Connection Line */}
             <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-600 via-teal-600 to-green-600 transform md:-translate-x-1/2 hidden md:block"></div>
             <div className="absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-600 via-teal-600 to-green-600 block md:hidden"></div>
 
-            {/* Pipeline Steps */}
             {pipelineSteps.map((step, index) => {
               const Icon = step.icon;
               const isEven = index % 2 === 0;
@@ -400,10 +388,8 @@ export default function SustainabilityPage() {
                     isEven ? 'md:flex-row' : 'md:flex-row-reverse'
                   }`}
                 >
-                  {/* Connection Dot */}
                   <div className="absolute left-8 md:left-1/2 w-4 h-4 rounded-full bg-emerald-500 border-4 border-black transform md:-translate-x-1/2 z-10"></div>
 
-                  {/* Content Card */}
                   <div className={`ml-16 md:ml-0 flex-1 ${
                     isEven ? 'md:mr-auto md:pr-12' : 'md:ml-auto md:pl-12'
                   }`}>
@@ -441,49 +427,49 @@ export default function SustainabilityPage() {
             className="text-center mb-16"
           >
             <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white">
-              Environmental Benefits
+              Why It Matters
             </h2>
             <p className="text-lg text-emerald-200/80 max-w-3xl mx-auto">
-              Comprehensive sustainability advantages for your organization
+              Practical transparency for creators and teams—not enterprise ESG theater.
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                title: "Carbon Neutral Operations",
-                description: "Achieve net-zero carbon emissions through renewable energy and offset programs",
-                icon: Globe,
+                title: "Per-Job CO₂ Context",
+                description: "Understand the estimated emissions footprint of an individual render before you spend credits.",
+                icon: Leaf,
                 color: "from-emerald-500 to-teal-600"
               },
               {
-                title: "Cost Reduction",
-                description: "Lower operational costs through energy-efficient infrastructure",
-                icon: TrendingDown,
+                title: "Line-Item Cost Clarity",
+                description: "See diagnostic, AI-repair, and GPU render charges broken out in credits and USD.",
+                icon: DollarSign,
                 color: "from-green-500 to-emerald-600"
               },
               {
-                title: "Compliance Ready",
-                description: "Meet global environmental regulations and ESG standards",
-                icon: CheckCircle2,
+                title: "Repair Before GPU Spend",
+                description: "Fix mesh issues upstream so you waste fewer credits on jobs that fail in the queue.",
+                icon: Wrench,
                 color: "from-teal-500 to-cyan-600"
               },
               {
-                title: "Real-Time Monitoring",
-                description: "Track sustainability metrics with live dashboards and alerts",
+                title: "Green Node Visibility",
+                description: "Know which infrastructure profile handled your job, including efficiency labeling in the dashboard.",
                 icon: Activity,
                 color: "from-lime-500 to-green-600"
               },
               {
-                title: "Renewable Integration",
-                description: "Seamlessly integrate solar, wind, and hydro power sources",
-                icon: Sun,
+                title: "AWS Cloud Rendering",
+                description: "GPU workloads run on AWS cloud infrastructure with queue-based orchestration.",
+                icon: Server,
                 color: "from-yellow-500 to-amber-600"
               },
               {
-                title: "Supply Chain Impact",
-                description: "Extend sustainability practices across your entire workflow",
-                icon: Recycle,
+                title: "Review Before Production",
+                description: "Use estimates to compare settings and outputs before relying on renders in client work.",
+                icon: CheckCircle2,
                 color: "from-emerald-600 to-green-700"
               }
             ].map((benefit, index) => {
@@ -513,7 +499,6 @@ export default function SustainabilityPage() {
       <section className="relative py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-black">
         <div className="max-w-7xl mx-auto">
           <div className="relative rounded-3xl border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-950/40 via-green-950/40 to-black/40 backdrop-blur-xl p-12 md:p-16 text-center overflow-hidden">
-            {/* Background Pattern - Leaf/Organic */}
             <div className="absolute inset-0 opacity-10">
               <div className="absolute inset-0" style={{
                 backgroundImage: `radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.3) 0%, transparent 50%),
@@ -530,26 +515,26 @@ export default function SustainabilityPage() {
             >
               <Earth className="w-16 h-16 text-emerald-400 mx-auto mb-6" />
               <h2 className="font-heading text-4xl md:text-5xl font-bold mb-6 text-white">
-                Ready to Go Green?
+                See Estimates in the App
               </h2>
               <p className="text-xl text-emerald-200/80 mb-8 max-w-2xl mx-auto">
-                Join leading studios and agencies in building a sustainable future for rendering. Start your carbon-neutral pipeline today.
+                Upload a model, review the CO₂ and cost cards beside Cloud Render, and queue jobs with clearer context at app.teeli.net.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/contact">
+                <Link href="https://app.teeli.net/">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-lg shadow-lg shadow-emerald-500/30 hover:shadow-xl transition-all flex items-center gap-2"
                   >
-                    Start Sustainability Journey
+                    Open Teeli App
                     <ArrowRight className="w-5 h-5" />
                   </motion.button>
                 </Link>
-                <Link href="/contact">
+                <Link href="/solutions/cloud-gpu">
                   <button className="px-8 py-4 rounded-xl border-2 border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-bold text-lg hover:bg-emerald-500/20 transition-all flex items-center gap-2">
-                    <BarChart3 className="w-5 h-5" />
-                    Request Audit
+                    <Sparkles className="w-5 h-5" />
+                    Cloud GPU Workflow
                   </button>
                 </Link>
               </div>

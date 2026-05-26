@@ -8,7 +8,7 @@ const comparisonData = [
   { feature: "Geometry Repair", traditional: false, teeli: true },
   { feature: "Rendering Cost", traditional: "High", teeli: "10X Cheaper" },
   { feature: "Compute", traditional: "Local", teeli: "Hybrid + DePIN" },
-  { feature: "Sustainability", traditional: "Not verifiable", teeli: "On-chain proof" },
+  { feature: "Sustainability", traditional: "Not verifiable", teeli: "Per-render CO₂ estimate" },
   { feature: "Collaboration", traditional: "Local", teeli: "Real-time web" },
   { feature: "VR/4D Ready", traditional: false, teeli: true },
 ];
