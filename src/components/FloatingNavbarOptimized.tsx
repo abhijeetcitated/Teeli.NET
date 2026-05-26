@@ -161,13 +161,13 @@ export default function FloatingNavbarOptimized() {
                       className={`transition-transform duration-200 ${openDropdown === item.label ? 'rotate-180' : ''}`}
                     />
                   </span>
-                ) : (
+                ) : item.href ? (
                   <Link
-                    href={item.href!}
+                    href={item.href}
                     className={`
                       relative px-3 py-2 text-sm font-medium rounded-full flex items-center gap-1
                       transition-colors duration-200
-                      ${pathname?.startsWith(item.href!)
+                      ${pathname?.startsWith(item.href)
                         ? 'text-white bg-white/10'
                         : 'text-white/70 hover:text-white hover:bg-white/5'
                       }
@@ -175,7 +175,7 @@ export default function FloatingNavbarOptimized() {
                   >
                     {item.label}
                   </Link>
-                )}
+                ) : null}
                 
                 {/* Dropdown - CSS transition */}
                 {hasDropdown(item.label) && openDropdown === item.label && (
@@ -244,13 +244,13 @@ export default function FloatingNavbarOptimized() {
                         ))}
                       </div>
                     </>
-                  ) : (
+                  ) : item.href ? (
                     <Link
-                      href={item.href!}
+                      href={item.href}
                       onClick={() => setIsMenuOpen(false)}
                       className={`
                         block px-4 py-3 rounded-lg text-base font-medium
-                        ${pathname?.startsWith(item.href!)
+                        ${pathname?.startsWith(item.href)
                           ? 'bg-white/10 text-white'
                           : 'text-white/70 hover:bg-white/5 hover:text-white'
                         }
@@ -258,7 +258,7 @@ export default function FloatingNavbarOptimized() {
                     >
                       {item.label}
                     </Link>
-                  )}
+                  ) : null}
                 </div>
               ))}
             </nav>

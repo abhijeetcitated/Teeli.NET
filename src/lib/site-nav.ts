@@ -14,13 +14,18 @@ export const hiddenDropdownHrefs: Record<string, Set<string>> = {
 /** Top-level sections on the main Header (includes Home). */
 export const headerNavItems = ["Home", "Solutions", "Technology", "Projects", "Insights", "Company"] as const;
 
+export type FloatingNavItem = {
+  label: string;
+  href?: string;
+};
+
 /** Top-level sections on the landing page floating navbar (no Home, no duplicate solution links). */
-export const floatingNavItems = [
+export const floatingNavItems: FloatingNavItem[] = [
   { label: "Solutions" },
   { label: "Technology" },
   { label: "Insights" },
   { label: "Company" },
-] as const;
+];
 
 export const dropdownItems: Record<string, NavDropdownItem[]> = {
   Solutions: [
