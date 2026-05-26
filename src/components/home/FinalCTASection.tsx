@@ -62,10 +62,6 @@ export default function FinalCTASection() {
               </svg>
             </span>
           </a>
-
-          <button className="px-16 py-6 bg-white/5 backdrop-blur-sm border-2 border-white/20 text-starlight font-bold text-2xl rounded-full hover:bg-white/10 hover:border-white/30 transition-all duration-300 hover:scale-105">
-            Watch Demo
-          </button>
         </motion.div>
       </div>
     </section>

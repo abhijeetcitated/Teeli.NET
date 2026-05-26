@@ -52,14 +52,14 @@ export function BlogThemeProvider({ children }: { children: React.ReactNode }) {
   const displayTheme = mounted ? theme : 'dark';
 
   // Hide theme toggle on specific pages
-  const hideToggleOnPages = ['/blog/about', '/blog/authors', '/blog/newsletter'];
+  const hideToggleOnPages = ['/blog/about'];
   const shouldShowToggle = mounted && !hideToggleOnPages.includes(pathname);
 
   return (
     <BlogThemeContext.Provider value={{ theme: displayTheme, toggleTheme }}>
       {children}
       
-      {/* Global Theme Toggle - Hidden on About, Authors, Newsletter pages */}
+      {/* Global Theme Toggle - Hidden on About page */}
       {shouldShowToggle && (
         <div className="fixed bottom-8 right-8 z-50">
           <BlogThemeToggle />

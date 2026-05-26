@@ -1,5 +1,4 @@
 // Barrel export for blog-ui components
-export { default as AuthorCard } from './AuthorCard';
 export { default as Callout } from './Callout';
 export { default as ContinueReadingCards } from './ContinueReadingCards';
 export { default as CTASection } from './CTASection';

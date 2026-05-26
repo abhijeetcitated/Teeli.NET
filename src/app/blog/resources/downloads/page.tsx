@@ -475,7 +475,7 @@ export default function DownloadsPage() {
             Subscribe to get notified when we add new materials, HDRIs, templates, and presets.
           </p>
           <Link
-            href="/blog/newsletter"
+            href="/contact"
             className={`inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-400/30 font-medium hover:from-green-500/30 hover:to-emerald-500/30 hover:border-green-400/50 transition-all duration-300 cursor-pointer ${
               theme === 'dark' ? 'text-white' : 'text-gray-900'
             }`}

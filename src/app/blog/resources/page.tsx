@@ -190,7 +190,7 @@ export default function ResourcesPage() {
             theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
           }`}>Can&apos;t find what you&apos;re looking for? Let us know what resources would help you most.</p>
           <Link
-            href="/blog/newsletter"
+            href="/contact"
             className={`inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-400/30 font-medium hover:from-purple-500/30 hover:to-pink-500/30 hover:border-purple-400/50 transition-all duration-300 ${
               theme === 'dark' ? 'text-white' : 'text-gray-900'
             }`}

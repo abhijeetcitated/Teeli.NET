@@ -29,7 +29,6 @@ import {
   Play,
   Pause,
   Volume2,
-  Info,
   ChevronDown,
   ChevronUp,
   Check
@@ -507,12 +506,6 @@ export default function InteractiveViewerPage() {
                     Get Started
                     <ChevronDown className="w-5 h-5 rotate-[-90deg]" />
                   </motion.button>
-                </Link>
-                <Link href="/contact">
-                  <button className="px-8 py-4 rounded-xl border-2 border-cyan-500/30 bg-cyan-500/10 text-cyan-400 font-bold text-lg hover:bg-cyan-500/20 transition-all flex items-center gap-2">
-                    <Info className="w-5 h-5" />
-                    View Documentation
-                  </button>
                 </Link>
               </div>
             </motion.div>

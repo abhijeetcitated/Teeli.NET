@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { BookOpen, Target, Users, Sparkles, TrendingUp, Mail, ArrowRight } from 'lucide-react';
+import { BookOpen, Target, Users, Sparkles, TrendingUp, Mail } from 'lucide-react';
 import Breadcrumb from '@/components/blog/Breadcrumb';
 
 export const metadata: Metadata = {
@@ -148,13 +148,6 @@ export default function AboutPage() {
                 Researchers
               </span>
             </div>
-            <Link
-              href="/blog/authors"
-              className="inline-flex items-center gap-2 mt-6 text-cyan-400 hover:text-cyan-300 font-semibold transition-colors group"
-            >
-              Meet Our Contributors
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
           </div>
         </div>
 
@@ -186,9 +179,6 @@ export default function AboutPage() {
           </Link>
           <Link href="/blog/topics" className="text-gray-400 hover:text-white transition-colors">
             Topics
-          </Link>
-          <Link href="/blog/authors" className="text-gray-400 hover:text-white transition-colors">
-            Authors
           </Link>
           <Link href="/blog/archive" className="text-gray-400 hover:text-white transition-colors">
             Archive

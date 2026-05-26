@@ -1,11 +1,16 @@
 "use client";
 
 import { motion } from 'framer-motion';
+import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import { Book, Code, Layers, Database, Cloud, Shield, Zap, Settings } from 'lucide-react';
 import Link from 'next/link';
 
+const showDocsPage = false;
+
 export default function TechDocsPage() {
+  if (!showDocsPage) notFound();
+
   const docSections = [
     {
       icon: Code,

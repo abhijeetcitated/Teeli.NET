@@ -422,11 +422,11 @@ export default function BlogHeader() {
   const [lastScrollY, setLastScrollY] = useState(0);
 
   // Force dark theme on specific pages
-  const forceDarkPages = ['/blog/about', '/blog/authors', '/blog/newsletter'];
+  const forceDarkPages = ['/blog/about'];
   const effectiveTheme = forceDarkPages.includes(pathname) ? 'dark' : theme;
 
   // Check if current page is an individual blog post
-  const isBlogPost = pathname?.startsWith('/blog/') && pathname !== '/blog' && !pathname?.includes('/topics') && !pathname?.includes('/popular') && !pathname?.includes('/tags') && !pathname?.includes('/resources') && !pathname?.includes('/newsletter') && !pathname?.includes('/about') && !pathname?.includes('/authors');
+  const isBlogPost = pathname?.startsWith('/blog/') && pathname !== '/blog' && !pathname?.includes('/topics') && !pathname?.includes('/popular') && !pathname?.includes('/tags') && !pathname?.includes('/resources') && !pathname?.includes('/about');
 
   useEffect(() => {
     const handleScroll = () => {

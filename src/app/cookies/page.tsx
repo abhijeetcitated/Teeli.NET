@@ -2,69 +2,73 @@
 
 import { motion } from 'framer-motion';
 import Header from '@/components/Header';
-import { Cookie, Settings, Shield, BarChart3, Palette, AlertCircle } from 'lucide-react';
+import { Cookie, Settings, Palette, AlertCircle, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CookiePolicyPage() {
   const cookieTypes = [
     {
       icon: Cookie,
-      type: 'Essential Cookies',
+      type: 'Essential Cookies & Storage',
       color: 'from-cyan-500 to-blue-600',
       necessary: true,
-      description: 'Required for basic platform functionality',
+      description: 'Required to deliver the website and platform securely.',
+      retention: 'Session to 12 months, depending on purpose',
       examples: [
-        'Authentication and session management',
-        'Security and fraud prevention',
-        'Load balancing and site performance',
-        'Preventing duplicate form submissions'
-      ]
+        'Authentication and session handling on TEELI platform pages',
+        'Security, abuse prevention, and request integrity',
+        'Load balancing, caching, and reliable page delivery',
+        'Remembering cookie or privacy choices where a consent control is shown',
+      ],
     },
     {
       icon: BarChart3,
-      type: 'Analytics Cookies',
+      type: 'Analytics & Performance',
       color: 'from-purple-500 to-pink-600',
       necessary: false,
-      description: 'Help us understand how visitors interact with our site',
+      description: 'Used to understand site usage and improve performance.',
+      retention: 'Vercel: aggregated/short-lived; GA4: up to 2 years by default',
       examples: [
-        'Page views and navigation patterns',
-        'Time spent on platform',
-        'User preferences and behavior',
-        'Error tracking and debugging'
-      ]
+        'Vercel Web Analytics page views and referrer trends without cookies',
+        'Vercel Speed Insights Core Web Vitals and device/browser performance',
+        'Google Analytics 4 page views and events when GA4 is enabled',
+        'Google Tag Manager may load measurement tags configured by TEELI.NET',
+      ],
     },
     {
       icon: Palette,
-      type: 'Preference Cookies',
+      type: 'Preference Storage',
       color: 'from-green-500 to-emerald-600',
       necessary: false,
-      description: 'Remember your settings and preferences',
+      description: 'Remembers choices you make while using TEELI.NET.',
+      retention: 'Until you clear browser storage or change the setting',
       examples: [
-        'Theme preferences (dark/light mode)',
-        'Language settings',
-        'Regional settings',
-        'Custom dashboard layouts'
-      ]
+        'Theme preferences such as dark or light mode',
+        'Saved blog bookmarks, likes, shares, and local view history',
+        'Interface preferences that make repeat visits easier',
+        'Local browser settings that are not used for advertising',
+      ],
     },
     {
       icon: Settings,
-      type: 'Functional Cookies',
+      type: 'Functional Storage',
       color: 'from-orange-500 to-red-600',
       necessary: false,
-      description: 'Enable enhanced features and personalization',
+      description: 'Supports optional features that improve product workflows.',
+      retention: 'Feature-specific; usually until cleared or changed',
       examples: [
-        'Chat widget preferences',
-        'Video playback settings',
-        'Saved rendering presets',
-        'Notification preferences'
-      ]
-    }
+        'Video or interactive viewer preferences when those tools are used',
+        'Saved rendering presets or dashboard preferences on app.teeli.net',
+        'Support or contact form state used to complete a request',
+        'Notification or communication preferences if you opt in',
+      ],
+    },
   ];
 
   return (
     <>
       <Header />
-      
+
       {/* Hero Section */}
       <section className="relative min-h-screen w-full bg-black flex items-center justify-center px-4 py-24 pt-32 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
@@ -85,10 +89,10 @@ export default function CookiePolicyPage() {
               Cookie Policy
             </h1>
             <p className="text-xl sm:text-2xl md:text-3xl text-zinc-300 max-w-4xl mx-auto leading-relaxed mb-4">
-              Learn about how we use cookies to enhance your experience
+              How TEELI.NET uses cookies, local storage, analytics, and similar technologies.
             </p>
             <p className="text-sm text-zinc-400">
-              Last updated: December 2024 | Effective as of January 1, 2024
+              Last updated: May 26, 2026 | Effective as of May 26, 2026
             </p>
           </motion.div>
         </div>
@@ -104,8 +108,11 @@ export default function CookiePolicyPage() {
             className="prose prose-invert max-w-none text-center"
           >
             <p className="text-lg text-zinc-300 leading-relaxed mb-6">
-              Cookies are small text files that are placed on your device when you visit our website. 
-              They help us provide you with a better experience and allow us to analyze how our site is used.
+              This Cookie Policy applies to teeli.net and TEELI-operated platform pages that link to it.
+              Cookies are small files stored in your browser. Similar technologies include localStorage,
+              scripts, pixels, and performance beacons. We use them only for site delivery, security,
+              product preferences, analytics, and performance monitoring. We do not use this website to
+              sell cookie data or run third-party advertising cookies.
             </p>
           </motion.div>
         </div>
@@ -117,7 +124,7 @@ export default function CookiePolicyPage() {
           <div className="grid md:grid-cols-2 gap-8">
             {cookieTypes.map((cookie, index) => (
               <motion.div
-                key={index}
+                key={cookie.type}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -130,7 +137,7 @@ export default function CookiePolicyPage() {
                     <cookie.icon className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
                       <h3 className="font-heading text-2xl font-bold text-white">
                         {cookie.type}
                       </h3>
@@ -140,15 +147,18 @@ export default function CookiePolicyPage() {
                         </span>
                       )}
                     </div>
-                    <p className="text-zinc-400 text-sm mb-4">
+                    <p className="text-zinc-400 text-sm mb-3">
                       {cookie.description}
+                    </p>
+                    <p className="text-xs text-yellow-300/80 mb-4">
+                      Retention: {cookie.retention}
                     </p>
                   </div>
                 </div>
                 <ul className="space-y-2">
-                  {cookie.examples.map((example, idx) => (
-                    <li key={idx} className="flex items-start gap-3 text-zinc-400 text-sm">
-                      <span className="text-yellow-400 mt-1">•</span>
+                  {cookie.examples.map((example) => (
+                    <li key={example} className="flex items-start gap-3 text-zinc-400 text-sm">
+                      <span className="text-yellow-400 mt-1">-</span>
                       <span>{example}</span>
                     </li>
                   ))}
@@ -171,7 +181,7 @@ export default function CookiePolicyPage() {
           >
             <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-yellow-500/10 to-transparent rounded-bl-full"></div>
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-amber-500/10 to-transparent rounded-tr-full"></div>
-            
+
             <div className="relative">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 mb-6">
                 <Settings className="w-8 h-8 text-yellow-400" />
@@ -179,37 +189,41 @@ export default function CookiePolicyPage() {
               <h2 className="font-heading text-3xl font-bold text-white mb-6">
                 Managing Your Cookies
               </h2>
-              
+
               <div className="space-y-6 text-zinc-300">
                 <div>
                   <h3 className="font-heading text-xl font-semibold text-white mb-2">
                     Browser Settings
                   </h3>
                   <p className="leading-relaxed">
-                    Most browsers allow you to manage cookie preferences through their settings menu. 
-                    You can choose to block all cookies, accept only first-party cookies, or delete 
-                    existing cookies. However, blocking essential cookies may impact platform functionality.
+                    Most browsers allow you to block cookies, accept only first-party cookies,
+                    delete existing cookies, and clear localStorage for a specific site. Blocking
+                    essential cookies can prevent login, security checks, file upload flows, or
+                    other platform features from working correctly.
                   </p>
                 </div>
 
                 <div>
                   <h3 className="font-heading text-xl font-semibold text-white mb-2">
-                    Our Cookie Settings
+                    Analytics Choices
                   </h3>
                   <p className="leading-relaxed">
-                    You can manage your cookie preferences directly in your account settings. 
-                    Navigate to Settings → Privacy → Cookie Preferences to customize which 
-                    non-essential cookies you'd like to accept.
+                    TEELI.NET uses Vercel Analytics and Speed Insights for privacy-conscious,
+                    aggregated measurement. Google Analytics and Google Tag Manager are configured
+                    separately and may set analytics cookies when enabled. If a consent banner or
+                    preference control is displayed, use it to manage non-essential analytics choices.
                   </p>
                 </div>
 
                 <div>
                   <h3 className="font-heading text-xl font-semibold text-white mb-2">
-                    Opt-Out Links
+                    Local Storage Controls
                   </h3>
                   <p className="leading-relaxed">
-                    We respect your privacy choices. If you prefer not to accept certain types of 
-                    cookies, you can disable them without affecting your ability to use core platform features.
+                    Some preferences and interactions are saved in your browser's localStorage.
+                    You can clear these records from browser site-data settings. Clearing local
+                    storage may reset theme choices, bookmarks, likes, local view counts, and
+                    saved UI state.
                   </p>
                 </div>
               </div>
@@ -218,7 +232,7 @@ export default function CookiePolicyPage() {
         </div>
       </section>
 
-      {/* Third-Party Cookies */}
+      {/* Third-Party Technologies */}
       <section className="relative w-full bg-black py-24 px-4 border-y border-white/10">
         <div className="mx-auto max-w-4xl">
           <motion.div
@@ -230,11 +244,15 @@ export default function CookiePolicyPage() {
             <AlertCircle className="w-8 h-8 text-yellow-400 flex-shrink-0" />
             <div>
               <h3 className="font-heading text-xl font-semibold text-white mb-2">
-                Third-Party Cookies
+                Third-Party Technologies
               </h3>
               <p className="text-zinc-400 leading-relaxed mb-4">
-                We do not use third-party advertising cookies or tracking cookies on our platform. 
-                All cookies are first-party cookies served directly by TEELI.NET to enhance your experience.
+                TEELI.NET currently uses Vercel for hosting, analytics, and performance insights.
+                The website is also configured for Google Analytics 4 and Google Tag Manager.
+                GA4 JavaScript tags use first-party cookies such as _ga and _ga_[id] to distinguish
+                users and sessions. We do not intentionally use third-party advertising cookies on
+                teeli.net. If advertising, remarketing, payment, chat, or embedded media tools are
+                added later, this page must be updated with the provider, purpose, and retention details.
               </p>
             </div>
           </motion.div>
@@ -261,4 +279,3 @@ export default function CookiePolicyPage() {
     </>
   );
 }
-

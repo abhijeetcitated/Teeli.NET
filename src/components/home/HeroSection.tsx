@@ -61,9 +61,6 @@ export default function HeroSection() {
               </svg>
             </span>
           </a>
-          <button className="px-12 py-5 bg-white/5 backdrop-blur-sm border border-white/20 text-starlight font-bold text-xl rounded-full hover:bg-white/10 hover:border-white/30 hover:scale-105 transition-all duration-300">
-            See Demo
-          </button>
         </motion.div>
 
         {/* Micro-Stats */}

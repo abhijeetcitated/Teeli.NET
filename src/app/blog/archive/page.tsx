@@ -218,9 +218,6 @@ export default async function ArchivePage() {
           <Link href="/blog/topics" className="text-gray-400 hover:text-white transition-colors">
             Browse by Topic
           </Link>
-          <Link href="/blog/authors" className="text-gray-400 hover:text-white transition-colors">
-            Browse by Author
-          </Link>
         </div>
       </div>
     </div>

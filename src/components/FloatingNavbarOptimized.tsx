@@ -1,18 +1,25 @@
 "use client";
 
-import { useState, useEffect, useCallback, memo } from 'react';
+import { useState, useEffect, useCallback, memo, type MouseEvent } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const navItems = [
-  { label: "Solutions", href: "/solutions" },
-  { label: "Technology", href: "/technology" },
-  { label: "Projects", href: "/projects" },
-  { label: "Insights", href: "/blog" },
-  { label: "Company", href: "/company" },
+  { label: "Solutions" },
+  { label: "Technology" },
+  { label: "Projects" },
+  { label: "Insights" },
+  { label: "Company" },
   { label: "GreenChain", href: "/solutions/sustainability" },
 ];
+
+const hiddenNavItems = new Set(["Projects"]);
+
+const hiddenDropdownHrefs: Record<string, Set<string>> = {
+  Company: new Set(["/company/team", "/company/careers"]),
+  Insights: new Set(["/insights/reports", "/insights/press"]),
+};
 
 const dropdownItems: Record<string, { label: string; href: string; description?: string }[]> = {
   "Solutions": [
@@ -45,6 +52,9 @@ const dropdownItems: Record<string, { label: string; href: string; description?:
     { label: "Contact", href: "/contact", description: "Get in touch" },
   ],
 };
+
+const getVisibleDropdownItems = (section: string) =>
+  dropdownItems[section]?.filter((sub) => !hiddenDropdownHrefs[section]?.has(sub.href)) ?? [];
 
 // Static Logo - No animation overhead
 const StaticLogo = memo(function StaticLogo() {
@@ -123,6 +133,28 @@ export default function FloatingNavbarOptimized() {
 
   const hasDropdown = useCallback((label: string) => Object.keys(dropdownItems).includes(label), []);
 
+  const isSectionActive = useCallback((label: string) => {
+    if (!hasDropdown(label)) {
+      const item = navItems.find((nav) => nav.label === label);
+      return item?.href ? pathname?.startsWith(item.href) : false;
+    }
+    return dropdownItems[label]?.some(
+      (sub) => pathname === sub.href || pathname?.startsWith(`${sub.href}/`)
+    );
+  }, [hasDropdown, pathname]);
+
+  const navLabelClass = (label: string) =>
+    `relative px-3 py-2 text-sm font-medium rounded-full flex items-center gap-1 cursor-default select-none pointer-events-none transition-colors duration-200 ${
+      isSectionActive(label)
+        ? 'text-white bg-white/10'
+        : 'text-white/70 hover:text-white hover:bg-white/5'
+    }`;
+
+  const blockNavClick = (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
     <>
       {/* Desktop Floating Navbar - CSS transitions instead of Framer Motion springs */}
@@ -157,38 +189,44 @@ export default function FloatingNavbarOptimized() {
 
           {/* Nav Links */}
           <div className="flex items-center gap-0.5">
-            {navItems.map((item) => (
+            {navItems.filter((item) => !hiddenNavItems.has(item.label)).map((item) => (
               <div
                 key={item.label}
                 className="relative"
                 onMouseEnter={() => hasDropdown(item.label) && setOpenDropdown(item.label)}
                 onMouseLeave={() => setOpenDropdown(null)}
+                onClick={hasDropdown(item.label) ? blockNavClick : undefined}
+                onMouseDown={hasDropdown(item.label) ? blockNavClick : undefined}
               >
-                <Link
-                  href={item.href}
-                  className={`
-                    relative px-3 py-2 text-sm font-medium rounded-full flex items-center gap-1
-                    transition-colors duration-200
-                    ${pathname?.startsWith(item.href)
-                      ? 'text-white bg-white/10'
-                      : 'text-white/70 hover:text-white hover:bg-white/5'
-                    }
-                  `}
-                >
-                  {item.label}
-                  {hasDropdown(item.label) && (
-                    <ChevronDown 
-                      size={14} 
+                {hasDropdown(item.label) ? (
+                  <span className={navLabelClass(item.label)} aria-hidden="true">
+                    {item.label}
+                    <ChevronDown
+                      size={14}
                       className={`transition-transform duration-200 ${openDropdown === item.label ? 'rotate-180' : ''}`}
                     />
-                  )}
-                </Link>
+                  </span>
+                ) : (
+                  <Link
+                    href={item.href!}
+                    className={`
+                      relative px-3 py-2 text-sm font-medium rounded-full flex items-center gap-1
+                      transition-colors duration-200
+                      ${pathname?.startsWith(item.href!)
+                        ? 'text-white bg-white/10'
+                        : 'text-white/70 hover:text-white hover:bg-white/5'
+                      }
+                    `}
+                  >
+                    {item.label}
+                  </Link>
+                )}
                 
                 {/* Dropdown - CSS transition */}
                 {hasDropdown(item.label) && openDropdown === item.label && (
                   <div className="absolute top-full left-0 pt-2 animate-fade-in">
                     <div className="bg-black/90 backdrop-blur-xl border border-white/10 rounded-xl p-2 min-w-[240px] shadow-2xl">
-                      {dropdownItems[item.label]?.map((subItem) => (
+                      {getVisibleDropdownItems(item.label).map((subItem) => (
                         <Link
                           key={subItem.href}
                           href={subItem.href}
@@ -231,21 +269,42 @@ export default function FloatingNavbarOptimized() {
         {isMenuOpen && (
           <div className="bg-black/95 backdrop-blur-xl border-b border-white/10 animate-fade-in">
             <nav className="px-4 py-4 space-y-2">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`
-                    block px-4 py-3 rounded-lg text-base font-medium
-                    ${pathname?.startsWith(item.href)
-                      ? 'bg-white/10 text-white'
-                      : 'text-white/70 hover:bg-white/5 hover:text-white'
-                    }
-                  `}
-                >
-                  {item.label}
-                </Link>
+              {navItems.filter((item) => !hiddenNavItems.has(item.label)).map((item) => (
+                <div key={item.label}>
+                  {hasDropdown(item.label) ? (
+                    <>
+                      <span className={`${navLabelClass(item.label)} w-full text-base px-4 py-3 rounded-lg`}>
+                        {item.label}
+                      </span>
+                      <div className="pl-4 py-1 space-y-1">
+                        {getVisibleDropdownItems(item.label).map((subItem) => (
+                          <Link
+                            key={subItem.href}
+                            href={subItem.href}
+                            onClick={() => setIsMenuOpen(false)}
+                            className="block px-4 py-2.5 rounded-lg text-sm text-white/60 hover:bg-white/5 hover:text-white transition-colors"
+                          >
+                            {subItem.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <Link
+                      href={item.href!}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={`
+                        block px-4 py-3 rounded-lg text-base font-medium
+                        ${pathname?.startsWith(item.href!)
+                          ? 'bg-white/10 text-white'
+                          : 'text-white/70 hover:bg-white/5 hover:text-white'
+                        }
+                      `}
+                    >
+                      {item.label}
+                    </Link>
+                  )}
+                </div>
               ))}
             </nav>
           </div>

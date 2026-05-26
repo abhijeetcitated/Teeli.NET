@@ -437,7 +437,7 @@ export default function DocsPage() {
             Found an error or want to contribute? Help us improve the documentation for the community.
           </p>
           <Link
-            href="/blog/newsletter"
+            href="/contact"
             className={`inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-400/30 font-medium hover:from-orange-500/30 hover:to-red-500/30 hover:border-orange-400/50 transition-all duration-300 cursor-pointer ${
               theme === 'dark' ? 'text-white' : 'text-gray-900'
             }`}

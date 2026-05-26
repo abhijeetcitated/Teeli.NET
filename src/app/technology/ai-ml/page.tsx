@@ -556,12 +556,6 @@ export default function AIMLStackPage() {
                     <ArrowRight className="w-5 h-5" />
                   </motion.button>
                 </Link>
-                <Link href="/contact">
-                  <button className="px-8 py-4 rounded-xl border-2 border-pink-500/30 bg-pink-500/10 text-pink-400 font-bold text-lg hover:bg-pink-500/20 transition-all flex items-center gap-2">
-                    <FileCode className="w-5 h-5" />
-                    Documentation
-                  </button>
-                </Link>
               </div>
             </motion.div>
           </div>

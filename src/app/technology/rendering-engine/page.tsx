@@ -540,12 +540,6 @@ export default function RenderingEnginePage() {
                     <ArrowRight className="w-5 h-5" />
                   </motion.button>
                 </Link>
-                <Link href="/contact">
-                  <button className="px-8 py-4 rounded-xl border-2 border-blue-500/30 bg-blue-500/10 text-blue-400 font-bold text-lg hover:bg-blue-500/20 transition-all flex items-center gap-2">
-                    <Code className="w-5 h-5" />
-                    API Documentation
-                  </button>
-                </Link>
               </div>
             </motion.div>
           </div>

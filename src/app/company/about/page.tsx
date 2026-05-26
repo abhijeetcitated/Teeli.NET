@@ -40,33 +40,6 @@ export default function AboutPage() {
     },
   ];
 
-  const teamMembers = [
-    {
-      name: 'Alex Chen',
-      role: 'Chief Technology Officer',
-      bio: 'Ex-NVIDIA GPU architect. Led development of Instant-3D Neural Rendering pipeline.',
-      gradient: 'from-cyan-500 to-blue-600'
-    },
-    {
-      name: 'Sarah Morgan',
-      role: 'Head of AI Research',
-      bio: 'Neural radiance fields pioneer. PhD in Computer Vision from Stanford.',
-      gradient: 'from-purple-500 to-pink-600'
-    },
-    {
-      name: 'Marcus Rivera',
-      role: 'Cloud Infrastructure Lead',
-      bio: 'Built distributed GPU systems serving 100M+ requests across AWS, GCP, and Azure.',
-      gradient: 'from-green-500 to-emerald-600'
-    },
-    {
-      name: 'Priya Sharma',
-      role: 'Sustainability Director',
-      bio: 'Carbon-negative cloud strategies. Former Google Green Tech initiative lead.',
-      gradient: 'from-orange-500 to-red-600'
-    },
-  ];
-
   return (
     <>
       <Header />
@@ -239,56 +212,6 @@ export default function AboutPage() {
                 <p className="text-zinc-400 leading-relaxed">
                   {value.description}
                 </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Team Section */}
-      <section className="relative w-full bg-black py-24 px-4">
-        <div className="mx-auto max-w-6xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="font-heading text-4xl md:text-5xl font-bold text-white mb-4">
-              Meet the Team
-            </h2>
-            <p className="text-xl text-zinc-400">
-              Pioneers in AI rendering and cloud infrastructure
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {teamMembers.map((member, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="relative rounded-2xl border-2 border-cyan-500/20 bg-gradient-to-br from-black/60 via-cyan-950/20 to-black/60 backdrop-blur-xl p-8 group hover:border-cyan-500/40 transition-all"
-                style={{ boxShadow: '0 10px 30px rgba(0, 255, 255, 0.05)' }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 to-purple-500/0 group-hover:from-cyan-500/10 group-hover:to-purple-500/10 transition-all rounded-2xl"></div>
-                <div className="relative">
-                  <div className={`w-20 h-20 rounded-full bg-gradient-to-r ${member.gradient} mb-4 flex items-center justify-center text-white text-2xl font-bold`}>
-                    {member.name.split(' ').map(n => n[0]).join('')}
-                  </div>
-                  <h3 className="font-heading text-2xl font-bold text-white mb-2">
-                    {member.name}
-                  </h3>
-                  <p className="text-cyan-400 mb-3">
-                    {member.role}
-                  </p>
-                  <p className="text-zinc-400 leading-relaxed">
-                    {member.bio}
-                  </p>
-                </div>
               </motion.div>
             ))}
           </div>

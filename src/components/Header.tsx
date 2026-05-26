@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type MouseEvent } from 'react';
 import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
@@ -8,16 +8,11 @@ import { usePathname } from 'next/navigation';
 
 const navItems = ["Home", "Solutions", "Technology", "Projects", "Insights", "Company"];
 
-const getNavLink = (item: string) => {
-  switch(item) {
-    case "Home": return "/";
-    case "Solutions": return "/solutions";
-    case "Technology": return "/technology";
-    case "Projects": return "/projects";
-    case "Insights": return "/blog";
-    case "Company": return "/company";
-    default: return "#";
-  }
+const hiddenNavItems = new Set(["Projects"]);
+
+const hiddenDropdownHrefs: Record<string, Set<string>> = {
+  Company: new Set(["/company/team", "/company/careers"]),
+  Insights: new Set(["/insights/reports", "/insights/press"]),
 };
 
 // Dropdown menu items for each section
@@ -52,15 +47,26 @@ const dropdownItems: Record<string, { label: string; href: string; icon?: string
   ]
 };
 
+const getVisibleDropdownItems = (section: string) =>
+  dropdownItems[section]?.filter((sub) => !hiddenDropdownHrefs[section]?.has(sub.href)) ?? [];
+
+const getNavLink = (item: string) => (item === "Home" ? "/" : "#");
+
 export default function Header() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     let ticking = false;
     
     const handleScroll = () => {
@@ -93,7 +99,7 @@ export default function Header() {
     
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, [lastScrollY, mounted]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -103,15 +109,34 @@ export default function Header() {
     return Object.keys(dropdownItems).includes(item);
   };
 
+  const isSectionActive = (item: string) => {
+    if (!hasDropdown(item)) return pathname === getNavLink(item);
+    return dropdownItems[item]?.some(
+      (sub) => pathname === sub.href || pathname.startsWith(`${sub.href}/`)
+    );
+  };
+
+  const navLabelClass = (item: string) =>
+    `flex items-center gap-1 px-4 py-2 text-sm font-medium rounded-lg transition-all cursor-default select-none pointer-events-none ${
+      isSectionActive(item)
+        ? 'text-white bg-white/10'
+        : 'text-zinc-400 hover:text-white hover:bg-white/5'
+    }`;
+
+  const blockNavClick = (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
     <header className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 ${
-      scrolled ? 'py-2' : 'py-4'
+      mounted && scrolled ? 'py-2' : 'py-4'
     } ${
-      hidden ? '-translate-y-full' : 'translate-y-0'
+      mounted && hidden ? '-translate-y-full' : 'translate-y-0'
     }`} style={{ willChange: 'transform' }}>
       <div className="mx-auto max-w-7xl px-4 md:px-6">
         <div className={`relative flex items-center justify-between rounded-2xl transition-all duration-300 ${
-          scrolled 
+          mounted && scrolled
             ? 'bg-black/90 backdrop-blur-xl border border-white/10 shadow-2xl py-3 px-6' 
             : 'bg-black/60 backdrop-blur-md border border-white/5 py-4 px-6'
         }`}>
@@ -128,23 +153,21 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1">
-            {navItems.map((item) => (
+            {navItems.filter((item) => !hiddenNavItems.has(item)).map((item) => (
               <div
                 key={item}
                 className="relative"
                 onMouseEnter={() => hasDropdown(item) && setOpenDropdown(item)}
                 onMouseLeave={() => setOpenDropdown(null)}
+                onClick={hasDropdown(item) ? blockNavClick : undefined}
+                onMouseDown={hasDropdown(item) ? blockNavClick : undefined}
               >
                 {hasDropdown(item) ? (
-                  <div>
-                    <button className={`flex items-center gap-1 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
-                      pathname === getNavLink(item)
-                        ? 'text-white bg-white/10'
-                        : 'text-zinc-400 hover:text-white hover:bg-white/5'
-                    }`}>
+                  <div aria-haspopup="true" aria-expanded={openDropdown === item}>
+                    <span className={navLabelClass(item)}>
                       {item}
                       <ChevronDown className={`h-3.5 w-3.5 transition-transform ${openDropdown === item ? 'rotate-180' : ''}`} />
-                    </button>
+                    </span>
                     
                     <AnimatePresence>
                       {openDropdown === item && (
@@ -155,7 +178,7 @@ export default function Header() {
                           transition={{ duration: 0.2 }}
                           className="absolute top-full left-0 mt-2 min-w-[220px] rounded-xl border border-white/10 bg-black/95 backdrop-blur-xl p-1.5 shadow-xl"
                         >
-                          {dropdownItems[item]?.map((subItem) => (
+                          {getVisibleDropdownItems(item).map((subItem) => (
                             <Link
                               key={subItem.href}
                               href={subItem.href}
@@ -230,42 +253,28 @@ export default function Header() {
                 </div>
 
                 <nav className="space-y-1 mb-8">
-                  {navItems.map((item) => (
+                  {navItems.filter((item) => !hiddenNavItems.has(item)).map((item) => (
                     <div key={item}>
                       {hasDropdown(item) ? (
                         <div>
-                          <button
-                            onClick={() => setOpenDropdown(openDropdown === item ? null : item)}
-                            className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 rounded-lg transition-all"
-                          >
+                          <span className={`${navLabelClass(item)} w-full justify-between`}>
                             {item}
-                            <ChevronDown className={`h-4 w-4 transition-transform ${openDropdown === item ? 'rotate-180' : ''}`} />
-                          </button>
-                          
-                          <AnimatePresence>
-                            {openDropdown === item && (
-                              <motion.div
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: 'auto', opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                className="overflow-hidden"
+                            <ChevronDown className="h-4 w-4 opacity-50" />
+                          </span>
+
+                          <div className="pl-4 py-2 space-y-1">
+                            {getVisibleDropdownItems(item).map((subItem) => (
+                              <Link
+                                key={subItem.href}
+                                href={subItem.href}
+                                onClick={toggleMenu}
+                                className="flex items-center gap-2 px-4 py-2.5 text-sm text-zinc-500 hover:text-white hover:bg-white/5 rounded-lg transition-all"
                               >
-                                <div className="pl-4 py-2 space-y-1">
-                                  {dropdownItems[item]?.map((subItem) => (
-                                    <Link
-                                      key={subItem.href}
-                                      href={subItem.href}
-                                      onClick={toggleMenu}
-                                      className="flex items-center gap-2 px-4 py-2.5 text-sm text-zinc-500 hover:text-white hover:bg-white/5 rounded-lg transition-all"
-                                    >
-                                      <div className="w-1 h-1 rounded-full bg-cyan-400"></div>
-                                      {subItem.label}
-                                    </Link>
-                                  ))}
-                                </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
+                                <div className="w-1 h-1 rounded-full bg-cyan-400"></div>
+                                {subItem.label}
+                              </Link>
+                            ))}
+                          </div>
                         </div>
                       ) : (
                         <Link

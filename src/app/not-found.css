@@ -1,0 +1,467 @@
+/* ═══════════════════════════════════════════════════════════
+   404 NOT FOUND — Premium Dark Theme
+   Aesthetic: Midjourney + Apple + Figma + Canva
+   Philosophy: "Restraint is the ultimate luxury"
+   ═══════════════════════════════════════════════════════════ */
+
+/* === PAGE CONTAINER === */
+.nf-page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #050505;
+  overflow: hidden;
+}
+
+/* === AMBIENT BACKGROUND GLOW === */
+.nf-ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.nf-glow-1 {
+  position: absolute;
+  width: 800px;
+  height: 800px;
+  top: -200px;
+  right: -200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.07) 0%, transparent 70%);
+  filter: blur(80px);
+  animation: nfDrift1 20s ease-in-out infinite;
+}
+
+.nf-glow-2 {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  bottom: -150px;
+  left: -150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.06) 0%, transparent 70%);
+  filter: blur(80px);
+  animation: nfDrift2 25s ease-in-out infinite;
+}
+
+.nf-glow-3 {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.04) 0%, rgba(6, 182, 212, 0.03) 50%, transparent 70%);
+  filter: blur(60px);
+  animation: nfPulseGlow 8s ease-in-out infinite;
+}
+
+@keyframes nfDrift1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-40px, 30px) scale(1.05); }
+}
+
+@keyframes nfDrift2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -40px) scale(1.08); }
+}
+
+@keyframes nfPulseGlow {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+}
+
+/* === NOISE TEXTURE OVERLAY === */
+.nf-noise {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+}
+
+/* === GRID PATTERN (Figma-style) === */
+.nf-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 20%, transparent 70%);
+}
+
+/* === MAIN CONTENT LAYOUT === */
+.nf-main {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 120px 24px 60px;
+  text-align: center;
+}
+
+/* === HERO ILLUSTRATION === */
+.nf-visual {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin-bottom: 36px;
+  animation: nfVisualIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.nf-visual-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  mask-image: radial-gradient(circle at 50% 50%, black 30%, rgba(0,0,0,0.6) 50%, transparent 70%);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, black 30%, rgba(0,0,0,0.6) 50%, transparent 70%);
+}
+
+.nf-visual-ring {
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: conic-gradient(from 180deg, rgba(6, 182, 212, 0.2), rgba(139, 92, 246, 0.15), transparent 50%) border-box;
+  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  animation: nfRingRotate 12s linear infinite;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.nf-visual-flare {
+  position: absolute;
+  inset: -30px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent, rgba(6, 182, 212, 0.06), transparent 30%, rgba(139, 92, 246, 0.06), transparent 60%);
+  animation: nfFlareRotate 15s linear infinite;
+  pointer-events: none;
+  filter: blur(6px);
+}
+
+@keyframes nfVisualIn {
+  from { opacity: 0; transform: scale(0.85) translateY(30px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes nfRingRotate {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes nfFlareRotate {
+  to { transform: rotate(-360deg); }
+}
+
+@media (min-width: 640px) {
+  .nf-visual { width: 320px; height: 320px; }
+}
+
+@media (min-width: 768px) {
+  .nf-visual { width: 360px; height: 360px; margin-bottom: 40px; }
+}
+
+/* === ERROR CODE === */
+.nf-code {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  margin-bottom: 24px;
+  animation: nfFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+}
+
+.nf-code-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #06B6D4;
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
+  animation: nfDotPulse 2s ease-in-out infinite;
+}
+
+.nf-code-text {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+@keyframes nfDotPulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.4); }
+}
+
+/* === HEADING === */
+.nf-heading {
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin-bottom: 16px;
+  animation: nfFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
+}
+
+.nf-heading-gradient {
+  background: linear-gradient(135deg, #06B6D4, #8B5CF6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@media (min-width: 640px) {
+  .nf-heading { font-size: 56px; }
+}
+
+@media (min-width: 768px) {
+  .nf-heading { font-size: 64px; margin-bottom: 20px; }
+}
+
+/* === DESCRIPTION === */
+.nf-desc {
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 400;
+  max-width: 440px;
+  margin: 0 auto 40px;
+  animation: nfFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.8s both;
+}
+
+@media (min-width: 640px) {
+  .nf-desc { font-size: 17px; margin-bottom: 48px; }
+}
+
+/* === BUTTON GROUP === */
+.nf-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 340px;
+  animation: nfFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.95s both;
+}
+
+@media (min-width: 480px) {
+  .nf-actions {
+    flex-direction: row;
+    max-width: none;
+    justify-content: center;
+  }
+}
+
+/* === PRIMARY BUTTON === */
+.nf-btn-primary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #050505;
+  background: linear-gradient(135deg, #06B6D4, #0EA5E9);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.nf-btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #22D3EE, #38BDF8);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nf-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(6, 182, 212, 0.3), 0 2px 8px rgba(6, 182, 212, 0.2);
+}
+
+.nf-btn-primary:hover::before {
+  opacity: 1;
+}
+
+.nf-btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.nf-btn-primary span {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (min-width: 640px) {
+  .nf-btn-primary { padding: 14px 32px; font-size: 15px; }
+}
+
+/* === SECONDARY BUTTON === */
+.nf-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nf-btn-secondary:hover {
+  transform: translateY(-2px);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.nf-btn-secondary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+@media (min-width: 640px) {
+  .nf-btn-secondary { padding: 14px 32px; font-size: 15px; }
+}
+
+/* === DIVIDER LINE === */
+.nf-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+  margin: 48px auto 24px;
+  animation: nfFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.1s both;
+}
+
+/* === BOTTOM NAV LINKS === */
+.nf-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  animation: nfFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;
+}
+
+.nf-nav-link {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.25);
+  text-decoration: none;
+  transition: color 0.25s ease;
+  letter-spacing: 0.01em;
+}
+
+.nf-nav-link:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.nf-nav-sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* === SHARED FADE-UP ANIMATION === */
+@keyframes nfFadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === FLOATING PARTICLES (subtle) === */
+.nf-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.nf-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.nf-p1 { top: 20%; left: 15%; animation: nfParticle 18s linear infinite; }
+.nf-p2 { top: 60%; left: 80%; animation: nfParticle 22s linear infinite 3s; }
+.nf-p3 { top: 75%; left: 25%; animation: nfParticle 20s linear infinite 7s; }
+.nf-p4 { top: 30%; left: 70%; animation: nfParticle 24s linear infinite 5s; }
+.nf-p5 { top: 45%; left: 45%; animation: nfParticle 19s linear infinite 10s; }
+
+@keyframes nfParticle {
+  0% { opacity: 0; transform: translateY(0) scale(1); }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.5; }
+  100% { opacity: 0; transform: translateY(-200px) scale(0.5); }
+}
+
+/* === RESPONSIVE ADJUSTMENTS === */
+@media (max-width: 480px) {
+  .nf-main { padding: 100px 20px 40px; }
+  .nf-visual { width: 260px; height: 260px; margin-bottom: 36px; }
+  .nf-heading { font-size: 36px; }
+  .nf-desc { font-size: 15px; }
+}
+
+/* === REDUCED MOTION === */
+@media (prefers-reduced-motion: reduce) {
+  .nf-visual,
+  .nf-visual-ring,
+  .nf-visual-flare,
+  .nf-code,
+  .nf-heading,
+  .nf-desc,
+  .nf-actions,
+  .nf-divider,
+  .nf-nav,
+  .nf-glow-1,
+  .nf-glow-2,
+  .nf-glow-3,
+  .nf-code-dot,
+  .nf-p1, .nf-p2, .nf-p3, .nf-p4, .nf-p5 {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

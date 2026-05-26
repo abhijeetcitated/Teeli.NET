@@ -66,12 +66,6 @@ export default function BlogFooter({ forceDark = false }: { forceDark?: boolean 
               <Link href="/blog/about" className={`transition-colors text-sm ${
                 effectiveTheme === 'dark' ? 'text-zinc-400 hover:text-purple-400' : 'text-gray-600 hover:text-purple-600'
               }`}>Blog About</Link>
-              <Link href="/blog/authors" className={`transition-colors text-sm ${
-                effectiveTheme === 'dark' ? 'text-zinc-400 hover:text-pink-400' : 'text-gray-600 hover:text-pink-600'
-              }`}>Authors</Link>
-              <Link href="/blog/newsletter" className={`transition-colors text-sm ${
-                effectiveTheme === 'dark' ? 'text-zinc-400 hover:text-cyan-400' : 'text-gray-600 hover:text-cyan-600'
-              }`}>Newsletter</Link>
               <Link href="/privacy" className={`transition-colors text-sm ${
                 effectiveTheme === 'dark' ? 'text-zinc-400 hover:text-purple-400' : 'text-gray-600 hover:text-purple-600'
               }`}>Privacy</Link>
