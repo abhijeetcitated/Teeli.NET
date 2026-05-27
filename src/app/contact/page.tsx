@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, HeadphonesIcon, Send, MapPin } from 'lucide-react';
+import Footer from '@/components/Footer';
 
 const showContactForm = false;
 
@@ -218,6 +219,7 @@ export default function ContactPage() {
           )}
         </div>
       </section>
+      <Footer />
     </>
   );
 }

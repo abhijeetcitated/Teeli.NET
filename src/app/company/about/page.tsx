@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { TEELI_APP_URL } from '@/lib/social-links';
+import Footer from '@/components/Footer';
 
 export default function AboutPage() {
   const productHighlights = [
@@ -288,6 +289,7 @@ export default function AboutPage() {
           </motion.div>
         </div>
       </section>
+      <Footer />
     </>
   );
 }
