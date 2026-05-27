@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Calendar, Clock, ArrowRight, Tag, TrendingUp, Sparkles, Box, Brain, Cloud, Atom, Building2, Leaf, Globe, Lock } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, Tag, TrendingUp, Sparkles, Box, Brain, Cloud, Building2, Leaf, Globe, Lock } from 'lucide-react';
 import { useBlogTheme } from '@/components/BlogThemeProvider';
 import Breadcrumb from '@/components/blog/Breadcrumb';
 
@@ -32,7 +32,6 @@ const iconMap: Record<string, any> = {
   '3d-rendering': Box,
   'ai-in-3d': Brain,
   'cloud-devops': Cloud,
-  'quantum': Atom,
   'digital-twins': Building2,
   'sustainability': Leaf,
   'metaverse': Globe,

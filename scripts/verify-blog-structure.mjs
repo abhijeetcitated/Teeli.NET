@@ -17,7 +17,6 @@ const topics = [
   'cloud-devops',
   'digital-twins',
   'metaverse',
-  'quantum',
   'sustainability',
   'blockchain'
 ];

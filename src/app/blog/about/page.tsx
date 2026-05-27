@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 const stats = [
   { label: "Articles Published", value: "148+", icon: BookOpen },
-  { label: "Topics Covered", value: "8", icon: Target },
+  { label: "Topics Covered", value: "7", icon: Target },
   { label: "Expert Authors", value: "12+", icon: Users },
   { label: "Monthly Readers", value: "50K+", icon: TrendingUp },
 ];
@@ -25,7 +25,6 @@ const topics = [
   "Cloud & DevOps",
   "Digital Twins",
   "Metaverse & Web3",
-  "Quantum Computing",
   "Sustainability Tech",
   "Blockchain",
 ];
@@ -94,8 +93,8 @@ export default function AboutPage() {
               actionable insights that help our readers stay ahead in their fields.
             </p>
             <p className="text-lg text-gray-300 leading-relaxed">
-              From photorealistic 3D rendering techniques to the latest AI breakthroughs, from sustainable 
-              tech practices to quantum computing fundamentals—we cover it all with depth and clarity.
+              From photorealistic 3D rendering techniques to the latest AI breakthroughs and sustainable 
+              tech practices—we cover it all with depth and clarity.
             </p>
           </div>
         </div>

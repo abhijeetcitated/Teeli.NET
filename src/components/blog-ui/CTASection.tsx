@@ -3,6 +3,7 @@
 import { useBlogTheme } from '@/components/BlogThemeProvider';
 import Link from 'next/link';
 import { Sparkles, ArrowRight } from 'lucide-react';
+import { TEELI_APP_URL } from '@/lib/social-links';
 
 export default function CTASection() {
   const { theme } = useBlogTheme();
@@ -45,14 +46,16 @@ export default function CTASection() {
           <p className={`text-base md:text-lg mb-7 max-w-2xl mx-auto leading-relaxed ${
             theme === 'dark' ? 'text-zinc-300' : 'text-gray-700'
           }`}>
-            Experience enterprise-grade AI rendering with quantum-optimized workflows and sustainable GPU infrastructure.
+            Experience browser-based 3D workflows with AI-assisted previews and cloud GPU rendering.
           </p>
           
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             {/* Primary Button */}
             <Link 
-              href="/contact"
+              href={TEELI_APP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className={`group relative w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-base transition-all duration-300 overflow-hidden inline-flex items-center justify-center gap-2 ${
                 theme === 'dark'
                   ? 'bg-gradient-to-r from-cyan-600 via-purple-600 to-pink-600 text-white shadow-2xl shadow-cyan-500/40 hover:shadow-cyan-500/60 hover:scale-105'

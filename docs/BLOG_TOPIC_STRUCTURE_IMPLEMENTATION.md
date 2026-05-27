@@ -22,7 +22,6 @@ content/blog/
 ├── cloud-devops/          📂 Empty (ready for future Cloud/DevOps posts)
 ├── digital-twins/         📂 Empty (ready for future Digital Twin posts)
 ├── metaverse/             📂 Empty (ready for future Metaverse posts)
-├── quantum/               📂 Empty (ready for future Quantum posts)
 ├── sustainability/        📂 Empty (ready for future Sustainability posts)
 └── blockchain/            📂 Empty (ready for future Blockchain posts)
 ```
@@ -119,7 +118,6 @@ node scripts/verify-blog-structure.mjs
 ✅ cloud-devops         0 posts
 ✅ digital-twins        0 posts
 ✅ metaverse            0 posts
-✅ quantum              0 posts
 ✅ sustainability       0 posts
 ✅ blockchain           0 posts
 

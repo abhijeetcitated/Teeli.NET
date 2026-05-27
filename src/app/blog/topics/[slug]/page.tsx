@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { Box, Brain, Cloud, Atom, Building2, Leaf, Globe, Lock } from 'lucide-react';
+import { Box, Brain, Cloud, Building2, Leaf, Globe, Lock } from 'lucide-react';
 import fs from 'fs';
 import path from 'path';
 
@@ -48,13 +48,6 @@ const topicConfig: Record<string, {
     icon: Globe,
     gradient: "from-orange-500 to-red-600",
     keywords: ["metaverse", "web3", "virtual reality", "nft"],
-  },
-  "quantum": {
-    title: "Quantum Computing",
-    description: "Quantum algorithms, simulation, and the next frontier of computational power",
-    icon: Atom,
-    gradient: "from-violet-500 to-purple-600",
-    keywords: ["quantum computing", "quantum algorithms", "quantum simulation"],
   },
   "sustainability": {
     title: "Sustainability Tech",

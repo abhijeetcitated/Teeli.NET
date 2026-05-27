@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useBlogTheme } from '@/components/BlogThemeProvider';
-import { LINKEDIN_COMPANY_URL } from '@/lib/social-links';
+import { LINKEDIN_COMPANY_URL, REDDIT_PROFILE_URL } from '@/lib/social-links';
+import RedditIcon from '@/components/icons/RedditIcon';
 
 // Inline SVGs for brand icons (removed from lucide-react v1+)
 const Linkedin = ({ className }: { className?: string }) => (
@@ -38,7 +39,7 @@ export default function BlogFooter({ forceDark = false }: { forceDark?: boolean 
               TEELI.NET
             </div>
             <p className={`text-sm text-center md:text-left ${effectiveTheme === 'dark' ? 'text-zinc-400' : 'text-gray-600'}`}>
-              Redefining 3D rendering with AI + Quantum Intelligence
+              Browser-based 3D repair, preview, and cloud rendering
             </p>
           </div>
 
@@ -72,6 +73,15 @@ export default function BlogFooter({ forceDark = false }: { forceDark?: boolean 
               }`}>
                 <Linkedin className={`w-5 h-5 transition-colors ${
                   effectiveTheme === 'dark' ? 'text-zinc-300 group-hover:text-blue-400' : 'text-gray-600 group-hover:text-blue-600'
+                }`} />
+              </a>
+              <a href={REDDIT_PROFILE_URL} target="_blank" rel="noopener noreferrer" aria-label="Reddit" className={`w-10 h-10 rounded-full flex items-center justify-center transition-all group ${
+                effectiveTheme === 'dark'
+                  ? 'border border-white/20 bg-white/5 hover:border-orange-500 hover:bg-orange-500/10'
+                  : 'border border-gray-300 bg-white shadow-sm hover:border-orange-500 hover:bg-orange-50'
+              }`}>
+                <RedditIcon className={`w-5 h-5 transition-colors ${
+                  effectiveTheme === 'dark' ? 'text-zinc-300 group-hover:text-orange-400' : 'text-gray-600 group-hover:text-orange-600'
                 }`} />
               </a>
             </div>

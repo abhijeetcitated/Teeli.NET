@@ -16,7 +16,7 @@ export default function AboutPage() {
     {
       icon: Globe,
       title: 'Innovation First',
-      description: 'Pushing boundaries in AI rendering and quantum computing to deliver cutting-edge solutions.',
+      description: 'Pushing boundaries in AI-assisted rendering and browser-based 3D workflows.',
       color: 'from-cyan-500 to-blue-500'
     },
     {
@@ -61,9 +61,9 @@ export default function AboutPage() {
               About TEELI.NET
             </h1>
             <p className="text-xl sm:text-2xl md:text-3xl text-zinc-300 max-w-4xl mx-auto leading-relaxed">
-              Revolutionizing 3D visualization through the fusion of <span className="text-cyan-400">neural rendering</span>, 
-              <span className="text-purple-400"> cloud computing</span>, and 
-              <span className="text-pink-400"> quantum intelligence</span>.
+              Revolutionizing 3D visualization through the fusion of <span className="text-cyan-400">mesh repair</span>, 
+              <span className="text-purple-400"> cloud rendering</span>, and 
+              <span className="text-pink-400"> AI-assisted previews</span>.
             </p>
           </motion.div>
         </div>

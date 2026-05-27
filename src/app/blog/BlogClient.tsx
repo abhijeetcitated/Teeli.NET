@@ -131,7 +131,7 @@ function BlogContent({ initialPosts, categories }: BlogClientProps) {
     "@context": "https://schema.org",
     "@type": "Blog",
     "name": "TEELI.NET Tech Insights",
-    "description": "Latest trends in AI rendering, quantum computing, and sustainable technology",
+    "description": "Latest trends in AI rendering, cloud GPU workflows, and sustainable technology",
     "url": `${baseUrl}/blog`,
     "publisher": {
       "@type": "Organization",
@@ -187,7 +187,7 @@ function BlogContent({ initialPosts, categories }: BlogClientProps) {
                 Tech Insights
               </h1>
               <p className={`text-lg md:text-xl max-w-2xl mx-auto ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'}`}>
-                Stay ahead with the latest trends in AI rendering, quantum computing, and sustainable technology
+                Stay ahead with the latest trends in AI rendering, cloud GPU workflows, and sustainable technology
               </p>
               
               {/* Search Bar */}

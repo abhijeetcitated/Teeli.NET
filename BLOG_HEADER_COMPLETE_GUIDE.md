@@ -73,7 +73,6 @@
   - Cloud & DevOps (18 posts)
   - Digital Twins (15 posts)
   - Metaverse (14 posts)
-  - Quantum (12 posts)
   - Sustainability (9 posts)
   - Blockchain (7 posts)
 - Glassmorphism dropdown background
@@ -94,7 +93,6 @@
 - `/blog/topics/cloud-devops` - Filtered posts
 - `/blog/topics/digital-twins` - Filtered posts
 - `/blog/topics/metaverse` - Filtered posts
-- `/blog/topics/quantum` - Filtered posts
 - `/blog/topics/sustainability` - Filtered posts
 - `/blog/topics/blockchain` - Filtered posts
 

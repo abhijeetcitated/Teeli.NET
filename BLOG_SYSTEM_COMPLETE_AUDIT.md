@@ -110,7 +110,6 @@ teeli.net/
         ├── cloud-devops/
         ├── digital-twins/
         ├── metaverse/
-        ├── quantum/
         └── sustainability/
 ```
 

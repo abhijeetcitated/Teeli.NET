@@ -2,7 +2,8 @@
 
 import { memo } from 'react';
 import Link from 'next/link';
-import { LINKEDIN_COMPANY_URL } from '@/lib/social-links';
+import { LINKEDIN_COMPANY_URL, REDDIT_PROFILE_URL } from '@/lib/social-links';
+import RedditIcon from '@/components/icons/RedditIcon';
 
 const Linkedin = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" className={className}>
@@ -31,7 +32,7 @@ const Footer = memo(function Footer() {
               TEELI.NET
             </div>
             <p className="text-center text-sm text-zinc-400 md:text-left">
-              Redefining 3D rendering with AI + Quantum Intelligence
+              Browser-based 3D repair, preview, and cloud rendering
             </p>
           </div>
 
@@ -50,6 +51,9 @@ const Footer = memo(function Footer() {
             <div className="flex gap-4">
               <a href={LINKEDIN_COMPANY_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="group flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/5 transition-all hover:border-blue-500 hover:bg-blue-500/10">
                 <Linkedin className="h-5 w-5 text-zinc-300 transition-colors group-hover:text-blue-400" />
+              </a>
+              <a href={REDDIT_PROFILE_URL} target="_blank" rel="noopener noreferrer" aria-label="Reddit" className="group flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/5 transition-all hover:border-orange-500 hover:bg-orange-500/10">
+                <RedditIcon className="h-5 w-5 text-zinc-300 transition-colors group-hover:text-orange-400" />
               </a>
             </div>
           </div>
