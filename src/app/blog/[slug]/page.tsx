@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   // Use thumbnail for OG/Twitter (optimized for social media 1200x630)
   // Falls back to main image if thumbnail not available
   const socialImage = post.thumbnail || post.image;
-  const socialImageUrl = socialImage ? `https://teeli.net${socialImage}` : 'https://teeli.net/logos/teeli-og-default.png';
+  const socialImageUrl = socialImage ? `https://teeli.net${socialImage}` : 'https://teeli.net/teeli-logo.svg';
   
   // Use thumbnailAlt or imageAlt for social image alt text (SEO critical)
   const socialImageAlt = post.thumbnailAlt || post.imageAlt || `${post.title} - TEELI.NET Blog`;

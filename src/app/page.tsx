@@ -1,5 +1,21 @@
+import type { Metadata } from 'next';
 import { StaticHero } from '@/components/home';
 import HomeSections from '@/components/home/HomeSections';
+
+// Self-referencing canonical for the homepage (root metadata intentionally omits
+// a global canonical to avoid every page claiming to be a duplicate of "/").
+export const metadata: Metadata = {
+  title: 'TEELI.NET — Fix & Render 3D Files Automatically',
+  description:
+    'Stop broken meshes and failed renders. Upload a 3D model to Teeli — it repairs geometry, previews in the browser, and renders in the cloud with Blender Cycles, automatically.',
+  alternates: { canonical: '/' },
+  openGraph: {
+    url: 'https://teeli.net',
+    title: 'TEELI.NET — Fix & Render 3D Files Automatically',
+    description:
+      'Upload a 3D model to Teeli — it repairs geometry, previews in the browser, and renders in the cloud with Blender Cycles, automatically.',
+  },
+};
 
 // ============================================
 // PERFORMANCE OPTIMIZED HOME PAGE

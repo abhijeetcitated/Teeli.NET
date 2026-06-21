@@ -84,7 +84,7 @@ function BlogContent({ initialPosts, categories }: BlogClientProps) {
           "name": "TEELI.NET",
           "logo": {
             "@type": "ImageObject",
-            "url": `${baseUrl}/logo.png`,
+            "url": `${baseUrl}/teeli-logo.svg`,
             "width": 512,
             "height": 512
           }
