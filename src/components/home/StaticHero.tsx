@@ -49,19 +49,19 @@ export default function StaticHero() {
           </a>
         </div>
 
-        {/* Micro-Stats */}
+        {/* Capability highlights — verifiable product facts, not vanity metrics */}
         <div className="animate-fade-in-up animation-delay-300 flex flex-wrap items-center justify-center gap-8 md:gap-12">
           <div className="text-center">
-            <div className="text-3xl md:text-4xl font-black text-signal-teal mb-1">98%</div>
-            <div className="text-sm md:text-base text-starlight/60">First-time render success</div>
+            <div className="text-3xl md:text-4xl font-black text-signal-teal mb-1">Auto</div>
+            <div className="text-sm md:text-base text-starlight/60">Mesh repair before every render</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl md:text-4xl font-black bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent mb-1">10×</div>
-            <div className="text-sm md:text-base text-starlight/60">Faster workflow</div>
+            <div className="text-3xl md:text-4xl font-black bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent mb-1">Cloud</div>
+            <div className="text-sm md:text-base text-starlight/60">Blender Cycles on cloud GPUs</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl md:text-4xl font-black bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent mb-1">90%</div>
-            <div className="text-sm md:text-base text-starlight/60">Less manual fixing</div>
+            <div className="text-3xl md:text-4xl font-black bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent mb-1">Browser</div>
+            <div className="text-sm md:text-base text-starlight/60">No install, no render farm</div>
           </div>
         </div>
       </div>
