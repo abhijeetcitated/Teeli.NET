@@ -1,17 +1,20 @@
-# TEELI.NET - Robots Configuration
-# https://teeli.net/robots.txt
+# TEELI.NET — Robots Configuration
+# Canonical host: https://teeli.net (non-www). www.teeli.net 301-redirects here.
+# Last reviewed: 2026-06
 
-# Allow all search engines to crawl the site
+# ─────────────────────────────────────────────────────────────
+# Default policy — all standard crawlers
+# ─────────────────────────────────────────────────────────────
 User-agent: *
 Allow: /
-
-# Block access to internal directories
 Disallow: /api/
 Disallow: /_next/
 Disallow: /.next/
 Disallow: /admin/
+Disallow: /login
+Disallow: /signup
 
-# Allow crawling of static assets and images (SEO critical)
+# Static assets that are SEO-critical (images, fonts, logos)
 Allow: /blog/*.webp$
 Allow: /blog/*.avif$
 Allow: /blog/*.jpg$
@@ -21,26 +24,124 @@ Allow: /fonts/
 Allow: /logos/
 Allow: /illustrations/
 
-# Sitemap location (helps search engines discover content)
-Sitemap: https://teeli.net/sitemap.xml
-
-# Google-specific rules (optimize image indexing)
+# ─────────────────────────────────────────────────────────────
+# Traditional search engines
+# ─────────────────────────────────────────────────────────────
 User-agent: Googlebot
 Allow: /
+
 User-agent: Googlebot-Image
 Allow: /blog/
 Allow: /blog-images/
 Allow: /illustrations/
 
-# Bing-specific rules
 User-agent: Bingbot
 Allow: /
 
-# Yahoo-specific rules
 User-agent: Slurp
 Allow: /
 
-# Social media crawlers (OpenGraph, Twitter Card preview)
+User-agent: DuckDuckBot
+Allow: /
+
+# ─────────────────────────────────────────────────────────────
+# AI Search & Answer Engines (AEO / GEO / SGE)
+# These power citations in ChatGPT, Claude, Perplexity, Gemini,
+# Copilot, Apple Intelligence, Meta AI, Amazon Rufus, etc.
+# Teeli ALLOWS both training and retrieval bots to maximise brand
+# recall and citation reach. Flip any group to "Disallow: /" to
+# opt out of that engine's model training.
+# ─────────────────────────────────────────────────────────────
+
+# OpenAI — ChatGPT / SearchGPT
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic — Claude
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Google — Gemini / AI Overviews / Vertex grounding
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# Apple Intelligence
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Microsoft Copilot
+User-agent: BingPreview
+Allow: /
+
+# Meta AI / Llama
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# Amazon — Rufus / Alexa
+User-agent: Amazonbot
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+# Mistral
+User-agent: MistralAI-User
+Allow: /
+
+# You.com
+User-agent: YouBot
+Allow: /
+
+# DuckDuckGo AI (DuckAssist)
+User-agent: DuckAssistBot
+Allow: /
+
+# Common Crawl (open corpus used by many LLMs)
+User-agent: CCBot
+Allow: /
+
+# ByteDance
+User-agent: Bytespider
+Allow: /
+
+# ─────────────────────────────────────────────────────────────
+# Social media link-preview crawlers (OpenGraph / Twitter Cards)
+# ─────────────────────────────────────────────────────────────
 User-agent: facebookexternalhit
 Allow: /
 
@@ -56,7 +157,12 @@ Allow: /
 User-agent: TelegramBot
 Allow: /
 
-# SEO tools (rate limit but allow)
+User-agent: redditbot
+Allow: /
+
+# ─────────────────────────────────────────────────────────────
+# SEO audit tools (rate-limited but allowed)
+# ─────────────────────────────────────────────────────────────
 User-agent: AhrefsBot
 Crawl-delay: 10
 
@@ -66,9 +172,19 @@ Crawl-delay: 10
 User-agent: DotBot
 Crawl-delay: 10
 
-# Block aggressive scrapers
+User-agent: SeznamBot
+Crawl-delay: 15
+
+# ─────────────────────────────────────────────────────────────
+# Abusive / low-value scrapers — blocked
+# ─────────────────────────────────────────────────────────────
 User-agent: MJ12bot
 Disallow: /
 
-User-agent: SeznamBot
-Crawl-delay: 15
+# ─────────────────────────────────────────────────────────────
+# Discovery files
+# ─────────────────────────────────────────────────────────────
+# Sitemap for search engines:
+Sitemap: https://teeli.net/sitemap.xml
+# Curated LLM context map (for AI assistants): https://teeli.net/llms.txt
+# Full-text LLM export: https://teeli.net/llms-full.txt

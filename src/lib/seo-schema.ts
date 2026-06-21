@@ -153,7 +153,7 @@ export function generateArticleSchema(post: BlogPost, canonicalUrl: string) {
       "url": "https://teeli.net",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://teeli.net/logos/teeli-logo.png",
+        "url": "https://teeli.net/teeli-logo.svg",
         "width": 512,
         "height": 512
       },
@@ -298,7 +298,7 @@ export function generateVideoObjectSchema(post: BlogPost, canonicalUrl: string) 
       "name": "TEELI.NET",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://teeli.net/logos/teeli-logo.png"
+        "url": "https://teeli.net/teeli-logo.svg"
       }
     },
     "author": {
@@ -354,7 +354,7 @@ export function generateContentVideoSchemas(post: BlogPost, canonicalUrl: string
         "name": "TEELI.NET",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://teeli.net/logos/teeli-logo.png"
+          "url": "https://teeli.net/teeli-logo.svg"
         }
       },
       "author": {

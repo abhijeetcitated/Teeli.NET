@@ -4,7 +4,10 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 import SiteHeader from "@/components/SiteHeader";
 import Script from 'next/script';
+import { generateSiteSchemaGraph, SITE_DESCRIPTION } from "@/lib/site-schema";
 import "./globals.css";
+
+const SITE_URL = "https://teeli.net";
 
 // NO GOOGLE FONTS - Use system fonts for MAXIMUM performance
 const fontVariables = {
@@ -23,8 +26,69 @@ const fontVariables = {
 };
 
 export const metadata: Metadata = {
-  title: "TEELI.NET - Reality Rendered. Instantly.",
-  description: "Futuristic rendering-focused AI & cloud studio.",
+  // metadataBase resolves all relative OG/canonical URLs to the canonical host,
+  // and keeps every page on the non-www apex (matches the www→non-www redirect).
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "TEELI.NET — Fix & Render 3D Files Automatically",
+    template: "%s | TEELI.NET",
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: "TEELI.NET",
+  authors: [{ name: "TEELI.NET", url: SITE_URL }],
+  creator: "TEELI.NET",
+  publisher: "TEELI.NET",
+  keywords: [
+    "3D rendering",
+    "cloud rendering",
+    "Blender Cycles cloud",
+    "3D model repair",
+    "mesh repair",
+    "WebGPU preview",
+    "AI rendering",
+    "architectural visualization",
+    "Teeli",
+  ],
+  category: "technology",
+  // NOTE: no root-level `alternates.canonical` here on purpose — that would make
+  // every page self-report as a duplicate of "/". Canonicals are set per page
+  // (homepage + blog posts). See note in the implementation summary.
+  openGraph: {
+    type: "website",
+    siteName: "TEELI.NET",
+    url: SITE_URL,
+    title: "TEELI.NET — Fix & Render 3D Files Automatically",
+    description: SITE_DESCRIPTION,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@teeli_net",
+    creator: "@teeli_net",
+    title: "TEELI.NET — Fix & Render 3D Files Automatically",
+    description: SITE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  icons: {
+    icon: "/teeli-logo.svg",
+    shortcut: "/teeli-logo.svg",
+    apple: "/teeli-logo.svg",
+  },
+  alternates: {
+    types: {
+      "application/rss+xml": `${SITE_URL}/rss.xml`,
+    },
+  },
 };
 
 const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID;
@@ -50,6 +114,14 @@ export default function RootLayout({
         {/* Performance: Preconnect for critical third-party domains */}
         <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />
+
+        {/* Sitewide entity graph (Organization + WebSite + SoftwareApplication).
+            Server-rendered into the initial HTML so non-JS AI crawlers (GPTBot,
+            ClaudeBot, PerplexityBot) can ground Teeli as an entity. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(generateSiteSchemaGraph()) }}
+        />
       </head>
       <body 
         className="font-sans antialiased" 

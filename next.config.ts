@@ -63,6 +63,21 @@ const nextConfig: NextConfig = {
     qualities: [45, 50, 55, 60, 65], // 45 (hero/LCP), 50, 55 (default), 60, 65
   },
   
+  // Canonicalization: force a single host (non-www apex) so search + AI crawlers
+  // never see https://www.teeli.net and https://teeli.net as two separate sites.
+  // This resolves the www/non-www mismatch between the sitemap (non-www) and the
+  // live PageSpeed URL (www). 301 keeps link equity on the apex domain.
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.teeli.net' }],
+        destination: 'https://teeli.net/:path*',
+        permanent: true,
+      },
+    ];
+  },
+
   // Aggressive caching headers for static assets
   async headers() {
     return [
