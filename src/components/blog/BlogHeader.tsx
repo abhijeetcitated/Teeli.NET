@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Search, Menu, X, Home, BookOpen, ArrowLeft, Layers, ChevronDown, TrendingUp, Tag, FileText, Download, Wrench, GraduationCap } from 'lucide-react';
+import { Search, Menu, X, Home, BookOpen, ArrowLeft, Layers, ChevronDown, Tag, FileText, Wrench, GraduationCap, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -9,11 +9,11 @@ import { useBlogTheme } from '@/components/BlogThemeProvider';
 
 const blogNavItems = [
   { label: "Home", href: "/", icon: Home },
-  { label: "All Posts", href: "/blog", icon: BookOpen },
-  { label: "Topics", href: "/blog/topics", icon: Layers, hasDropdown: true },
-  { label: "Resources", href: "/blog/resources", icon: Wrench, hasDropdown: true },
-  { label: "Popular", href: "/blog/popular", icon: TrendingUp },
-  { label: "Tags", href: "/blog/tags", icon: Tag },
+  { label: "Tools", href: "/tools", icon: Wrench },
+  { label: "Glossary", href: "/glossary", icon: BookOpen },
+  { label: "Compare", href: "/compare", icon: Layers },
+  { label: "All Posts", href: "/blog", icon: FileText },
+  { label: "Topics", href: "/blog/topics", icon: Tag, hasDropdown: true },
 ];
 
 const topicCategories = [

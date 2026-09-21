@@ -4,73 +4,68 @@ export type NavDropdownItem = {
   description?: string;
 };
 
-export const hiddenNavItems = new Set(["Projects"]);
+export const hiddenNavItems = new Set<string>();
 
-export const hiddenDropdownHrefs: Record<string, Set<string>> = {
-  Company: new Set(["/company/team", "/company/careers"]),
-  Insights: new Set(["/insights/reports", "/insights/press"]),
-};
+export const hiddenDropdownHrefs: Record<string, Set<string>> = {};
 
 /** Top-level sections on the main Header (includes Home). */
-export const headerNavItems = ["Home", "Solutions", "Technology", "Projects", "Insights", "Company"] as const;
+export const headerNavItems = ["Home", "Tools", "Glossary", "Compare", "Blog", "Pipeline"] as const;
 
 export type FloatingNavItem = {
   label: string;
   href?: string;
 };
 
-/** Top-level sections on the landing page floating navbar (no Home, no duplicate solution links). */
+/** Top-level sections on the landing page floating navbar. */
 export const floatingNavItems: FloatingNavItem[] = [
-  { label: "Solutions" },
-  { label: "Technology" },
-  { label: "Insights" },
-  { label: "Company" },
+  { label: "Tools", href: "/tools" },
+  { label: "Glossary", href: "/glossary" },
+  { label: "Compare", href: "/compare" },
+  { label: "Blog", href: "/blog" },
+  { label: "Pipeline" },
 ];
 
 export const dropdownItems: Record<string, NavDropdownItem[]> = {
-  Solutions: [
+  Pipeline: [
     {
-      label: "AI Rendering",
+      label: "Automated Mesh Repair",
       href: "/solutions/ai-rendering",
-      description: "Browser upload, repair, and cloud renders",
+      description: "Watertight 2-manifold geometry healing",
     },
     {
-      label: "Cloud GPU Rendering",
-      href: "/solutions/cloud-gpu",
-      description: "AWS GPU render queue and workflow",
-    },
-    {
-      label: "Cost & CO₂ Insights",
-      href: "/solutions/sustainability",
-      description: "Per-job cost and emissions estimates",
-    },
-  ],
-  Technology: [
-    {
-      label: "Rendering Engine",
+      label: "Blender Cycles Cloud",
       href: "/technology/rendering-engine",
-      description: "Blender Cycles pipeline",
+      description: "Headless GPU render farm & WebGPU preview",
     },
-  ],
-  Projects: [
-    { label: "Case Studies", href: "/projects/case-studies", description: "Client success stories" },
-    { label: "Showreel / Gallery", href: "/projects/showreel", description: "Portfolio gallery" },
-    { label: "Interactive Viewer", href: "/projects/viewer", description: "3D model explorer" },
-  ],
-  Insights: [
-    { label: "Blog", href: "/blog", description: "Articles and tutorials" },
-    { label: "Industry Reports", href: "/insights/reports", description: "Research and analysis" },
-    { label: "Press & News", href: "/insights/press", description: "Media coverage" },
-  ],
-  Company: [
-    { label: "About Us", href: "/company/about", description: "Mission and product story" },
-    { label: "Team / Culture", href: "/company/team", description: "Meet the team" },
-    { label: "Careers", href: "/company/careers", description: "Open roles" },
-    { label: "Contact", href: "/contact", description: "Get in touch" },
+    {
+      label: "Cloud Storage & Deliver",
+      href: "/solutions/cloud-gpu",
+      description: "Certified print-ready exports & 4K renders",
+    },
+    {
+      label: "Per-Job Cost & Sustainability",
+      href: "/solutions/sustainability",
+      description: "Cost calculation & carbon footprint",
+    },
   ],
 };
 
 export const getVisibleDropdownItems = (section: string) =>
-  dropdownItems[section]?.filter((sub) => !hiddenDropdownHrefs[section]?.has(sub.href)) ?? [];
+  dropdownItems[section] || [];
 
-export const getNavLink = (item: string) => (item === "Home" ? "/" : "#");
+export const getNavLink = (item: string) => {
+  switch (item) {
+    case "Home":
+      return "/";
+    case "Tools":
+      return "/tools";
+    case "Glossary":
+      return "/glossary";
+    case "Compare":
+      return "/compare";
+    case "Blog":
+      return "/blog";
+    default:
+      return "#";
+  }
+};

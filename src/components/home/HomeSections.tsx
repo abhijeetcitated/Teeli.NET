@@ -23,6 +23,14 @@ const HeroFeaturesSection = dynamic(() => import('@/components/home/HeroFeatures
   ssr: false
 });
 
+const ContentHubsSection = dynamic(() => import('@/components/home/ContentHubsSection'), {
+  ssr: false
+});
+
+const TargetAudienceSection = dynamic(() => import('@/components/home/TargetAudienceSection'), {
+  ssr: false
+});
+
 const TechEnginesSection = dynamic(() => import('@/components/home/TechEnginesSection'), {
   ssr: false
 });
@@ -66,6 +74,14 @@ export default function HomeSections() {
       
       <OptimizedSection id="features">
         <HeroFeaturesSection />
+      </OptimizedSection>
+      
+      <OptimizedSection id="hubs">
+        <ContentHubsSection />
+      </OptimizedSection>
+      
+      <OptimizedSection id="audience">
+        <TargetAudienceSection />
       </OptimizedSection>
       
       <OptimizedSection id="tech">

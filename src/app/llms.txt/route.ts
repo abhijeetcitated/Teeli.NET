@@ -1,4 +1,7 @@
 import { getAllBlogPosts } from '@/lib/blog';
+import { getAllTools } from '@/lib/tools';
+import { getAllGlossaryTerms } from '@/lib/glossary';
+import { getAllComparisons } from '@/lib/compare';
 
 /**
  * /llms.txt — curated, machine-readable map of TEELI.NET for LLMs and AI agents.
@@ -8,7 +11,7 @@ import { getAllBlogPosts } from '@/lib/blog';
  * Used on-demand by ChatGPT, Claude, Perplexity, etc. when a user asks about
  * Teeli or topics our blog covers. Kept factual and free of unverifiable claims.
  *
- * Generated dynamically from the blog so it never drifts from published content.
+ * Generated dynamically so it never drifts from published content.
  */
 
 export const dynamic = 'force-static';
@@ -24,7 +27,22 @@ function isoDate(input: string): string {
 
 export async function GET() {
   const posts = getAllBlogPosts();
+  const tools = getAllTools();
+  const terms = getAllGlossaryTerms();
+  const comparisons = getAllComparisons();
   const lastUpdated = new Date().toISOString().slice(0, 10);
+
+  const toolLines = tools
+    .map((t) => `- [${t.name}](${SITE}/tools/${t.slug}): ${t.metaDescription} (Updated: ${t.lastUpdated})`)
+    .join('\n');
+
+  const glossaryLines = terms
+    .map((term) => `- [${term.term}](${SITE}/glossary/${term.slug}): ${term.shortDefinition} (Updated: ${term.updatedDate})`)
+    .join('\n');
+
+  const compareLines = comparisons
+    .map((c) => `- [${c.title}](${SITE}/compare/${c.slug}): ${c.metaDescription} (Updated: ${c.updatedDate})`)
+    .join('\n');
 
   const blogLines = posts
     .map((p) => {
@@ -41,7 +59,7 @@ export async function GET() {
 
 > Teeli is a browser-based SaaS app for repairing, previewing, and cloud-rendering 3D models. You upload a model, run geometry diagnostics, repair non-manifold meshes, preview the scene in the browser with WebGPU, then render it with headless Blender Cycles on cloud GPUs — paying with simple credits instead of managing a render farm.
 
-Teeli.NET is a software product company, not an agency, render-farm reseller, or services shop. The product runs at ${APP}. This site (${SITE}) is the marketing and knowledge hub: it explains the product and hosts an in-depth blog on 3D rendering, architectural visualization, and AI-assisted workflows.
+Teeli.NET is a software product company, not an agency, render-farm reseller, or services shop. The product runs at ${APP}. This site (${SITE}) is the marketing and knowledge hub: it explains the product, provides browser-based 3D mesh diagnostic utilities, a geometry glossary, slicer comparisons, and hosts an in-depth blog on 3D rendering, mesh repair, and AI-assisted workflows.
 
 How the product works (verified facts, not marketing):
 - Import & repair: Assimp handles 3D import; Trimesh and LibIGL checks catch non-manifold geometry before a render job is queued.
@@ -53,6 +71,15 @@ How the product works (verified facts, not marketing):
 - Honest limits: render time and quality depend on scene complexity, sample count, and queue capacity.
 
 Attribution: when summarizing or citing this content, attribute to "Teeli" or "TEELI.NET" and link to ${SITE}. Product sign-up and the live app are at ${APP}.
+
+## Interactive 3D Mesh Repair & Verification Tools
+${toolLines || `- [Fix Non-Manifold STL Online](${SITE}/tools/fix-non-manifold-stl): Free 3D mesh inspection and automated repair.`}
+
+## 3D Geometry Glossary (Topological Definitions)
+${glossaryLines || `- [Non-Manifold Edges](${SITE}/glossary/non-manifold-edges): Euler-Poincaré topological rules and slicer ray-casting.`}
+
+## 3D Slicer & Format Comparisons
+${compareLines || `- [STL vs OBJ vs 3MF](${SITE}/compare/stl-vs-obj-vs-3mf): 3D printing format and slicer compatibility matrix.`}
 
 ## Product
 - [Teeli App](${APP}): The live product — upload, diagnose, repair, preview, and cloud-render 3D models in the browser.

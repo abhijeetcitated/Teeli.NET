@@ -1,0 +1,459 @@
+{
+  "id": "fix-non-manifold-stl",
+  "slug": "fix-non-manifold-stl",
+  "name": "Fix Non-Manifold STL Online Free",
+  "action": "fix-non-manifold",
+  "format": "stl",
+  "headline": "Fix Non-Manifold Edges in STL Files Online (Free STL Repair Tool)",
+  "metaTitle": "Fix Non-Manifold STL Online Free (Watertight 3D Mesh Repair)",
+  "metaDescription": "Diagnose and repair non-manifold edges, open boundary holes, and inverted normals in STL files. Free online STL repair tool, Mac/Linux compatible, zero signup.",
+  "answerParagraph": "Need to fix a non-manifold STL file for 3D printing? A non-manifold STL contains edges shared by only one triangle (open holes) or three or more triangles (internal walls), preventing slicers from calculating solid volumes. TEELI is a free online STL repair tool that inspects your mesh against Euler-Poincaré boundary rules, stitches detached vertices, removes internal partition faces, and delivers a certified watertight STL ready to print in seconds.",
+  "trustStrip": {
+    "free": true,
+    "noSignup": true,
+    "purgeHours": 24,
+    "sizeCapMB": 100
+  },
+  "highlightIssue": "non-manifold",
+  "issueExplanation": "In 3D manufacturing, a printable STL file cannot simply be a collection of floating triangles—it must represent an airtight boundary dividing solid plastic from ambient air.",
+  "issueKeyPoints": [
+    {
+      "label": "The 2-Manifold Rule",
+      "text": "Every single edge on the 3D surface must be shared by exactly two triangular facets. If an edge has 1 face, it is an open hole; if it has 3+ faces, it forms an internal dividing wall.",
+      "icon": "📐"
+    },
+    {
+      "label": "Why CAD Exports Break",
+      "text": "Failed boolean unions, non-planar extrusions, sculpting brush seams, or floating-point truncation during STL export create microscopic boundary tears and disconnected vertices.",
+      "icon": "⚠️"
+    },
+    {
+      "label": "Why Slicers Reject It",
+      "text": "Slicing software uses horizontal ray-casting to determine inside vs outside. Non-manifold edges trigger odd-parity ray crossings, corrupting perimeter toolpaths and infill generation.",
+      "icon": "🔍"
+    }
+  ],
+  "issueCards": [
+    {
+      "title": "Open Boundary Holes (1 Face per Edge)",
+      "desc": "Occurs when a triangle edge connects to only one facet. The mesh is topologically open like an unsealed balloon, allowing slicer ray-casts to escape into mathematical infinity.",
+      "icon": "🕳️"
+    },
+    {
+      "title": "Internal T-Junctions (3+ Faces per Edge)",
+      "desc": "Created when internal partition walls or intersecting solids share an edge. Forms impossible zero-thickness interior geometry that splits slicing perimeters into chaotic loops.",
+      "icon": "🧱"
+    },
+    {
+      "title": "Inverted Face Normals (Flipped Facets)",
+      "desc": "The facets are physically joined, but their normal vectors point inward toward the core. The slicer interprets solid features as hollow voids and leaves outer walls unprinted.",
+      "icon": "🔄"
+    }
+  ],
+  "defectsTable": [
+    {
+      "defect": "Open Boundary Edge (Hole)",
+      "condition": "Edge connects to exactly 1 triangular face",
+      "raycast": "Ray escapes to infinity; perimeter cannot close",
+      "physicalImpact": "Nozzle extrudes plastic into mid-air, creating layer gaps and spaghetti prints",
+      "fix": "Traces boundary half-edges and stitches conforming Delaunay planar cap"
+    },
+    {
+      "defect": "Non-Manifold T-Junction",
+      "condition": "Edge is shared by 3 or more triangular faces",
+      "raycast": "Ray enters zero-thickness interior partition",
+      "physicalImpact": "Excess plastic deposited inside hollow voids, causing nozzle collisions",
+      "fix": "Prunes internal partition faces; retains only continuous exterior shell"
+    },
+    {
+      "defect": "Inverted Face Normal",
+      "condition": "Surface normal vector points inward (-Z direction)",
+      "raycast": "Parity inversion: interior volume classified as air",
+      "physicalImpact": "Outer shell left completely unprinted; internal cavities filled solid",
+      "fix": "Breadth-first topological traversal to orient all facet normals outward"
+    },
+    {
+      "defect": "Degenerate / Zero-Area Face",
+      "condition": "Three collinear vertices or zero surface area",
+      "raycast": "Path-planning algorithm divide-by-zero exception",
+      "physicalImpact": "Slicer freezes during slicing or leaves over-extruded plastic blobs",
+      "fix": "Collapses coincident vertices within tolerance and eliminates 0-area facets"
+    },
+    {
+      "defect": "Non-Manifold Vertex (Bowtie)",
+      "condition": "Two separate volumetric cones touch at 1 vertex",
+      "raycast": "Singular point has zero physical wall thickness",
+      "physicalImpact": "Part snaps cleanly at the contact point under minimal mechanical stress",
+      "fix": "Splits the singular vertex into distinct coordinates with defined wall clearance"
+    }
+  ],
+  "mathExplanation": "Topologically, a closed, watertight 2-manifold mesh must satisfy the Euler-Poincaré characteristic: V - E + F = 2(1 - g), where V is vertices, E is edges, F is triangular faces, and g is the topological genus (number of through-holes, like a donut). In a valid manifold triangle mesh, each face has 3 edges and each edge is shared by 2 faces, yielding the fundamental identity 3F = 2E. When open boundary edges exist, this balance breaks (2E - 3F = E_boundary > 0). Slicing engines use horizontal ray-casting parity algorithms: a ray fired through the model must enter and exit an even number of surfaces. Non-manifold edges create odd-parity intersections, causing the slicer's ray to get 'trapped' inside the object.",
+  "printingImpact": "When slicing software (Bambu Studio, OrcaSlicer, Cura, PrusaSlicer) slices an STL file into 2D layers, it projects horizontal slicing planes through the triangles. At each layer, it connects the intersected edges into closed 2D loops. When an edge is non-manifold, the loop cannot close.",
+  "printingFailures": [
+    {
+      "title": "Phantom Empty Layers & Air-Printing",
+      "desc": "When slicing planes cross an unclosed boundary, the perimeter loop breaks. Slicers skip the broken layers, leaving the nozzle extruding plastic into mid-air without structural support.",
+      "badge": "Extruder Failure"
+    },
+    {
+      "title": "Inverted Toolpaths & Hollow Infill",
+      "desc": "Ray-casting parity flips. Slicers fill empty outer cavities with solid plastic while leaving intended structural shells completely hollow, ruining load-bearing parts.",
+      "badge": "Toolpath Glitch"
+    },
+    {
+      "title": "Slicer Freezes & Mid-Print Spaghetti",
+      "desc": "Thousands of degenerate boundary segments cause path-planning algorithms to hang or produce erratic nozzle travel moves that knock printed parts off the build plate.",
+      "badge": "Print Crash"
+    }
+  ],
+  "slicerTable": [
+    {
+      "slicer": "Bambu Studio",
+      "dialog": "\"The 3D model has non-manifold edges. Click here to fix.\"",
+      "behavior": "Perimeter loops break; infill leaks outside outer walls; warns with orange plate icon",
+      "nativeTool": "Windows Netfabb system API integration",
+      "limitations": "⚠️ Windows Only. Feature disabled on macOS and Linux. Voxel remeshing strips multi-color AMS paint."
+    },
+    {
+      "slicer": "OrcaSlicer",
+      "dialog": "\"[Warning] Object contains non-manifold edges / open vertices.\"",
+      "behavior": "Toolpath skips corrupted layers, leaving missing ceiling layers and hollow infill",
+      "nativeTool": "Windows Netfabb plugin build",
+      "limitations": "⚠️ Windows Only. Linux AppImage and Mac builds have zero native repair options."
+    },
+    {
+      "slicer": "Ultimaker Cura 5.x",
+      "dialog": "\"[X] Model is not watertight. Slicing may be broken.\"",
+      "behavior": "Ray-casting parity flips; inverts outer walls and fills hollow chambers",
+      "nativeTool": "\"Mesh Fixes\" setting (Voxel approximation)",
+      "limitations": "Cross-platform, but voxel heuristic rounds sharp mechanical corners and fills intentional screw holes."
+    },
+    {
+      "slicer": "PrusaSlicer 2.9",
+      "dialog": "\"Auto-repaired errors using Netfabb / Red warning borders.\"",
+      "behavior": "Disables variable layer height; produces infill perimeter toolpath gaps",
+      "nativeTool": "Prusa Netfabb cloud integration",
+      "limitations": "Windows only. Cloud repair requires full file upload and can distort organic sculptural details."
+    }
+  ],
+  "slicerErrors": [
+    {
+      "slicer": "Bambu Studio",
+      "badgeText": "The 3D model has non-manifold edges. Click here to fix.",
+      "nativeBehavior": "Displays an orange exclamation warning icon next to the object in the plate tree. Clicking 'Fix model' triggers an automatic repair sequence.",
+      "macLinuxLimitation": "Windows Only! The 'Fix model' feature relies exclusively on the Windows Netfabb system API. On macOS and Linux, the repair button does not exist or displays a disabled tooltip.",
+      "teeliFix": "Provides instant in-browser repair for Mac, Linux, and Windows users without modifying your plate orientation or Bambu Studio multi-plate project files."
+    },
+    {
+      "slicer": "OrcaSlicer",
+      "badgeText": "Warning: Object contains non-manifold edges.",
+      "nativeBehavior": "Shows an orange warning triangle. Auto-repair is limited to Windows builds, while Linux AppImage and macOS users receive no built-in healing option.",
+      "macLinuxLimitation": "Fails to close complex open boundary loops, resulting in missing top layers or irregular surface infill on thin-walled models.",
+      "teeliFix": "Stitches open half-edges and welds co-planar boundary loops so OrcaSlicer can generate uninterrupted outer wall perimeters."
+    },
+    {
+      "slicer": "Ultimaker Cura",
+      "badgeText": "Unable to slice / Missing layers in preview.",
+      "nativeBehavior": "Cura does not provide a 1-click mesh repair button. Users must navigate to 'Mesh Fixes' and toggle 'Union Overlapping Volumes' or 'Remove All Holes'.",
+      "macLinuxLimitation": "Cura's mesh fix heuristics use voxel approximation, which rounds sharp mechanical edges, closes intentional screw holes, and bloats file sizes.",
+      "teeliFix": "Executes non-destructive geometric stitching: repairs defective edges without altering dimensional tolerances or filling intentional through-holes."
+    },
+    {
+      "slicer": "PrusaSlicer",
+      "badgeText": "Auto-repaired 42 errors (Netfabb).",
+      "nativeBehavior": "Integrates with Microsoft's cloud Netfabb service on Windows. Automatically attempts repair upon model import.",
+      "macLinuxLimitation": "On macOS and Linux, PrusaSlicer uses basic internal heuristics that cannot solve complex self-intersecting facet clusters.",
+      "teeliFix": "Repairs non-manifold geometry before import, ensuring identical slicing behavior across all operating systems."
+    }
+  ],
+  "howTeeliFixes": "TEELI runs an automated 4-stage mesh healing pipeline engineered specifically for high-precision additive manufacturing. Instead of destructively remeshing your file into voxels, TEELI executes surgical topological repair:",
+  "repairSteps": [
+    {
+      "step": "01",
+      "name": "Epsilon Vertex Welding",
+      "desc": "Detects duplicate and near-coincident vertices caused by CAD floating-point truncation.",
+      "bulletPoints": [
+        "Scans for coincident vertex pairs within 10⁻⁵ mm tolerance.",
+        "Merges disconnected vertex coordinates into unified topological nodes.",
+        "Eliminates false micro-gaps without shifting model coordinates or dimensions."
+      ]
+    },
+    {
+      "step": "02",
+      "name": "Boundary Loop Stitching",
+      "desc": "Chains open half-edges into closed 3D loops and triangulates missing surface patches.",
+      "bulletPoints": [
+        "Traces unshared boundary edges into directed cyclic 3D polygon paths.",
+        "Generates conforming Delaunay triangulation across open planar gaps.",
+        "Guarantees every stitched edge connects to exactly two faces (2-manifold condition)."
+      ]
+    },
+    {
+      "step": "03",
+      "name": "Internal T-Junction Pruning",
+      "desc": "Isolates and excises zero-thickness interior partition walls without puncturing the shell.",
+      "bulletPoints": [
+        "Identifies edges shared by 3 or more faces (internal partitions).",
+        "Prunes interior geometric walls that have no contact with ambient air.",
+        "Leaves the exterior structural shell 100% intact with zero volume loss."
+      ]
+    },
+    {
+      "step": "04",
+      "name": "Normal Vector Coherence",
+      "desc": "Aligns facet normal vectors outward, guaranteeing valid solid volume calculation.",
+      "bulletPoints": [
+        "Traverses surface connectivity using breadth-first topological search.",
+        "Flips inverted face normals outward to establish uniform winding order.",
+        "Certifies the mesh as watertight solid (satisfies 3F = 2E Euler identity)."
+      ]
+    }
+  ],
+  "verificationTable": [
+    {
+      "metric": "Non-Manifold Edges",
+      "before": "148 detected",
+      "after": "0 (100% Manifold)",
+      "impact": "Slicer warning icons and error dialogs completely eliminated"
+    },
+    {
+      "metric": "Open Boundary Holes",
+      "before": "12 unclosed loops",
+      "after": "0 (Airtight Stitching)",
+      "impact": "Continuous 2D perimeter loops generated on every sliced layer"
+    },
+    {
+      "metric": "Inverted Face Normals",
+      "before": "34 inward-facing facets",
+      "after": "0 (Outward Oriented)",
+      "impact": "Prevents hollow shell inversion and solid infill leaking outside"
+    },
+    {
+      "metric": "Watertight Topological Status",
+      "before": "❌ Leaking (Non-Solid)",
+      "after": "✅ Certified Watertight Solid",
+      "impact": "Satisfies Euler-Poincaré identity 3F = 2E for reliable toolpath generation"
+    },
+    {
+      "metric": "Multi-Color / AMS Painting",
+      "before": "Original painted layers",
+      "after": "Preserved (Boundary fix)",
+      "impact": "Bambu AMS and Prusa MMU painted filament layers remain 100% intact"
+    },
+    {
+      "metric": "Dimensional Tolerances",
+      "before": "±0.000 mm deviation",
+      "after": "±0.000 mm deviation",
+      "impact": "Preserves critical mechanical snap-fits, screw holes, and bearing seats"
+    }
+  ],
+  "comparisonMatrix": [
+    {
+      "tool": "TEELI Online Repair",
+      "type": "Cloud / WebAssembly",
+      "price": "Free Diagnosis / Credit Repair",
+      "macLinuxSupport": "100% Native (Browser)",
+      "preservesPainting": "Yes (Vertex & Texture Safe)",
+      "status2026": "Active · 2026 Production Standard"
+    },
+    {
+      "tool": "Bambu Studio Fix",
+      "type": "Desktop Slicer",
+      "price": "Free (Included with Slicer)",
+      "macLinuxSupport": "Windows Only (No Mac/Linux)",
+      "preservesPainting": "Partial (Voxel remesh wipes paint)",
+      "status2026": "Active (Windows Only)"
+    },
+    {
+      "tool": "Autodesk Meshmixer",
+      "type": "Desktop Software",
+      "price": "Free (Discontinued)",
+      "macLinuxSupport": "Windows / Old macOS only",
+      "preservesPainting": "No (Make Solid wipes vertex color)",
+      "status2026": "Discontinued (No updates since 2021)"
+    },
+    {
+      "tool": "Windows 3D Builder",
+      "type": "Windows Store App",
+      "price": "Free (Built-in Windows)",
+      "macLinuxSupport": "Windows Only",
+      "preservesPainting": "No (Strips UV coordinates)",
+      "status2026": "Deprecated (No active development)"
+    },
+    {
+      "tool": "Blender 4.x (3D Print Toolbox)",
+      "type": "Desktop Suite",
+      "price": "Free & Open Source",
+      "macLinuxSupport": "100% Native (Win/Mac/Linux)",
+      "preservesPainting": "Requires Manual UV Re-baking",
+      "status2026": "Active · Industry Standard"
+    }
+  ],
+  "freeAlternatives": "Looking for offline desktop alternatives? While TEELI is the fastest zero-install tool, several free offline software packages can repair non-manifold geometry:",
+  "freeAlternativeGuides": [
+    {
+      "tool": "Blender 4.x (Free & Open Source)",
+      "badge": "Cross-Platform (Win/Mac/Linux)",
+      "steps": [
+        "Open Blender, go to Edit > Preferences > Add-ons, and enable '3D-Print Toolbox'.",
+        "Import your STL file (File > Import > Stl). Press Tab to enter Edit Mode.",
+        "Press '3' for Face Select mode. Press 'A' to select all mesh geometry.",
+        "In the right 3D View sidebar (press 'N'), open the '3D-Print' tab.",
+        "Under 'Clean Up', click 'Make Manifold'. Blender stitches open boundary holes and aligns inverted normals."
+      ]
+    },
+    {
+      "tool": "Windows 3D Builder (Built-in Windows)",
+      "badge": "Windows 10 / 11 Only",
+      "steps": [
+        "Right-click your STL file and select Open with > 3D Builder.",
+        "Insert the file. A red highlight outline will appear with a notification in the bottom right corner.",
+        "Click the pop-up notification: 'One or more objects are invalidly defined. Click here to repair.'",
+        "Wait 15–60 seconds for Windows Netfabb healing to finish, then go to Menu > Save As > STL."
+      ]
+    }
+  ],
+  "limitsOfAutoRepair": "Automated mesh repair solves 95% of 3D printing failures, but algorithmic healing has fundamental geometric boundaries. Understanding when to use automated repair versus when to fix the underlying CAD model will save hours of wasted filament:",
+  "limitsKeyPoints": [
+    {
+      "label": "Zero-Thickness Surfaces (Sheets)",
+      "text": "3D slicers require volumetric geometry. If a 3D artist modeled a cape, car spoiler, or flower petal as a single 2D plane with zero thickness, auto-welding will collapse the surface into a single line. Add a Solidify Modifier in CAD with a minimum thickness of 0.8mm (2 nozzle perimeters)."
+    },
+    {
+      "label": "Intentional Resin Drainage Holes",
+      "text": "Hollow SLA/DLP resin models require holes to prevent vacuum suction cups. Automated boundary stitchers detect unclosed surface cuts as geometric defects and cap them shut. Model drain holes with internal connecting tubular walls rather than simple surface holes."
+    },
+    {
+      "label": "Interpenetrating Multi-Part Assemblies",
+      "text": "When two separate interlocking parts intersect in 3D space, boolean union repair may fuse them into a single solid mass. Export interlocking components as individual manifold STLs or arrange them on separate slicer build plates."
+    }
+  ],
+  "limitsTable": [
+    {
+      "scenario": "Ultra-Thin Walls (<0.2mm)",
+      "whyFails": "Tolerance welding merges inner and outer surfaces into a single 0-thickness line",
+      "manualFix": "Apply a Solidify Modifier (minimum 0.8mm for standard 0.4mm nozzle)",
+      "tool": "Blender 4.x / CAD"
+    },
+    {
+      "scenario": "Resin Suction Drain Holes",
+      "whyFails": "Boundary healing treats holes as open leaks and triangulates them closed",
+      "manualFix": "Model drain holes as connecting hollow cylinders rather than surface cuts",
+      "tool": "Fusion 360 / Meshmixer"
+    },
+    {
+      "scenario": "Interpenetrating Multi-Body Solids",
+      "whyFails": "Boolean union fuses separate movable mechanical joints into one frozen solid",
+      "manualFix": "Split mesh into separate objects; export each body as a discrete manifold STL",
+      "tool": "Bambu Studio / CAD"
+    },
+    {
+      "scenario": "High-Density Embossed Micro-Text",
+      "whyFails": "Vertex decimation merges tiny topological features in curved letterforms",
+      "manualFix": "Weld with strict sub-micron tolerance (<0.001mm) or repair text in CAD",
+      "tool": "TEELI / MeshLab"
+    }
+  ],
+  "faq": [
+    {
+      "question": "What is a non-manifold edge in an STL file?",
+      "answer": "A non-manifold edge is an edge on a 3D triangle mesh that does not connect exactly two faces. If it connects to only 1 face, it creates an open boundary hole. If it connects to 3 or more faces, it creates an internal partition wall (T-junction). Slicers require manifold geometry to determine solid volumes.",
+      "bulletPoints": [
+        "1 face per edge = Open boundary hole (leaking volume).",
+        "3+ faces per edge = Internal partition wall (T-junction).",
+        "Manifold condition = Exactly 2 faces per edge (solid watertight volume)."
+      ]
+    },
+    {
+      "question": "Why does Bambu Studio show 'The 3D model has non-manifold edges'?",
+      "answer": "Bambu Studio flags STLs that have unclosed boundary edges, self-intersecting faces, or flipped normals. While Bambu Studio has a built-in 'Fix model' button on Windows, it relies on a Windows-specific Netfabb DLL and does NOT work on macOS or Linux. TEELI provides an instant in-browser repair tool compatible with all operating systems.",
+      "bulletPoints": [
+        "Windows users: Built-in Netfabb DLL attempts automatic repair.",
+        "Mac & Linux users: Built-in repair is completely disabled.",
+        "Solution: Upload your STL to TEELI to repair boundary loops in your browser."
+      ]
+    },
+    {
+      "question": "How do I fix non-manifold edges in OrcaSlicer?",
+      "answer": "OrcaSlicer inherits Bambu Studio's geometry checks. On Windows, you can right-click the model and select 'Fix model'. On macOS and Linux, the repair engine is unavailable. Uploading your STL to TEELI stitches the open edges before importing it into OrcaSlicer, ensuring smooth toolpath generation.",
+      "bulletPoints": [
+        "Right-click object > 'Fix model' (Windows only).",
+        "For macOS/Linux: Pre-repair with TEELI to prevent skipped perimeters.",
+        "Preserves your custom OrcaSlicer seam, infill, and plate configurations."
+      ]
+    },
+    {
+      "question": "Do non-manifold edges matter for 3D printing?",
+      "answer": "Yes, absolutely. Non-manifold edges cause severe printing defects because the slicing software cannot differentiate between solid material and empty space. Slicers may skip layers, extrude plastic into mid-air, generate infill in empty pockets, or crash during toolpath calculation.",
+      "bulletPoints": [
+        "Skipped layer toolpaths resulting in structural layer separation.",
+        "Plastic extrusion into empty air (mid-print spaghetti mess).",
+        "Erratic nozzle travel movements that can knock the print off the bed."
+      ]
+    },
+    {
+      "question": "How do I fix non-manifold edges in Blender?",
+      "answer": "To fix non-manifold edges in Blender 4.x: (1) Enable the 3D-Print Toolbox add-on in Preferences. (2) Select your object and press Tab to enter Edit Mode. (3) Press 3 for Face Select mode and press A to select all faces. (4) In the 3D-Print sidebar tab, click 'Make Manifold' under Clean Up.",
+      "bulletPoints": [
+        "Step 1: Enable '3D-Print Toolbox' in Edit > Preferences > Add-ons.",
+        "Step 2: Press Tab (Edit Mode) > Select All (A).",
+        "Step 3: Open 3D-Print tab (N sidebar) > Click 'Make Manifold'."
+      ]
+    },
+    {
+      "question": "What is a watertight STL file?",
+      "answer": "A watertight STL (also known as a 2-manifold solid) is a 3D mesh with zero open boundary holes, zero internal partition walls, and uniformly outward-oriented normals. If you were to fill the interior of a watertight model with water, not a single drop would leak out. Watertight geometry is mandatory for 3D printing.",
+      "bulletPoints": [
+        "Zero open boundary edges (sealed surface envelope).",
+        "Zero internal faces (no redundant interior walls).",
+        "All surface normals point outward (-Z vectors corrected)."
+      ]
+    },
+    {
+      "question": "Does repairing an STL alter its dimensional accuracy?",
+      "answer": "TEELI's repair engine is engineered for engineering precision. We use an epsilon welding tolerance of 10⁻⁵ mm, which eliminates micro-gaps caused by CAD export rounding without shifting vertex coordinates, altering hole diameters, or distorting snap-fit tolerances.",
+      "bulletPoints": [
+        "Welding tolerance: 10⁻⁵ mm (sub-micron precision).",
+        "Zero dimensional shrinkage or corner rounding.",
+        "Safe for functional mechanical parts, snap-fits, and bearing housings."
+      ]
+    },
+    {
+      "question": "Can TEELI repair multi-color painted STL files for Bambu AMS?",
+      "answer": "Yes! Legacy repair tools like Meshmixer's 'Make Solid' remesh the entire model into voxels, completely stripping painted color layers. TEELI repairs only the defective boundary edges, preserving your vertex colors, texture coordinates, and Bambu AMS multi-filament painting.",
+      "bulletPoints": [
+        "Boundary-only repair: Preserves intact vertex attributes.",
+        "Retains Bambu AMS multi-color painted filament assignments.",
+        "Maintains UV mapping coordinates for full-color 3MF exports."
+      ]
+    },
+    {
+      "question": "Is TEELI's STL repair tool free to use?",
+      "answer": "Yes. Model diagnosis, defect analysis, and 3D visual inspection are 100% free with no account or credit card required. You can check any STL, OBJ, or 3MF file up to 100MB instantly in your browser.",
+      "bulletPoints": [
+        "100% free diagnosis and 3D defect visualization.",
+        "Zero account creation or payment information required.",
+        "All files automatically deleted from our servers within 24 hours."
+      ]
+    }
+  ],
+  "relatedPages": [
+    {
+      "title": "3D Geometry Glossary: Non-Manifold Edges",
+      "href": "/glossary/non-manifold-edges"
+    },
+    {
+      "title": "Online STL Viewer & Inspector",
+      "href": "/tools/stl-viewer"
+    },
+    {
+      "title": "Convert STL to 3MF (Multi-Color)",
+      "href": "/tools/stl-to-3mf"
+    },
+    {
+      "title": "Slicer Mesh Repair Guide",
+      "href": "/blog/mesh-repair"
+    }
+  ],
+  "lastUpdated": "2026-09-21"
+}

@@ -1,12 +1,17 @@
 # TEELI.NET — Robots Configuration
 # Canonical host: https://teeli.net (non-www). www.teeli.net 301-redirects here.
-# Last reviewed: 2026-06
+# Last reviewed: 2026-09
 
 # ─────────────────────────────────────────────────────────────
 # Default policy — all standard crawlers
 # ─────────────────────────────────────────────────────────────
 User-agent: *
 Allow: /
+Allow: /tools/
+Allow: /glossary/
+Allow: /compare/
+Allow: /llms.txt
+Allow: /llms-full.txt
 Disallow: /api/
 Disallow: /_next/
 Disallow: /.next/

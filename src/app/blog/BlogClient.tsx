@@ -223,6 +223,63 @@ function BlogContent({ initialPosts, categories }: BlogClientProps) {
                   </p>
                 )}
               </div>
+
+              {/* 4 Content Hubs Switcher */}
+              <div className="mt-8 mb-4 max-w-4xl mx-auto">
+                <div className="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-3 text-center">
+                  Explore TEELI 3D Content Hubs
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-left">
+                  <Link
+                    href="/tools"
+                    className="p-3.5 rounded-2xl bg-white/5 border border-emerald-500/30 hover:bg-emerald-500/10 hover:border-emerald-500/60 transition-all group"
+                  >
+                    <div className="flex items-center justify-between text-emerald-400 font-bold text-sm mb-1">
+                      <span>🛠️ Tools Hub</span>
+                      <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                    </div>
+                    <p className="text-xs text-zinc-400 group-hover:text-zinc-200 line-clamp-2">
+                      Interactive 3D geometry checkers & repair
+                    </p>
+                  </Link>
+
+                  <Link
+                    href="/glossary"
+                    className="p-3.5 rounded-2xl bg-white/5 border border-cyan-500/30 hover:bg-cyan-500/10 hover:border-cyan-500/60 transition-all group"
+                  >
+                    <div className="flex items-center justify-between text-cyan-400 font-bold text-sm mb-1">
+                      <span>📖 Glossary</span>
+                      <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                    </div>
+                    <p className="text-xs text-zinc-400 group-hover:text-zinc-200 line-clamp-2">
+                      3D printing topology & geometry definitions
+                    </p>
+                  </Link>
+
+                  <Link
+                    href="/compare"
+                    className="p-3.5 rounded-2xl bg-white/5 border border-purple-500/30 hover:bg-purple-500/10 hover:border-purple-500/60 transition-all group"
+                  >
+                    <div className="flex items-center justify-between text-purple-400 font-bold text-sm mb-1">
+                      <span>⚖️ Compare</span>
+                      <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                    </div>
+                    <p className="text-xs text-zinc-400 group-hover:text-zinc-200 line-clamp-2">
+                      Side-by-side format & slicer benchmarks
+                    </p>
+                  </Link>
+
+                  <div className="p-3.5 rounded-2xl bg-gradient-to-br from-pink-500/15 via-purple-500/15 to-transparent border border-pink-500/40 text-left">
+                    <div className="flex items-center justify-between text-pink-300 font-bold text-sm mb-1">
+                      <span>📝 Authority Blog</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-pink-500/20 border border-pink-500/30 text-pink-300 font-semibold">Active</span>
+                    </div>
+                    <p className="text-xs text-zinc-300 line-clamp-2">
+                      Deep technical tutorials & whitepapers
+                    </p>
+                  </div>
+                </div>
+              </div>
               
               {/* Stats Bar */}
               <div className="flex flex-wrap items-center justify-center gap-6 mt-4 text-sm">
