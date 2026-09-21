@@ -1,0 +1,603 @@
+ 
+ 
+ 
+ 
+ 
+ TEELI Content System &mdash; /tools + /glossary templates 
+
+ 
+ 
+ 
+ 
+ 
+ T 
+ TEELI CONTENT SYSTEM &mdash; /tools + /glossary 
+ SELF-CONTAINED FOUNDER WRITES COPY AGENT BUILDS ROUTES 
+ 
+ 
+ 
+ 
+
+ Entry gate. The /tools pages in Part A cannot ship until Phase 4 T4.1 is done &mdash; they embed the public /check widget, and a tools page without a working widget is just a blog post pretending to be a tool. Part B (/glossary) has no dependency and can start today. If T4.1 is not proven, build glossary first and stop. 
+
+ 
+ Standing rules &mdash; apply to every page built from this file 
+ 
+ # Rule 
+ 1 One engine, many doors. Every tools page calls the same /check code path. No page gets its own detection logic, its own repair branch, or its own worker call. If you find yourself writing per-page geometry code, stop and report. 
+ 2 The engine always runs all six checks. highlightIssue only reorders the result display. It never filters what the engine looks for. A user landing on the non-manifold page still sees their holes count. 
+ 3 Body copy is written by the founder, never generated. The agent builds the route, the widget wiring, and the schema. It does not write marketing prose. AI-generated filler across 48 near-identical pages is exactly what triggers a thin-content penalty. 
+ 4 Never claim a property the product does not enforce. Same rule as Phase 4 T4.2. If the 24h purge is not proven in logs, the trust strip does not say &ldquo;deleted after 24 hours.&rdquo; 
+ 5 Ship 8 pages, not 48. Prove the template on eight real pages with unique copy, watch Search Console for 30 days, then scale. A bulk launch of 48 thin pages is unrecoverable. 
+ 6 Every page is statically rendered. If body text arrives via client-side JS, AI crawlers get an empty page. Use generateStaticParams ; verify with curl that the H1 and body text are in the raw HTML. 
+ 7 No page ships without its schema block. Validate every one in Google Rich Results Test before merge. 
+ 
+ 
+
+ 
+ Part A &mdash; /tools page 
+ The landing page that AI cannot replace 
+ An AI answer can explain a non-manifold edge. It cannot repair the user&rsquo;s file. That gap is the entire reason this page type exists &mdash; it is the one content format where the answer engine has to hand the user off. Treat every tools page as a product surface, not an article. 
+
+ 
+ A0 &middot; What this page is, and is not 
+ 
+ Property /tools page Blog post 
+ Primary job Get a file uploaded Get read, then link onward 
+ Length 800&ndash;1,200 words 1,500&ndash;2,500 words 
+ Widget Yes, above the fold Never 
+ URL shape /tools/{action}-{format} /blog/{slug} 
+ Summarisable by AI? Partly &mdash; but the tool itself is not Fully 
+ Success metric Uploads started Citations + clicks out 
+ 
+ Word count is a ceiling, not a target. A 900-word tools page that answers cleanly outperforms a 2,000-word one padded to look authoritative. Padding pushes the widget below the fold, which is the only thing on the page that earns money. 
+ 
+
+ 
+ A1 &middot; Page anatomy &mdash; exact section order 
+ This order is fixed. Sections 1&ndash;5 are above the fold on a 1440&times;900 desktop viewport; verify that before shipping any page. 
+ 
+ # Section Words Why it exists 
+ 1 Breadcrumb &mdash; Home &rsaquo; Tools &rsaquo; page. Feeds BreadcrumbList schema. 
+ 2 H1 6&ndash;10 Close to the exact query the user typed. One H1 per page, always. 
+ 3 Answer paragraph 40&ndash;60 The single most important block on the page. This is the chunk an AI engine lifts. Full answer, zero preamble. 
+ 4 Widget &mdash; The conversion. Must be visible without scrolling. 
+ 5 Trust strip 10&ndash;15 Kills upload hesitation: free, no signup, deletion policy, size cap. 
+ 6 H2: What is {issue}? 120&ndash;180 Definitional chunk. Links to the matching glossary page. 
+ 7 H2: Why does this break printing? 120&ndash;180 Problem chunk. Name real slicers &mdash; Cura, PrusaSlicer, Bambu Studio. 
+ 8 H2: How TEELI fixes it 150&ndash;200 Proof chunk. Real before/after numbers in a table. This is what gets cited and linked. 
+ 9 H2: Can I fix this for free? 150&ndash;200 Trust chunk. Honestly name the free options that work. Counter-intuitive, and it is why this page gets cited instead of the vendor page above it. 
+ 10 H2: When automated repair is not enough 80&ndash;120 Honesty chunk. Directly attacks the &ldquo;file repair quality&rdquo; negative trait Athena measured at 56%. 
+ 11 FAQ 5 &times; 40&ndash;60 Highest-density AI food on the page. Feeds FAQPage schema. 
+ 12 Related pages &mdash; 3&ndash;5 internal links: sibling formats, sibling issues, glossary. 
+ 13 Last updated &mdash; Visible date + dateModified in schema. Freshness signal. 
+ 
+ Do not add: a hero image, a testimonial carousel, a pricing table, a newsletter modal, or an intro paragraph before the H1. Every one of these pushes the widget down. The widget is the page. 
+ 
+
+ 
+ A2 &middot; The chunking rule &mdash; why each H2 must stand alone 
+ AI engines do not read a page top to bottom. They retrieve chunks &mdash; usually one heading plus the text under it &mdash; and cite that chunk in isolation. A section that begins &ldquo;As mentioned above, this also affects&hellip;&rdquo; is useless when lifted out, so it never gets cited. 
+ 
+ Rule Why 
+ Every H2 section makes sense read alone It will be read alone. No &ldquo;as we saw earlier&rdquo;, no &ldquo;this&rdquo; referring to the previous section. 
+ Repeat the key noun in each section Write &ldquo;non-manifold edges&rdquo; again rather than &ldquo;they&rdquo; or &ldquo;the issue&rdquo;. Chunks lose their antecedents. 
+ First sentence under each H2 answers that H2 Same answer-first rule as the intro, applied per section. 
+ H2s are written as questions where natural Matches how the query arrives at the engine. 
+ One idea per paragraph, 2&ndash;4 sentences Wall-of-text paragraphs get chunked badly and truncated mid-thought. 
+ Numbers and tables over adjectives &ldquo;Reduced 36 holes to 4&rdquo; is citable. &ldquo;Significantly improved&rdquo; is not. 
+ 
+ 
+ 
+
+ 
+ Part A &mdash; worked example 
+ Complete copy for /tools/fix-non-manifold-stl 
+ This is the reference page. Copy the structure for all other pages; rewrite every sentence. See A7 for the uniqueness rules. 
+
+ 
+ A3 &middot; Section-by-section copy 
+
+ 1&ndash;2 &middot; Breadcrumb and H1 
+ Breadcrumb Home &rsaquo; Tools &rsaquo; Fix non-manifold STL 
+ H1 Fix non-manifold edges in an STL file 
+ Nine words, contains the exact phrase people search. No brand name in the H1 &mdash; nobody searches &ldquo;TEELI non-manifold fixer&rdquo; yet. 
+
+ 3 &middot; Answer paragraph &mdash; the citation chunk 
+ Answer &mdash; 56 words A non-manifold edge is an edge shared by three or more faces, or by only one face. Slicers reject these models because they cannot determine what is inside the solid and what is outside. Upload an STL below to see exactly how many non-manifold edges it contains &mdash; free, and no account is needed. 
+ Test for this paragraph: delete the rest of the page. Does this alone answer the user&rsquo;s question? If yes, it will get cited. If it says &ldquo;in this guide we will explore&hellip;&rdquo;, rewrite it. 
+
+ 4 &middot; Widget 
+ Renders here. Nothing between the answer paragraph and the widget. See A4 for the wiring contract. 
+
+ 5 &middot; Trust strip 
+ Trust strip &mdash; 14 words Free &middot; No account needed &middot; STL up to 100&nbsp;MB &middot; Uploads deleted after 24 hours 
+ The deletion claim ships only if T4.1&rsquo;s purge is proven in logs. Standing rule 4. If it is not proven, the strip reads &ldquo;Free &middot; No account needed &middot; STL up to 100&nbsp;MB&rdquo; and nothing more. 
+
+ 6 &middot; H2: What is a non-manifold edge? 
+ Body &mdash; ~150 words A non-manifold edge is an edge where the surface of a mesh connects in a way that could not exist as a real physical object. In a valid mesh every edge is shared by exactly two faces. A non-manifold edge is shared by three or more, or by only one. Three common shapes this takes in practice: a face left over inside a model after a boolean operation, two shells welded at a single shared edge, and a stray face with no neighbour on one side. Sculpting tools and text-to-3D generators produce all three routinely. Non-manifold geometry is not the same as a hole. A model can have zero holes and still be non-manifold, and a slicer will still refuse it. Related term: watertight mesh . 
+
+ 7 &middot; H2: Why do slicers reject non-manifold STL files? 
+ Body &mdash; ~160 words A slicer works by intersecting your model with a stack of horizontal planes and deciding, for every point on each plane, whether that point is inside the solid or outside it. That decision requires an unambiguous surface. When an edge is shared by three faces, there is no single correct answer, so the slicer either guesses or refuses. What you see depends on which slicer you use. Cura reports the model as not manifold and may still slice it with distorted layers. PrusaSlicer flags &ldquo;object has errors&rdquo; and offers automatic repair. Bambu Studio raises a mesh error before printing. The dangerous case is the one that slices anyway. A model with non-manifold edges can produce clean-looking layers and then print with missing walls or filled internal cavities that waste hours of material before the fault is visible. 
+
+ 8 &middot; H2: How TEELI repairs non-manifold edges 
+ Body &mdash; ~180 words + table The checker runs all six geometry checks on every upload, not just the non-manifold test. Repair then removes the offending faces, rebuilds the local surface, and re-runs the same checks to confirm the count actually fell. A regression gate sits inside the repair worker. If the number of holes after repair is higher than before, or the model is still not watertight, the job is marked failed rather than reported as done. Nothing is charged for a failed job. Example from a real user file: 
+ ┌──────────────────────┬────────┬───────┐
+│ Check │ Before │ After │
+├──────────────────────┼────────┼───────┤
+│ Non-manifold edges │ 47 │ 0 │
+│ Boundary holes │ 36 │ 4 │
+│ Watertight │ No │ Yes │
+│ Triangle count │ 184,220│184,196│
+└──────────────────────┴────────┴───────┘ 
+ Founder must supply these numbers from a real file. Do not invent them and do not let the agent invent them. One real before/after table is worth more for citations than the entire rest of the page &mdash; original data is the single strongest citation signal available to a small site. 
+
+ 9 &middot; H2: Can I fix non-manifold edges for free? 
+ Body &mdash; ~190 words Yes, and for many files you should. Here are the options that genuinely work. Blender &mdash; open the file, enter Edit mode, then Select &rsaquo; All by Trait &rsaquo; Non Manifold. This highlights every offending edge so you can inspect and fix them by hand. Free, precise, and the right tool when you need to understand what is wrong rather than just clear it. PrusaSlicer and Bambu Studio &mdash; both offer one-click automatic repair and handle straightforward cases well. Neither tells you what it changed. Formware&rsquo;s online STL repair &mdash; free, browser-based, no install. Where these fall short is verification and volume. None of them reports a before-and-after count you can put in front of a client, and none handles a folder of thirty files. If you are fixing one model for yourself, use Blender. If you need proof the file is now printable, or you receive broken files every week, that is the gap this tool fills. 
+ This section is not a mistake. Honest comparison pages get cited far more often than vendor pages that pretend no alternative exists &mdash; and answer engines cross-check claims across sources, so a page that omits the obvious free option reads as unreliable. It also pre-qualifies buyers: whoever keeps reading after this section has a real reason to pay. 
+
+ 10 &middot; H2: When automated repair is not enough 
+ Body &mdash; ~110 words Automated repair is reliable on defects that are local &mdash; a handful of bad edges in an otherwise sound surface. It is unreliable in three situations. Meshes with heavy self-intersection, where several shells overlap, often need the intersecting geometry removed by hand before any repair will hold. Very thin walls can disappear entirely when the surface is rebuilt. And models where the defect is a modelling mistake rather than a geometry error &mdash; a wall below the printer&rsquo;s minimum thickness, for instance &mdash; are geometrically valid and will pass every check while still failing to print. The checker tells you which of these applies before you spend anything. 
+ Why this section is mandatory on every page. Athena measured &ldquo;file repair quality&rdquo; as a negative brand trait in 56% of AI responses mentioning TEELI, against 3% for competitors. Stating the limits explicitly, in the product&rsquo;s own words, is the direct fix &mdash; it replaces the model&rsquo;s inferred doubt with a sourced, bounded claim. 
+ 
+ 
+
+ 
+ Part A &mdash; wiring 
+
+ 
+ A4 &middot; Widget placement and wiring contract 
+ 
+ Rule Detail 
+ Above the fold, always Drop zone fully visible at 1440&times;900 without scrolling, and reachable within one thumb-scroll on a 390&times;844 phone. 
+ Nothing between answer and widget No image, no banner, no callout. 
+ Same component as /check Import it. A forked copy will drift and one of the two will silently lose the rate limit. 
+ Format pre-filtered client-side only Server validation is unchanged and authoritative. 
+ Result reorders, never filters All six checks always shown. The highlighted one goes first with a short explanatory line. 
+ Source string recorded Stored on the anon asset row so per-page conversion is one SQL query. 
+ 
+ // components/CheckWidget.tsx -- contract the agent must honour
+
+// 1. This is the SAME component rendered at /check. Import it; do not
+// copy it. If /check changes, every tools page changes with it.
+//
+// 2. acceptFormats ONLY narrows the file picker and the client-side
+// extension guard. Server-side validation stays identical to /check.
+//
+// 3. highlightIssue is passed straight through to the RESULT renderer.
+// It reorders the checks array for display. It is NOT sent to the
+// worker, it does NOT appear in the diagnose payload, and it MUST
+// NOT reach any Python code. Grep the worker for &#x27;highlightIssue&#x27;
+// after your change -- zero hits is the pass condition.
+//
+// 4. source is a plain analytics string. Store it on the anon asset row
+// so the founder can answer &quot;which tools page produces uploads?&quot;
+// with one SQL query.
+//
+// 5. Anonymous scope rules from Phase 4 T4.1 apply UNCHANGED here:
+// diagnose only, anon/ R2 prefix, per-IP rate limit, 24h purge.
+// A tools page is not a new privilege boundary -- it is a new door
+// onto the existing one. Do not add a bypass. 
+ DoD A4: grep -r "highlightIssue" services/ returns zero hits. A file uploaded from /tools/fix-holes-stl and the same file uploaded from /check produce byte-identical diagnosis JSON &mdash; paste both in your report. 
+ 
+
+ 
+ A5 &middot; Schema markup &mdash; full JSON-LD 
+ One @graph block per page, injected server-side. Three node types: the tool itself, the FAQ, and the breadcrumb. 
+ &lt;script type=&quot;application/ld+json&quot;&gt;
+{
+ &quot;@context&quot;: &quot;https://schema.org&quot;,
+ &quot;@graph&quot;: [
+ {
+ &quot;@type&quot;: &quot;WebApplication&quot;,
+ &quot;@id&quot;: &quot;https://teeli.net/tools/fix-non-manifold-stl#app&quot;,
+ &quot;name&quot;: &quot;TEELI non-manifold STL checker&quot;,
+ &quot;url&quot;: &quot;https://teeli.net/tools/fix-non-manifold-stl&quot;,
+ &quot;applicationCategory&quot;: &quot;DesignApplication&quot;,
+ &quot;applicationSubCategory&quot;: &quot;3D mesh repair&quot;,
+ &quot;operatingSystem&quot;: &quot;Any (browser-based)&quot;,
+ &quot;browserRequirements&quot;: &quot;Requires JavaScript&quot;,
+ &quot;featureList&quot;: [
+ &quot;Detect non-manifold edges in STL files&quot;,
+ &quot;Detect boundary holes and open edges&quot;,
+ &quot;Detect inverted normals&quot;,
+ &quot;Detect self-intersecting faces&quot;,
+ &quot;Detect degenerate faces&quot;,
+ &quot;Watertight verification&quot;
+ ],
+ &quot;offers&quot;: {
+ &quot;@type&quot;: &quot;Offer&quot;,
+ &quot;price&quot;: &quot;0&quot;,
+ &quot;priceCurrency&quot;: &quot;USD&quot;,
+ &quot;description&quot;: &quot;Free diagnosis, no account required. Repair is credit-based.&quot;
+ },
+ &quot;publisher&quot;: { &quot;@id&quot;: &quot;https://teeli.net/#organization&quot; }
+ },
+ {
+ &quot;@type&quot;: &quot;FAQPage&quot;,
+ &quot;@id&quot;: &quot;https://teeli.net/tools/fix-non-manifold-stl#faq&quot;,
+ &quot;mainEntity&quot;: [
+ {
+ &quot;@type&quot;: &quot;Question&quot;,
+ &quot;name&quot;: &quot;Will fixing non-manifold edges change my model&#x27;s shape?&quot;,
+ &quot;acceptedAnswer&quot;: {
+ &quot;@type&quot;: &quot;Answer&quot;,
+ &quot;text&quot;: &quot;Standard repair only alters geometry at the defective edges. Vertex positions elsewhere are untouched, so the printed dimensions stay the same. Deep repair rebuilds the surface and can shift fine detail, which is why it is a separate, opt-in step.&quot;
+ }
+ },
+ {
+ &quot;@type&quot;: &quot;Question&quot;,
+ &quot;name&quot;: &quot;Does TEELI charge if the repair fails?&quot;,
+ &quot;acceptedAnswer&quot;: {
+ &quot;@type&quot;: &quot;Answer&quot;,
+ &quot;text&quot;: &quot;No. Credits are held when a repair job starts and are only captured if the job produces a measurable improvement. If the job fails or makes no progress, the hold is released and your balance is unchanged.&quot;
+ }
+ },
+ {
+ &quot;@type&quot;: &quot;Question&quot;,
+ &quot;name&quot;: &quot;What is the difference between non-manifold and not watertight?&quot;,
+ &quot;acceptedAnswer&quot;: {
+ &quot;@type&quot;: &quot;Answer&quot;,
+ &quot;text&quot;: &quot;Not watertight means the surface has gaps, so the model has no clearly enclosed volume. Non-manifold means the surface connects in a way that cannot exist physically, such as an edge shared by three faces. A model can be non-manifold while having no holes at all.&quot;
+ }
+ },
+ {
+ &quot;@type&quot;: &quot;Question&quot;,
+ &quot;name&quot;: &quot;Can Cura or PrusaSlicer fix non-manifold edges?&quot;,
+ &quot;acceptedAnswer&quot;: {
+ &quot;@type&quot;: &quot;Answer&quot;,
+ &quot;text&quot;: &quot;Both slicers attempt automatic repair on simple defects and often succeed. They tend to fail on edges shared by three or more faces and on intersecting shells, and neither reports what it changed, so you cannot verify the result.&quot;
+ }
+ },
+ {
+ &quot;@type&quot;: &quot;Question&quot;,
+ &quot;name&quot;: &quot;Which file formats does the checker accept?&quot;,
+ &quot;acceptedAnswer&quot;: {
+ &quot;@type&quot;: &quot;Answer&quot;,
+ &quot;text&quot;: &quot;This page accepts STL, both binary and ASCII, up to the published size limit. OBJ, 3MF and GLB have their own pages.&quot;
+ }
+ }
+ ]
+ },
+ {
+ &quot;@type&quot;: &quot;BreadcrumbList&quot;,
+ &quot;itemListElement&quot;: [
+ { &quot;@type&quot;: &quot;ListItem&quot;, &quot;position&quot;: 1, &quot;name&quot;: &quot;Home&quot;, &quot;item&quot;: &quot;https://teeli.net/&quot; },
+ { &quot;@type&quot;: &quot;ListItem&quot;, &quot;position&quot;: 2, &quot;name&quot;: &quot;Tools&quot;, &quot;item&quot;: &quot;https://teeli.net/tools&quot; },
+ { &quot;@type&quot;: &quot;ListItem&quot;, &quot;position&quot;: 3, &quot;name&quot;: &quot;Fix non-manifold STL&quot; }
+ ]
+ }
+ ]
+}
+&lt;/script&gt; 
+ Honest expectation setting. Google restricted FAQ rich results to a narrow set of authoritative sites in 2023, and retired HowTo rich results around the same time. This schema will not give you SERP rich snippets. It is here because answer engines parse structured data to extract clean question/answer pairs, and because it costs nothing once the template exists. Judge it on citations, not on SERP appearance. 
+ Never put a question in FAQPage schema that is not visible on the page. Schema and rendered content must match exactly &mdash; mismatches are a manual-action risk and answer engines cross-check. 
+ DoD A5: every page passes Google Rich Results Test with zero errors, and the Organization node referenced by @id actually exists on the homepage. 
+ 
+
+ 
+ A6 &middot; FAQ format rules 
+ 
+ Rule Detail 
+ Exactly 5 questions Fewer is thin; more dilutes and pads the page. 
+ 40&ndash;60 words per answer Long enough to be complete, short enough to be lifted whole. 
+ Answer first word is the answer &ldquo;No. Credits are held&hellip;&rdquo; not &ldquo;That&rsquo;s a great question&hellip;&rdquo; 
+ Questions phrased as users type them Source them from Reddit threads and &ldquo;People also ask&rdquo;, not from imagination. 
+ At least one uncomfortable question Pricing, failure, or limits. A five-question FAQ where all five are flattering reads as marketing and gets discounted. 
+ No question repeats across pages verbatim Duplicate FAQ blocks across 48 URLs is the fastest route to a thin-content classification. 
+ 
+ The five slots, in order: 
+ 
+ Safety &mdash; will this damage or change my model? 
+ Money &mdash; what happens if it fails? (answer: hold released, nothing charged) 
+ Confusion &mdash; how is {this issue} different from {adjacent issue}? 
+ Alternative &mdash; can my existing tool already do this? 
+ Scope &mdash; formats, size limits, batch. 
+ 
+ 
+ 
+
+ 
+ Part A &mdash; build 
+
+ 
+ A7 &middot; Config-driven architecture 
+ One config file, one dynamic route. Forty-eight pages, two source files. The founder edits the config; the agent never touches prose. 
+ // lib/toolPages.ts -- ONE config, ONE route, N pages.
+// The agent builds this shape. The founder fills the prose fields.
+
+export type IssueKey =
+ | &#x27;nonManifold&#x27; | &#x27;holes&#x27; | &#x27;watertight&#x27; | &#x27;invertedNormals&#x27;
+ | &#x27;selfIntersecting&#x27; | &#x27;degenerateFaces&#x27;;
+
+export type ToolPage = {
+ slug: string;
+ format: &#x27;stl&#x27; | &#x27;obj&#x27; | &#x27;3mf&#x27; | &#x27;glb&#x27;;
+ highlightIssue: IssueKey; // display order only -- NEVER filters the engine
+ h1: string;
+ answerParagraph: string; // 40-60 words, founder-written
+ sections: { h2: string; body: string }[]; // 5 sections, founder-written
+ faq: { q: string; a: string }[]; // 5 items, founder-written
+ related: string[]; // slugs
+ lastUpdated: string; // ISO date
+};
+
+export const TOOL_PAGES: Record&lt;string, ToolPage&gt; = {
+ &#x27;fix-non-manifold-stl&#x27;: { /* ... */ },
+ &#x27;fix-holes-stl&#x27;: { /* ... */ },
+}; // app/tools/[slug]/page.tsx
+
+import { TOOL_PAGES } from &#x27;@/lib/toolPages&#x27;;
+import { notFound } from &#x27;next/navigation&#x27;;
+
+// STATIC GENERATION IS MANDATORY (standing rule 6).
+// Without this the body text is client-rendered and AI crawlers see nothing.
+export function generateStaticParams() {
+ return Object.keys(TOOL_PAGES).map((slug) =&gt; ({ slug }));
+}
+
+export function generateMetadata({ params }) {
+ const page = TOOL_PAGES[params.slug];
+ if (!page) return {};
+ return {
+ title: page.h1,
+ description: page.answerParagraph.slice(0, 155),
+ alternates: { canonical: `https://teeli.net/tools/${page.slug}` },
+ openGraph: { title: page.h1, description: page.answerParagraph },
+ };
+}
+
+export default function ToolPage({ params }) {
+ const page = TOOL_PAGES[params.slug];
+ if (!page) notFound();
+
+ return (
+ &lt;article&gt;
+ &lt;Breadcrumb slug={page.slug} /&gt;
+ &lt;h1&gt;{page.h1}&lt;/h1&gt;
+ &lt;p className=&quot;answer&quot;&gt;{page.answerParagraph}&lt;/p&gt;
+
+ {/* The SAME widget component used on /check. No fork, no copy. */}
+ &lt;CheckWidget
+ acceptFormats={[page.format]}
+ highlightIssue={page.highlightIssue}
+ source={`tools:${page.slug}`} // for funnel attribution in GA4
+ /&gt;
+
+ &lt;TrustStrip format={page.format} /&gt;
+
+ {page.sections.map((s) =&gt; (
+ &lt;section key={s.h2}&gt;
+ &lt;h2&gt;{s.h2}&lt;/h2&gt;
+ &lt;div dangerouslySetInnerHTML={{ __html: s.body }} /&gt;
+ &lt;/section&gt;
+ ))}
+
+ &lt;FaqBlock items={page.faq} /&gt;
+ &lt;RelatedPages slugs={page.related} /&gt;
+ &lt;time dateTime={page.lastUpdated}&gt;Last updated {page.lastUpdated}&lt;/time&gt;
+ &lt;JsonLd page={page} /&gt;
+ &lt;/article&gt;
+ );
+} 
+ DoD A7: curl -s https://teeli.net/tools/fix-non-manifold-stl | grep -c "non-manifold edge" returns a non-zero count. If it returns 0 the page is client-rendered and no AI crawler can read it &mdash; standing rule 6 violated, stop and report. 
+ 
+
+ 
+ A8 &middot; Uniqueness rules &mdash; the thin-content guardrail 
+ Forty-eight pages from one template is programmatic SEO. Done well it is a durable asset. Done lazily it is a doorway-page penalty that takes the whole domain down with it. The line between the two is how much genuinely differs. 
+ 
+ Element Must be unique? Note 
+ H1 &#10003; Always &mdash; 
+ Answer paragraph &#10003; Always Rewritten, not find-and-replaced 
+ All five H2 bodies &#10003; Always Different examples, different slicer behaviour, different numbers 
+ Before/after table &#10003; Always From a different real file per page 
+ All five FAQ pairs &#10003; Always Slots may repeat; wording may not 
+ Free-alternatives section &#10003; Always Blender steps differ per issue; slicer behaviour differs per format 
+ Trust strip &#10007; Shared Format and size cap swap in 
+ Widget &#10007; Shared Must be shared &mdash; standing rule 1 
+ Schema shape &#10007; Shared Values differ, structure identical 
+ 
+ Hard rule: no two tools pages may share a body paragraph verbatim. Before publishing a batch, diff every pair. If two pages are more than 40% identical by body text, one of them should not exist &mdash; merge them. 
+ Sanity test. If a page would still be useful with the widget removed, it is a real page. If it would be an empty shell, it is a doorway page and Google will eventually treat it as one. 
+ 
+
+ 
+ A9 &middot; The eight launch pages 
+ Ship these eight. Do not ship the other forty until Search Console shows impressions on at least five of them after 30 days. 
+ 
+ # Slug Format Highlight Target query 
+ 1 fix-non-manifold-stl stl nonManifold how to fix non manifold geometry 
+ 2 fix-holes-stl stl holes 3d model has holes how to fix 
+ 3 make-stl-watertight stl watertight stl not watertight fix 
+ 4 repair-stl-online-free stl watertight free stl repair online 
+ 5 check-stl-print-ready stl watertight how to check if a 3d file is print ready 
+ 6 fix-inverted-normals stl invertedNormals inverted normals 3d print 
+ 7 repair-obj-online obj watertight repair obj mesh online 
+ 8 fix-ai-generated-model-for-printing stl nonManifold how to prepare ai generated model for 3d printing 
+ 
+ Page 8 is the strategic one. It is the lowest-competition, fastest-growing query in the set, it maps directly to the traffic Meshy and Tripo generate, and it is the natural landing page for the &ldquo;200 AI models tested&rdquo; research article. Write it last, once the data exists to back it. 
+ 
+
+ 
+ A10 &middot; Internal linking map 
+ Hub and spoke. Every page links up to its hub, sideways to two siblings, and down to its glossary term. Nothing is orphaned. 
+ /tools (hub index)
+ |
+ +-- /tools/fix-non-manifold-stl
+ | |-- glossary link -&gt; /glossary/non-manifold-edge
+ | |-- sibling issue -&gt; /tools/fix-holes-stl
+ | |-- sibling format -&gt; /tools/repair-obj-online
+ | &#x27;-- up -&gt; /tools
+ |
+ +-- /tools/fix-holes-stl
+ |-- glossary link -&gt; /glossary/boundary-edge
+ ...
+
+/glossary (hub index)
+ |
+ +-- /glossary/non-manifold-edge
+ |-- &#x27;how to fix&#x27; -&gt; /tools/fix-non-manifold-stl &lt;-- the money link
+ |-- related terms -&gt; /glossary/watertight-mesh
+ &#x27;-- up -&gt; /glossary
+
+/blog/{post}
+ &#x27;-- links DOWN into /tools and /glossary. Never the reverse as a
+ primary CTA -- a tools page must not send a ready-to-convert
+ visitor off to read an article. 
+ DoD A10: Screaming Frog crawl shows zero orphan pages and every tools page has at least three internal inbound links. 
+ 
+
+ 
+ A11 &middot; Pre-publish QA checklist 
+ 
+ Widget above the fold at 1440&times;900 and one thumb-scroll on 390&times;844 
+ Answer paragraph 40&ndash;60 words , answers the H1 with no preamble 
+ curl shows body text in raw HTML (standing rule 6) 
+ Rich Results Test passes with zero errors 
+ Schema FAQ matches visible FAQ word for word 
+ Every H2 reads standalone &mdash; no &ldquo;as mentioned above&rdquo; 
+ Before/after table uses real numbers from a real file 
+ Free-alternatives section present and genuinely honest 
+ Limits section present 
+ Canonical URL set , no trailing-slash duplicate 
+ &lt;40% body overlap with every other tools page 
+ 3+ internal inbound links exist 
+ Last-updated date visible and in schema 
+ Sitemap includes it ; GSC and Bing both submitted 
+ source string lands on the anon asset row &mdash; verify with SQL 
+ 
+ DoD Part A: eight pages live and statically rendered; one real upload completed from a tools page with its source visible in a SQL query pasted into your report; all eight pass Rich Results Test; pairwise body overlap under 40%. 
+ 
+ 
+
+ 
+ Part B &mdash; /glossary page 
+ The cheap, fast half of the system 
+ No dependency on Phase 4. No widget. 400&ndash;600 words each, three per sitting. These are the pages answer engines lift definitions from, and they are what makes the tools pages rank &mdash; a site with ten clean definition pages reads as a domain authority on mesh geometry, and that authority flows through the internal links. 
+
+ 
+ B1 &middot; Anatomy 
+ 
+ # Section Words Note 
+ 1 H1: What is {term}? 4&ndash;6 Question form. Matches the query exactly. 
+ 2 Definition paragraph 40&ndash;60 The whole point of the page. Complete, standalone, no preamble. 
+ 3 H2: Why it matters for 3D printing 100&ndash;150 Consequence, not theory. 
+ 4 H2: How to identify it 100&ndash;150 Concrete steps in named software. 
+ 5 H2: How to fix it 80&ndash;120 The money link &mdash; one sentence to the matching tools page. 
+ 6 Related terms &mdash; 3&ndash;4 glossary links. 
+ 7 Last updated &mdash; Visible + schema. 
+ 
+ No widget on a glossary page. Someone searching &ldquo;what is a non-manifold edge&rdquo; wants to understand, not upload. Put a drop zone there and you get bounces instead of a definition that earns citations. Send them to the tools page with a link and let them arrive ready. 
+ 
+
+ 
+ B2 &middot; Worked example &mdash; /glossary/non-manifold-edge 
+
+ H1 What is a non-manifold edge? 
+
+ Definition &mdash; 52 words A non-manifold edge is an edge in a 3D mesh that is shared by three or more faces, or by only one face, instead of exactly two. Such an edge cannot exist on a real physical surface, which is why slicers and CAD software reject models that contain them. 
+
+ H2: Why it matters for 3D printing &mdash; ~130 words Slicing software converts a model into printable layers by deciding, at every point, whether that point lies inside the solid or outside it. That decision only works if the surface is unambiguous. A non-manifold edge makes it ambiguous, because there is no single correct answer about which side is the interior. In practice this shows up in three ways: the slicer refuses the file outright, it repairs the file silently and changes geometry you did not approve, or &mdash; worst &mdash; it slices without complaint and produces a print with missing walls or unexpected solid interiors, wasting hours of material before the fault becomes visible. 
+
+ H2: How to identify a non-manifold edge &mdash; ~140 words In Blender, open the file, switch to Edit mode, and use Select &rsaquo; All by Trait &rsaquo; Non Manifold. Every offending edge is highlighted, and the status bar reports the count. In MeshLab, the Compute Geometric Measures filter reports non-manifold edge and vertex counts directly. Most slicers will tell you something is wrong without naming it. PrusaSlicer shows &ldquo;object has errors&rdquo;, Cura reports the model as not manifold, and Bambu Studio raises a generic mesh error. None of them distinguishes a non-manifold edge from a boundary hole, which is why two very different problems often get reported with the same warning. 
+
+ H2: How to fix a non-manifold edge &mdash; ~90 words For a single model, Blender is the precise option: select the non-manifold edges, inspect what is actually wrong, and delete or rebuild the offending faces by hand. Slicer auto-repair handles simple cases in one click but does not report what it changed. For a verified result with a before-and-after count, or for more files than you want to open individually, run the file through the free non-manifold STL checker &mdash; it reports the exact count before you decide whether to repair. 
+
+ Related terms Watertight mesh &middot; Boundary edge &middot; Manifold geometry &middot; Self-intersecting faces 
+
+ Note the link discipline. Exactly one link to the tools page, placed in the &ldquo;how to fix&rdquo; section where intent is highest, and phrased as a description of the tool rather than a shouty CTA. A glossary page with four CTAs reads as a landing page and stops getting cited as a definition. 
+ 
+
+ 
+ B3 &middot; Glossary schema 
+ DefinedTerm inside a shared DefinedTermSet . Simpler than the tools schema and the set node ties the whole glossary together as one entity. 
+ &lt;script type=&quot;application/ld+json&quot;&gt;
+{
+ &quot;@context&quot;: &quot;https://schema.org&quot;,
+ &quot;@graph&quot;: [
+ {
+ &quot;@type&quot;: &quot;DefinedTermSet&quot;,
+ &quot;@id&quot;: &quot;https://teeli.net/glossary#set&quot;,
+ &quot;name&quot;: &quot;TEELI 3D printing geometry glossary&quot;,
+ &quot;url&quot;: &quot;https://teeli.net/glossary&quot;
+ },
+ {
+ &quot;@type&quot;: &quot;DefinedTerm&quot;,
+ &quot;@id&quot;: &quot;https://teeli.net/glossary/non-manifold-edge#term&quot;,
+ &quot;name&quot;: &quot;Non-manifold edge&quot;,
+ &quot;description&quot;: &quot;An edge in a 3D mesh shared by three or more faces, or by only one face, rather than exactly two. Non-manifold edges make a model geometrically impossible as a physical solid, which is why slicers reject them.&quot;,
+ &quot;inDefinedTermSet&quot;: { &quot;@id&quot;: &quot;https://teeli.net/glossary#set&quot; },
+ &quot;url&quot;: &quot;https://teeli.net/glossary/non-manifold-edge&quot;
+ },
+ {
+ &quot;@type&quot;: &quot;BreadcrumbList&quot;,
+ &quot;itemListElement&quot;: [
+ { &quot;@type&quot;: &quot;ListItem&quot;, &quot;position&quot;: 1, &quot;name&quot;: &quot;Home&quot;, &quot;item&quot;: &quot;https://teeli.net/&quot; },
+ { &quot;@type&quot;: &quot;ListItem&quot;, &quot;position&quot;: 2, &quot;name&quot;: &quot;Glossary&quot;, &quot;item&quot;: &quot;https://teeli.net/glossary&quot; },
+ { &quot;@type&quot;: &quot;ListItem&quot;, &quot;position&quot;: 3, &quot;name&quot;: &quot;Non-manifold edge&quot; }
+ ]
+ }
+ ]
+}
+&lt;/script&gt; 
+ The description in schema should be the same 40&ndash;60 word definition shown on the page, not a shortened variant. Consistency between rendered text and structured data is what makes the extraction reliable. 
+ 
+
+ 
+ B4 &middot; The ten launch terms 
+ 
+ # Slug Links to tools page 
+ 1 /glossary/non-manifold-edge fix-non-manifold-stl 
+ 2 /glossary/watertight-mesh make-stl-watertight 
+ 3 /glossary/boundary-edge fix-holes-stl 
+ 4 /glossary/inverted-normals fix-inverted-normals 
+ 5 /glossary/self-intersecting-faces repair-stl-online-free 
+ 6 /glossary/degenerate-faces repair-stl-online-free 
+ 7 /glossary/manifold-geometry fix-non-manifold-stl 
+ 8 /glossary/stl-vs-obj-vs-3mf repair-obj-online 
+ 9 /glossary/mesh-vs-solid-model check-stl-print-ready 
+ 10 /glossary/print-ready-file check-stl-print-ready 
+ 
+ DoD Part B: ten glossary pages live and statically rendered; each has exactly one tools link and 3&ndash;4 related-term links; all pass Rich Results Test; /glossary index links to all ten. 
+ 
+ 
+
+ 
+ Part C &mdash; sequencing 
+ 
+ C1 &middot; Build order and ownership 
+ 
+ Order What Owner Gate 
+ 1 10 glossary pages Founder writes, agent builds route None &mdash; start now 
+ 2 /glossary index + schema Agent After 3 terms exist 
+ 3 Phase 4 T4.1 &mdash; /check Agent Phase 3 T3.2 proven 
+ 4 Tools route + config + schema Agent T4.1 done 
+ 5 Real before/after data Founder &mdash; 8 real files Blocks page copy 
+ 6 8 tools pages Founder writes, agent wires 4 and 5 done 
+ 7 30-day observation Founder GSC + Bing impressions 
+ 8 Scale to 48 Founder 5 of 8 showing impressions 
+ 
+ Realistic pace for one person: one glossary page per sitting (about 90 minutes including research), one tools page per week (the real before/after file is the slow part). Ten glossary pages in three weeks, eight tools pages in eight weeks. That is the whole system in roughly a quarter, alongside product work &mdash; not a sprint. 
+ Do not batch-write with AI to go faster. Forty-eight machine-written near-duplicates is the one failure mode that cannot be undone by editing later &mdash; the domain classification persists long after the pages are fixed. 
+ 
+
+ 
+ C2 &middot; What to report back 
+ 
+ Live URLs, grouped by part 
+ curl | grep output proving static render on one page of each type 
+ Rich Results Test screenshot or pass/fail per page 
+ SQL row showing a real upload with its source string 
+ Identical-diagnosis proof: same file via /check and via a tools page 
+ grep -r "highlightIssue" services/ &mdash; must be zero 
+ Pairwise body-overlap percentages for the eight tools pages 
+ Anything you noticed but did not fix (standing rule 7) 
+ 
+ 
+ 
+
+ 
+ TEELI CONTENT SYSTEM &mdash; /tools + /glossary &middot; one engine, many doors &middot; ship 8, prove, then scale &middot; never claim a property the code does not enforce 
+ 
+ 

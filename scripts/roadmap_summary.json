@@ -1,0 +1,873 @@
+[
+  {
+    "file": "AGENT-BRIEF-01-Foundation.html",
+    "size": 28845,
+    "title": "AGENT BRIEF 01 — Foundation (T0·T1·T2) · TEELI 3D Studio",
+    "headings": [
+      "T0.1 — .env.example (root + apps/web). Founder fills real values in Vercel/Modal.",
+      "T0.2 — Shared constants. Create packages/shared/ (or apps/web/src/shared/ if monorepo pkg is heavy — pick one, tell founder which).",
+      "T0.3 — BigInt-safe JSON helper in apps/web/src/lib/utils.ts",
+      "T0.4 — Mojibake fix",
+      "T1.1 — Append to apps/web/prisma/schema.prisma",
+      "T1.2 — Pooler split in lib/prisma.ts + datasource",
+      "T1.3 — Migration + non-negative wallet guard",
+      "T1.4 — Seed prisma/seed.ts"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\" class=\"dark\"> <head> <meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>AGENT BRIEF 01 — Foundation (T0·T1·T2) · TEELI 3D Studio</title> <script src=\"https://cdn.tailwindcss.com\"></script> <script>tailwind.config={darkM"
+  },
+  {
+    "file": "AGENT-BRIEF-02-Upload.html",
+    "size": 32462,
+    "title": "AGENT BRIEF 02 — Upload Pipeline (T3·T4·T5) · TEELI 3D Studio",
+    "headings": [
+      "T3.0 — Install deps",
+      "T3.1 — R2 client: apps/web/src/lib/r2.ts (NEW)",
+      "T3.2 — Constants: add to packages/shared/upload.ts (NEW)",
+      "T3.3 — Quota guard: apps/web/src/server/guards/quota.ts (NEW)",
+      "T3.4 — The upload route: apps/web/src/app/api/upload/multipart/route.ts (MODIFY existing)",
+      "T4.1 — sha256 streaming helper: apps/web/src/lib/sha256.ts (NEW)",
+      "T4.2 — The uploader hook: apps/web/src/hooks/useS3Uploader.ts (MODIFY existing)",
+      "T4.3 — Wire the dropzone (replace fake behavior)"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\" class=\"dark\"> <head> <meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>AGENT BRIEF 02 — Upload Pipeline (T3·T4·T5) · TEELI 3D Studio</title> <script src=\"https://cdn.tailwindcss.com\"></script> <script>tailwind.config={"
+  },
+  {
+    "file": "AGENT-BRIEF-02B-Decisions.html",
+    "size": 19606,
+    "title": "AGENT BRIEF 02B — Decisions + finish T4·T5 · TEELI 3D Studio",
+    "headings": [
+      "P.1 — Server helper: apps/web/src/server/services/projects.ts (NEW)",
+      "P.2 — Use it in the upload route",
+      "P.3 — Client: where the studio gets its projectId",
+      "PL.1 — Plan map: add to packages/shared/plans.ts (NEW)",
+      "PL.2 — Plan resolver: apps/web/src/server/services/plan.ts (NEW)",
+      "PL.3 — Use in quota guard",
+      "T4-finish — Wire the dropzone using the resolved project",
+      "T5.1-finish — handleComplete (use resolved project)"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\" class=\"dark\"> <head> <meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>AGENT BRIEF 02B — Decisions + finish T4·T5 · TEELI 3D Studio</title> <script src=\"https://cdn.tailwindcss.com\"></script> <script>tailwind.config={d"
+  },
+  {
+    "file": "AGENT-BRIEF-03-Diagnose.html",
+    "size": 40985,
+    "title": "AGENT BRIEF 03 — Diagnose Worker + Modal (T6·T7·T8) · TEELI 3D Studio",
+    "headings": [
+      "T6.0 — Founder one-time setup (you tell the founder to do this)",
+      "T6.1 — Shared HMAC helper (Python): services/geometry-engine/common/security.py (NEW)",
+      "T6.2 — Modal app: services/geometry-engine/modal_app.py",
+      "T6.3 — Callback receiver (Next side): apps/web/src/app/api/internal/job-complete/route.ts (NEW)",
+      "T7.1 — Security gate FIRST: common/gate.py (NEW)",
+      "T7.2 — The 6 checks: workers/checks.py (NEW)",
+      "T7.3 — Scoring: workers/scoring.py (NEW)",
+      "T7.4 — Tests with real fixtures: tests/test_checks.py (NEW)"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\" class=\"dark\"> <head> <meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>AGENT BRIEF 03 — Diagnose Worker + Modal (T6·T7·T8) · TEELI 3D Studio</title> <script src=\"https://cdn.tailwindcss.com\"></script> <script>tailwind."
+  },
+  {
+    "file": "AGENT-BRIEF-04-Realtime-Bind.html",
+    "size": 40363,
+    "title": "AGENT BRIEF 04 — Realtime + Studio Panel Bind (T9·T10·T11) · TEELI 3D Studio",
+    "headings": [
+      "T9.1 — Per-mesh extract pehle, concat baad mein: workers/checks.py (MODIFY)",
+      "T9.2 — Proxy generator: workers/proxy.py (NEW)",
+      "T9.3 — Worker mein wire + callback ko PROXY bhejo: workers/diagnose.py (MODIFY)",
+      "T9.4 — Callback PROXY version likhe: api/internal/job-complete/route.ts (MODIFY)",
+      "T9.5 — Asset detail API (signed proxy URL): api/assets/[id]/route.ts (NEW)",
+      "T9.6 — Babylon proxy load + dispose: core/SceneManager.ts + core/EngineStore.ts (MODIFY)",
+      "T10.1 — RLS + Realtime publication (Supabase SQL editor)",
+      "T10.2 — Worker progress heartbeat: common/db.py + diagnose.py (MODIFY)"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\" class=\"dark\"> <head> <meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>AGENT BRIEF 04 — Realtime + Studio Panel Bind (T9·T10·T11) · TEELI 3D Studio</title> <script src=\"https://cdn.tailwindcss.com\"></script> <script>ta"
+  },
+  {
+    "file": "AGENT-BRIEF-04A-Format-Coverage.html",
+    "size": 34886,
+    "title": "Agent Brief 04A — Format Coverage · TEELI",
+    "headings": [
+      "Image — add headless Blender to diagnose_image",
+      "Universal loader — the drop-in for trimesh.load",
+      "Gate — widen allowlist + magic-byte sniff",
+      "Wire it in + map errors + tests",
+      "STOP &amp; confirm",
+      "Secrets needed to verify DoD (founder)"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief 04A — Format Coverage · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink-2:#9A"
+  },
+  {
+    "file": "AGENT-BRIEF-04B-Realtime-Panel.html",
+    "size": 23995,
+    "title": "Agent Brief 04B — Realtime + Panel Binding · TEELI",
+    "headings": [
+      "Realtime subscription layer",
+      "Bind the right panel to the real JSON",
+      "Loading / failed states"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief 04B — Realtime + Panel Binding · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --"
+  },
+  {
+    "file": "AGENT-BRIEF-05-Repair-Ladder.html",
+    "size": 27728,
+    "title": "Agent Brief 05 — Repair Ladder · TEELI",
+    "headings": [
+      "Repair worker (Modal)",
+      "Credits + job wiring (server) — the money path",
+      "Repair UI"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief 05 — Repair Ladder · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink-2:#9AA1A"
+  },
+  {
+    "file": "AGENT-BRIEF-06-Render-Worker.html",
+    "size": 28736,
+    "title": "Agent Brief 06 — Render Worker · TEELI",
+    "headings": [
+      "GPU render image",
+      "Render worker",
+      "Credits + plan-gating (server)",
+      "Render UI"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief 06 — Render Worker · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink-2:#9AA1A"
+  },
+  {
+    "file": "AGENT-BRIEF-07-Delivery.html",
+    "size": 17065,
+    "title": "Agent Brief 07 — Delivery · TEELI",
+    "headings": [
+      "Signed download service + routes",
+      "Email-on-complete + download UI"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief 07 — Delivery · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink-2:#9AA1AC; --"
+  },
+  {
+    "file": "AGENT-BRIEF-08-Auth-Identity.html",
+    "size": 17049,
+    "title": "Agent Brief 08 — Auth &amp; Identity · TEELI",
+    "headings": [
+      "Canonical auth gate + purge stubs",
+      "Wallet on signup (identity &rarr; credits)",
+      "RLS wiring + studio gate"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief 08 — Auth &amp; Identity · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink-2:"
+  },
+  {
+    "file": "AGENT-BRIEF-09-Monetization.html",
+    "size": 21673,
+    "title": "Agent Brief 09 — Monetization · TEELI",
+    "headings": [
+      "MoR-agnostic adapter",
+      "Packs + checkout + UI",
+      "Webhook (grant) + enforcement"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief 09 — Monetization · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink-2:#9AA1AC"
+  },
+  {
+    "file": "AGENT-BRIEF-10-Security.html",
+    "size": 20251,
+    "title": "Agent Brief 10 — Security &amp; Abuse Hardening · TEELI",
+    "headings": [
+      "Rate limiting at the Edge (Upstash, sliding window)",
+      "Cost-bomb defense + upload guards (the money protector)",
+      "Bot protection + tenant isolation + replay"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief 10 — Security &amp; Abuse Hardening · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9E"
+  },
+  {
+    "file": "AGENT-BRIEF-11-Observability.html",
+    "size": 18039,
+    "title": "Agent Brief 11 — Observability &amp; Job Reliability · TEELI",
+    "headings": [
+      "Eyes: error tracking (thin wrapper)",
+      "Safety net: timeouts + stuck-job reaper",
+      "Schedule the reaper + structured logging"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief 11 — Observability &amp; Job Reliability · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#"
+  },
+  {
+    "file": "AGENT-BRIEF-12-Observability.html.html",
+    "size": 33237,
+    "title": "Agent Brief 12 — Observability · TEELI",
+    "headings": [
+      "Sentry on both sides (web + engine)",
+      "Zombie-job reaper + GPU-spend alarm (cron)",
+      "Smoke-CI (GitHub Actions canary)"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief 12 — Observability · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink"
+  },
+  {
+    "file": "AGENT-BRIEF-13-Format-Coverage.html",
+    "size": 19978,
+    "title": "Agent Brief 13 — Format Coverage · TEELI",
+    "headings": [
+      "Tiered import to canonical GLB",
+      "Smooth web preview (gltf-transform)",
+      "Multi-format export + safe roll-out"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief 13 — Format Coverage · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink-2:#9AA"
+  },
+  {
+    "file": "AGENT-BRIEF-14-Performance.html",
+    "size": 17943,
+    "title": "Agent Brief 14 — Performance &amp; Smoothness · TEELI",
+    "headings": [
+      "Modern engine + render-on-demand",
+      "Bulletproof dispose (leak + stacking fix)",
+      "FPS budget + static freeze"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief 14 — Performance &amp; Smoothness · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED;"
+  },
+  {
+    "file": "AGENT-BRIEF-15-States-Version-History.html",
+    "size": 19645,
+    "title": "Agent Brief 15 — States &amp; Version History · TEELI",
+    "headings": [
+      "The UI Stack (empty / loading / error)",
+      "Job status as a stage, not a spinner",
+      "Version history timeline"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief 15 — States &amp; Version History · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED;"
+  },
+  {
+    "file": "AGENT-BRIEF-16-Testing-Matrix.html",
+    "size": 19318,
+    "title": "Agent Brief 16 — Testing Matrix · TEELI",
+    "headings": [
+      "Unit + integration (fast tier)",
+      "E2E money paths + the WebGL viewer",
+      "Load (k6) + chaos (fault injection)"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief 16 — Testing Matrix · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink-2:#9AA1"
+  },
+  {
+    "file": "AGENT-BRIEF-17-QA-Gate-Beta-Launch.html",
+    "size": 19031,
+    "title": "Agent Brief 17 — QA Gate &amp; Beta Launch · TEELI",
+    "headings": [
+      "Money &amp; data integrity",
+      "Resilience &amp; ops",
+      "User-facing &amp; day-one"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief 17 — QA Gate &amp; Beta Launch · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --"
+  },
+  {
+    "file": "AGENT-BRIEF-8A-Queue-Cancel.html",
+    "size": 17882,
+    "title": "Agent Brief 12 — Queue &amp; Cancel · TEELI",
+    "headings": [
+      "Capture the cancel handle",
+      "Cancel route + refund",
+      "UI + the two guards"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief 12 — Queue &amp; Cancel · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink-2:#"
+  },
+  {
+    "file": "AGENT-BRIEF-L1-DEFG-Panels-Toolbar-Resize.html",
+    "size": 25335,
+    "title": "Agent Brief L1 D–G — Panels, Toolbar &amp; Resize · TEELI",
+    "headings": [
+      "Left panel — real scene tree + assets",
+      "Right panel — pipeline tabs + render popup",
+      "Viewport toolbar — real tools",
+      "Desktop panel resize + persisted layout"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief L1 D–G — Panels, Toolbar &amp; Resize · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E"
+  },
+  {
+    "file": "AGENT-BRIEF-L1-HEADER.html",
+    "size": 24682,
+    "title": "Agent Brief L1 — Studio Header · TEELI",
+    "headings": [
+      "Zoned header shell + responsive scaffolding",
+      "Zone 1 LEFT — context (state-driven, no hardcoded text)",
+      "Zone 2 CENTER — shading modes, wired to Babylon for real",
+      "Zone 3 RIGHT — account + actions (real auth, real wallet)",
+      "Behavior + accessibility polish (all “real”, never fake)"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief L1 — Studio Header · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink"
+  },
+  {
+    "file": "AGENT-BRIEF-L1A-Studio-Header.html",
+    "size": 26817,
+    "title": "Agent Brief L1-A — Studio Header · TEELI",
+    "headings": [],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief L1-A — Studio Header · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink-2:#9AA"
+  },
+  {
+    "file": "AGENT-BRIEF-L1B-Mobile-Panel-Tabs.html",
+    "size": 21700,
+    "title": "Agent Brief L1-B — Mobile Panel Tabs · TEELI",
+    "headings": [],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief L1-B — Mobile Panel Tabs · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink-2:"
+  },
+  {
+    "file": "AGENT-BRIEF-L1C-Header-Polish-Model-Load-Fix.html",
+    "size": 17973,
+    "title": "Agent Brief L1-C — Mobile Header Polish + Model-Load Fix · TEELI",
+    "headings": [
+      "Remove the logo + declutter the mobile header",
+      "File name displays properly (no bleed)",
+      "Fix the model-load failure (CORS)"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief L1-C — Mobile Header Polish + Model-Load Fix · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --i"
+  },
+  {
+    "file": "AGENT-BRIEF-L2-Auth-Account.html",
+    "size": 21773,
+    "title": "Agent Brief L2 — Real Auth &amp; Account · TEELI",
+    "headings": [
+      "SSR clients + session refresh in the existing proxy",
+      "Auth pages + PKCE callback + Google",
+      "Profile menu + signup grant + route audit"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief L2 — Real Auth &amp; Account · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --in"
+  },
+  {
+    "file": "AGENT-BRIEF-L3-Production-Activation.html",
+    "size": 20799,
+    "title": "Agent Brief L3 — Production Activation &amp; Verification · TEELI",
+    "headings": [
+      "Boot env validation + fix the dev instrumentation hang",
+      "RLS in prod + the reaper cron",
+      "Prod smoke script"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief L3 — Production Activation &amp; Verification · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --"
+  },
+  {
+    "file": "AGENT-BRIEF-L4-Monetization-Dodo.html",
+    "size": 19626,
+    "title": "Agent Brief L4 — Monetization (Dodo Payments) · TEELI",
+    "headings": [
+      "Config &amp; SDK",
+      "Packs (server-resolved amounts)",
+      "Checkout session (backend, no publishable key)",
+      "Webhook — the only place credits are granted",
+      "Verify in test mode, then go live"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief L4 — Monetization (Dodo Payments) · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED;"
+  },
+  {
+    "file": "AGENT-BRIEF-L5L6-Security-Compliance.html",
+    "size": 21015,
+    "title": "Agent Brief L5+L6 — Security Hardening &amp; Compliance · TEELI",
+    "headings": [
+      "Security hardening (headers · SSRF · dependencies)",
+      "Compliance (legal pages · consent · export/delete)"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief L5+L6 — Security Hardening &amp; Compliance · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --in"
+  },
+  {
+    "file": "AGENT-BRIEF-L7-QA-Gate-Beta-Launch.html",
+    "size": 13675,
+    "title": "L7 — QA Gate &amp; Beta Launch · TEELI",
+    "headings": [
+      "Deploy &amp; env sanity",
+      "Money path — Dodo test purchase (L4 verification)",
+      "Full pipeline E2E — asli user jaisa",
+      "Failure &amp; recovery drills",
+      "Security spot-checks",
+      "Kill switches — launch-day panic buttons",
+      "Format truth — UI jo bole wahi ho",
+      "Ops readiness"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>L7 — QA Gate &amp; Beta Launch · TEELI</title> <style> :root{ --ink:#0b0e14; --panel:#11151f; --panel2:#161b28; --line:#232a3b; --text:#c9d1e0; --dim"
+  },
+  {
+    "file": "AGENT-BRIEF-P0A-Auth-Legal.html",
+    "size": 12149,
+    "title": "P0-A · Auth Confirmation + Public Legal Pages · TEELI",
+    "headings": [
+      "Auth confirmation session-isolation fix",
+      "Public legal pages fix",
+      "Is batch ke baad"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>P0-A · Auth Confirmation + Public Legal Pages · TEELI</title> <style> :root{ --ink:#0a0d13; --panel:#10141e; --panel2:#151a26; --line:#212838; --text"
+  },
+  {
+    "file": "AGENT-BRIEF-P0B-Pipeline-Reliability.html",
+    "size": 12492,
+    "title": "P0-B · Pipeline Reliability · TEELI",
+    "headings": [
+      "Upload robustness + presigned-URL refresh",
+      "Upload ownership + integrity (owner-bound session)",
+      "Prisma transaction timeout (assets-click crash)",
+      "SceneManager atomic-swap (failed load purana model na ude)",
+      "Re-run diagnosis control (discoverable)",
+      "Is batch ke baad"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>P0-B · Pipeline Reliability · TEELI</title> <style> :root{ --ink:#0a0d13; --panel:#10141e; --panel2:#151a26; --line:#212838; --text:#c7d0e0; --dim:#7"
+  },
+  {
+    "file": "AGENT-BRIEF-P0C-Honesty-Backup.html",
+    "size": 14548,
+    "title": "P0-C · Honesty + Backup · TEELI",
+    "headings": [
+      "Cookie banner fix + consent-before-PostHog",
+      "Mock pages hide — Projects / Renders / Cloud Storage",
+      "Billing honesty — subscription cards hide + BILLING_LIVE gate",
+      "Format claims honest",
+      "/legal/licensing → public",
+      "Backup — pg_dump → R2 (GitHub Action)",
+      "Server-side Sentry canary (Codex ke caveat ka closure)",
+      "Is batch ke baad — P0 khatam"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>P0-C · Honesty + Backup · TEELI</title> <style> :root{ --ink:#0a0d13; --panel:#10141e; --panel2:#151a26; --line:#212838; --text:#c7d0e0; --dim:#7a879"
+  },
+  {
+    "file": "AGENT-BRIEF-P0D-E2E-Bugs.html",
+    "size": 8696,
+    "title": "P0-D · E2E Gate Bugs · TEELI",
+    "headings": [
+      "Render succeeds, credits charge, file never downloads",
+      "GLTF upload preview fails",
+      "Is batch ke baad"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>P0-D · E2E Gate Bugs · TEELI</title> <style> :root{ --ink:#0a0d13; --panel:#10141e; --panel2:#151a26; --line:#212838; --text:#c7d0e0; --dim:#7a879f; "
+  },
+  {
+    "file": "AGENT-BRIEF-P0E-Studio-UI-Fixes.html",
+    "size": 23580,
+    "title": "Agent Brief P0-E — Studio UI Audit Fixes · TEELI",
+    "headings": [
+      "Header cleanup — two quick, isolated fixes",
+      "Diagnose — watertight check contradicts itself P0 &#x00b7; trust-critical",
+      "Render tab — settings are incomplete vs. the contract",
+      "Viewport toolbar — wire the gizmos for real",
+      "Verify + report — do NOT decide these unilaterally"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief P0-E — Studio UI Audit Fixes · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --in"
+  },
+  {
+    "file": "AGENT-BRIEF-P0F-Resolution-Repair-Escalation.html",
+    "size": 16782,
+    "title": "Agent Brief P0-F — Resolution, Repair-Escalation, Orient Fixes · TEELI",
+    "headings": [
+      "Fake-4K render confirmed live, DB proof",
+      "Repair plateaus at 22 holes — no escalation path exists",
+      "Orient tool — face-highlight vertex mutation carried over, status unconfirmed",
+      "PR #20 — \"2 of 5 checks passed\" audit only, lowest priority"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Agent Brief P0-F — Resolution, Repair-Escalation, Orient Fixes · TEELI</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027;"
+  },
+  {
+    "file": "BRIEF-04A-format-coverage.md",
+    "size": 20958,
+    "title": "AGENT-BRIEF-04A — Format Coverage (Universal Loader)",
+    "headings": [],
+    "snippet": "# AGENT-BRIEF-04A — Format Coverage (Universal Loader) > **Scope:** Make every common 3D format diagnosable, not just `glb/obj/stl/ply`. > Add **headless Blender** as a sandboxed universal importer → GLB → existing trimesh checks. > **Does NOT touch** the locked `diagnosis` JSON contract, the 6 che"
+  },
+  {
+    "file": "TEELI-AGENT-BRIEF-SB1-Render-Mount.html",
+    "size": 9260,
+    "title": "TEELI Agent Brief SB1 — Render SYSTEM_BUG (Blender mount)",
+    "headings": [
+      "The problem — proven, not suspected",
+      "What you must do — root cause, not a banner",
+      "Standing rules (same as every TEELI brief)",
+      "Definition of Done — SB1",
+      "Report shape (copy this)"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"hi\"> <head> <meta charset=\"utf-8\" /> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" /> <title>TEELI Agent Brief SB1 — Render SYSTEM_BUG (Blender mount)</title> <style> :root { --text: #2C2C2B; --muted: #7D7A75; --canvas: #FFFFFF; --s"
+  },
+  {
+    "file": "TEELI-AGENT-BRIEF-SB2-Engine-Hygiene-T33-Unblock.html",
+    "size": 39433,
+    "title": "TEELI — Agent Brief SB2 · Engine hygiene + T3.3 unblock",
+    "headings": [
+      "Contents",
+      "§0 Rules — read before anything",
+      "§1 Where we are after SB1",
+      "§2 Scope table",
+      "§3 SB2-T · cfe85815 — root cause and fixThe only item that blocks T3.3. Do this first.",
+      "§4 SB2-1 · convert.py failure reportingEngine · PR-E",
+      "§5 SB2-3 · Blender exit-code classificationEngine · PR-E · [MEMORY-VERIFY] — the CTO's note from the PR #27 review is “rc 2 from a non-UNSUPPORTED_EXT cause is misclassified”. Prove it before you change it.",
+      "§6 SB2-4 · exact pip pinsEngine · PR-E"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>TEELI — Agent Brief SB2 · Engine hygiene + T3.3 unblock</title> <style> :root{--ink:#2C2C2B;--ink2:#7D7A75;--bg:#FFFFFF;--soft:#F9F8F7;--soft2:#F0EFED;--line:#"
+  },
+  {
+    "file": "TEELI-Agent-Org-Blueprint-2026-09-13.md",
+    "size": 40232,
+    "title": "TEELI — Agent Organization Blueprint (Fable 5.1 · Opus 5 · Sonnet 5)",
+    "headings": [],
+    "snippet": "# TEELI — Agent Organization Blueprint (Fable 5.1 · Opus 5 · Sonnet 5) **Date:** 2026-09-13 · **Author:** Claude Fable 5.1 (Claude Code session, repo `abhijeetcitated/teeli-platform`, branch `fix/sb2-engine-hygiene-p2`) **Sources:** 5 CTO_PLAYBOOK volumes (63 briefs/plans, read end-to-end) · Anthro"
+  },
+  {
+    "file": "TEELI-Content-System-Tools-Glossary.html",
+    "size": 55552,
+    "title": "TEELI Content System &mdash; /tools + /glossary templates",
+    "headings": [
+      "A0 &middot; What this page is, and is not",
+      "A1 &middot; Page anatomy &mdash; exact section order",
+      "A2 &middot; The chunking rule &mdash; why each H2 must stand alone",
+      "A3 &middot; Section-by-section copy",
+      "A4 &middot; Widget placement and wiring contract",
+      "A5 &middot; Schema markup &mdash; full JSON-LD",
+      "A6 &middot; FAQ format rules",
+      "A7 &middot; Config-driven architecture"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>TEELI Content System &mdash; /tools + /glossary templates</title> <style> :root{--bg:#08090C;--panel:#0E1014;--panel-2:#0A0C10;--line:#1C2027;--ink:#E7E9ED;--ink"
+  },
+  {
+    "file": "TEELI-Core-Production-Playbook.html",
+    "size": 33922,
+    "title": "TEELI Core — Production Playbook · Studio + Pipeline ko ship-ready banane ka step-by-step",
+    "headings": [
+      "Dependency order (isliye yahi sequence)",
+      "Day 0 — aaj shaam tak ke 4 fixes (total ~3 ghante)",
+      "STEP 1 · Data layer — pipeline ka ghar Est: 1.5 din · Cross-ref: Part 2 §6",
+      "STEP 2 · Credits ledger — aapke \"Credit safety rules\" card ko sach banao Est: 1 din · Part 2 §6.2 + Part 4 #2",
+      "STEP 3 · Upload finalize — file se Asset row tak Est: 1.5 din · Part 2 GB-spec",
+      "STEP 4 · Diagnose worker — Modal par pehla sach Est: 2 din · Part 2 §7",
+      "STEP 5 · Realtime + Studio wiring — mock ka antim sanskar Est: 1.5 din",
+      "STEP 6 · Repair — aapke pricing ke hisaab se ladder Est: 2.5 din · Part 2 §8"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"hi\" class=\"dark\"> <head> <meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>TEELI Core — Production Playbook · Studio + Pipeline ko ship-ready banane ka step-by-step</title> <script src=\"https://cdn.tailwindcss.com\"></scrip"
+  },
+  {
+    "file": "TEELI-CTO-Console-Chat-UI-Plan-2026-09-13.md",
+    "size": 23417,
+    "title": "TEELI CTO Console — Own Chat UI Plan (assistant-ui + Claude)",
+    "headings": [],
+    "snippet": "# TEELI CTO Console — Own Chat UI Plan (assistant-ui + Claude) **Date:** 2026-09-13 · **Author:** Claude Fable 5.1 (research session) · **For:** a fresh IDE session that will build this **Companion doc:** `TEELI-Agent-Org-Blueprint-2026-09-13.md` (the 25-agent roster + model policy this UI will dri"
+  },
+  {
+    "file": "TEELI-FINAL-STACK-Single-Source-of-Truth.html",
+    "size": 32055,
+    "title": "TEELI FINAL STACK — Single Source of Truth · har tool ka antim faisla + wiring",
+    "headings": [
+      "3.1 · Worker images ke exact pins (agent verbatim use karega)",
+      "3.5 · MeshLib — haan, wire ho sakta hai. Exact recipe:",
+      "3.7 · LibIGL ka final faisla",
+      "3.6 · GpuRunner abstraction (Story-A ka best idea — official)",
+      "3.4 · TanStack Query wiring pattern (ADD)",
+      "Freeze rules",
+      "ANTI-STACK — yeh kabhi nahi (likha hua, taaki bahas hi na ho)"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"hi\" class=\"dark\"> <head> <meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>TEELI FINAL STACK — Single Source of Truth · har tool ka antim faisla + wiring</title> <script src=\"https://cdn.tailwindcss.com\"></script> <script>"
+  },
+  {
+    "file": "TEELI-Go-Live-Runbook.html",
+    "size": 14772,
+    "title": "TEELI — Go-Live Runbook",
+    "headings": [
+      "Secrets + Modal auth",
+      "Migrate the DB + deploy the engine"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>TEELI — Go-Live Runbook</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink-2:#9AA1AC; --ink-3:#6A7"
+  },
+  {
+    "file": "TEELI-Implementation-Roadmap.html",
+    "size": 14945,
+    "title": "TEELI — Implementation Roadmap",
+    "headings": [
+      "Phase P0",
+      "Phase P1",
+      "Phase P2"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>TEELI — Implementation Roadmap</title> <style> :root{ --ink:#0a0d13; --panel:#10141e; --panel2:#151a26; --line:#212838; --text:#c7d0e0; --dim:#7a879f"
+  },
+  {
+    "file": "TEELI-Integration-Switch-2.html",
+    "size": 16824,
+    "title": "TEELI — Integration (Switch 2)",
+    "headings": [
+      "Make the upload box real",
+      "Mount the real panels into the studio",
+      "Kill the remaining mock numbers"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>TEELI — Integration (Switch 2)</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink-2:#9AA1AC; --ink"
+  },
+  {
+    "file": "TEELI-Junior-Engineer-Master-Plan-P3-to-Launch-2026-09-15.html",
+    "size": 77625,
+    "title": "TEELI — Junior Engineer Master Plan · P3 hygiene close → P4 launch → P5 · 15 Sep 2026",
+    "headings": [
+      "§0 · How to read this plan (agent)",
+      "§1 · Where we are — verified 15 Sep 2026",
+      "§2 · Standing rules — every WP, no exceptions",
+      "§3 · Work queue — strict order",
+      "§4 · Founder-only decisions (stop and ask — never self-approve)",
+      "§5 · Report skeleton — send once per PR boundary",
+      "§6 · Known traps (read before touching the area)",
+      "Appendix A · The 65 files in teeliplatform roadmap/ — triage by generation"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>TEELI — Junior Engineer Master Plan · P3 hygiene close → P4 launch → P5 · 15 Sep 2026</title> <style> :root { --ink:#1b1f24; --ink2:#4b5563; --line:#d9dee5; --"
+  },
+  {
+    "file": "teeli-market-research-2026 (1).html",
+    "size": 56141,
+    "title": "Teeli.net — Market Intelligence Report 2026",
+    "headings": [],
+    "snippet": "<!DOCTYPE html> <html lang=\"hi\"> <head> <meta charset=\"UTF-8\"/> <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"/> <title>Teeli.net — Market Intelligence Report 2026</title> <link href=\"https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Crimson+P"
+  },
+  {
+    "file": "TEELI-Master-Plan-v1.html",
+    "size": 16200,
+    "title": "TEELI Master Plan v1 — Fix the Core, Then Sell",
+    "headings": [
+      "Phase 0 — Repair ko sach karo ABHI CHAL RAHA",
+      "Phase 1 — Trust cleanup 1 brief, ~1 sitting",
+      "Phase 2 — Paisa gate + naya pricing 1 brief",
+      "Phase 3 — Formats + Deep Repair rebuild 2–3 briefs, ek-ek karke",
+      "Phase 4 — Launch GTM 1–2 briefs",
+      "Phase 5 — Differentiators har item ka apna brief, ek waqt mein ek",
+      "Phase 6 — Bureau/API PARKED"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>TEELI Master Plan v1 — Fix the Core, Then Sell</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink-"
+  },
+  {
+    "file": "teeli-master-report-2026.html",
+    "size": 71094,
+    "title": "TEELI.NET — Master Research, Architecture & Strategy Report · June 2026",
+    "headings": [
+      "Executive Summary",
+      "Global Industry Research — 10 Markets, June 2026 Data",
+      "Competitor Intelligence — Direct, Indirect, Emerging",
+      "Innovation Research — State of the Art, June 2026 + Teeli ka Future Moat",
+      "Tech Stack Research — June 2026 Verdict",
+      "System Design — Enterprise-Grade Architecture",
+      "Backend Engineering — Services, Structure, Scaling",
+      "AI Strategy — Kahan AI lagana hai (aur kahan nahi)"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"hi\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>TEELI.NET — Master Research, Architecture & Strategy Report · June 2026</title> <style> :root{ --bg:#0A0C10;--panel:#12151C;--panel2:#171B24;--line:rgba(255,"
+  },
+  {
+    "file": "TEELI-P1-Phase-Plan.html",
+    "size": 11527,
+    "title": "P1 Phase Plan · TEELI",
+    "headings": [
+      "Format coverage — STL + OBJ end-to-end",
+      "Security hardening — CSP enforce + Auth + upload scan",
+      "Renders page real-wire + UX hardening",
+      "Legal content + marketing landing",
+      "Monitoring, alerts &amp; ops maturity",
+      "P1 ke baad — P2 (Growth) ka darwaza"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>P1 Phase Plan · TEELI</title> <style> :root{ --ink:#0a0d13; --panel:#10141e; --panel2:#151a26; --line:#212838; --text:#c7d0e0; --dim:#7a879f; --green"
+  },
+  {
+    "file": "TEELI-Part2-Engineering-Blueprint (2).html",
+    "size": 53833,
+    "title": "TEELI.NET — Engineering Blueprint v2 (Part 2) · Phases 4–10 · Real Codebase Edition",
+    "headings": [
+      "Kyun Vercel akela kaafi NahI hai — 4 hard limits (June 2026)",
+      "Upload path — browser se seedha R2 (Vercel ko bytes kabhi touch nahi karne)",
+      "Processing path — GB file ko RAM mein kabhi pura load mat karo",
+      "4.1 · High-Level Architecture",
+      "4.2 · Render Flow — submit se delivery tak",
+      "4.3 · Queue Flow — lanes, retry, DLQ",
+      "4.4 · Event Flow — domain events (ek source, chaar consumers)",
+      "5.1 · Aapke current tree ka honest audit"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"hi\" class=\"dark\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>TEELI.NET — Engineering Blueprint v2 (Part 2) · Phases 4–10 · Real Codebase Edition</title> <script src=\"https://cdn.tailwindcss.com\"></script> <s"
+  },
+  {
+    "file": "TEELI-Part3-Ops-Security-Legal-Business.html",
+    "size": 34949,
+    "title": "TEELI.NET — Part 3 · DevOps · Security · Observability · Scaling · Legal · Business",
+    "headings": [
+      "11.1 · CI/CD pipeline (monorepo-aware)",
+      "11.2 · Environments + release strategy",
+      "11.3 · Backups + Disaster Recovery",
+      "12.1 · Threat model — kaun, kya churayega, kaise rokenge",
+      "12.2 · OWASP Top 10 → TEELI mapping",
+      "13.1 · Three pillars → tools",
+      "13.2 · SLOs + error budgets",
+      "13.3 · Alerts (page vs ticket) + incident response"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"hi\" class=\"dark\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>TEELI.NET — Part 3 · DevOps · Security · Observability · Scaling · Legal · Business</title> <script src=\"https://cdn.tailwindcss.com\"></script> <s"
+  },
+  {
+    "file": "TEELI-Part4-Audit-BlindSpots-CTO-Plan.html",
+    "size": 52348,
+    "title": "TEELI.NET — Part 4 · Product Audit · 200 Blind Spots · Launch CTO Plan",
+    "headings": [
+      "1.1 · Product Scorecard (kya hai vs kya chahiye launch ke liye)",
+      "1.2 · Missing user flows (gap analysis)",
+      "1.3 · Product Risk Matrix",
+      "A · Hidden Costs (1–20)",
+      "B · Hidden Technical Landmines (21–45)",
+      "C · Product/UX Blind Spots (46–70)",
+      "D · Monetization + Enterprise (71–90)",
+      "E · Growth/Distribution (91–110)"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"hi\" class=\"dark\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>TEELI.NET — Part 4 · Product Audit · 200 Blind Spots · Launch CTO Plan</title> <script src=\"https://cdn.tailwindcss.com\"></script> <script> tailwi"
+  },
+  {
+    "file": "TEELI-Phase-0-Emergency-Fix.html",
+    "size": 10299,
+    "title": "TEELI Phase 0 — Repair Worker Emergency Fix (Standalone Brief)",
+    "headings": [
+      "Real production data, queried directly from the database",
+      "Part 1 · Honesty gate — stop lying about success (do this first, it's small)",
+      "Part 2 · Why it actually fails on some meshes — fix the root cause, not just the reporting"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>TEELI Phase 0 — Repair Worker Emergency Fix (Standalone Brief)</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink"
+  },
+  {
+    "file": "TEELI-Phase-1-Trust-Cleanup.html",
+    "size": 11402,
+    "title": "TEELI Phase 1 — Trust Cleanup (Standalone Brief)",
+    "headings": [
+      "T1.1 · Diagnosis trigger contract",
+      "T1.2 · Repair panel stale-state fix",
+      "T1.3 · Pricing page stops advertising things that aren't true",
+      "T1.4 · Toolbar: remove Scale / Orient / Frame — founder decision, final",
+      "T1.5 · Light clutter pass — strictly limited"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>TEELI Phase 1 — Trust Cleanup (Standalone Brief)</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --in"
+  },
+  {
+    "file": "TEELI-Phase-2-Money-Gate.html",
+    "size": 12735,
+    "title": "TEELI Phase 2 — Money Gate & Honest Failure",
+    "headings": [
+      "T2.1 &middot; Failed work never charges &mdash; prove the whole ledger matrix",
+      "T2.2 &middot; Honest failure states &mdash; design and build the screens nobody drew",
+      "T2.3 &middot; Pricing model &mdash; founder supplies numbers, you supply the model",
+      "T2.4 &middot; Founder verification &mdash; you support, founder executes"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>TEELI Phase 2 — Money Gate & Honest Failure</title> <style> :root{--bg:#08090C;--panel:#0E1014;--panel-2:#0A0C10;--line:#1C2027;--ink:#E7E9ED;--ink-2:#9AA1AC;--i"
+  },
+  {
+    "file": "TEELI-Phase-3-Formats-Profiles.html",
+    "size": 14243,
+    "title": "TEELI Phase 3 — Formats, Printer Profiles, Deep Repair",
+    "headings": [
+      "T3.1 &middot; Printer profile foundation &mdash; do this FIRST, everything else depends on it",
+      "T3.2 &middot; STL &mdash; upload, pipeline, download, and real-world units",
+      "T3.3 &middot; OBJ &mdash; same contract as STL",
+      "T3.4 &middot; 3MF export &mdash; verify library support before designing around it",
+      "T3.5 &middot; Deep Repair rebuild &mdash; flag stays OFF for this entire task"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>TEELI Phase 3 — Formats, Printer Profiles, Deep Repair</title> <style> :root{--bg:#08090C;--panel:#0E1014;--panel-2:#0A0C10;--line:#1C2027;--ink:#E7E9ED;--ink-2:"
+  },
+  {
+    "file": "TEELI-Phase-4-Launch.html",
+    "size": 10953,
+    "title": "TEELI Phase 4 — Launch GTM",
+    "headings": [
+      "T4.1 &middot; Free public no-signup diagnosis",
+      "T4.2 &middot; Privacy badge and practices page &mdash; backed by what T4.1 actually does",
+      "T4.3 &middot; Dashboard becomes real",
+      "T4.4 &middot; Dodo live swap &mdash; founder and agent together"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>TEELI Phase 4 — Launch GTM</title> <style> :root{--bg:#08090C;--panel:#0E1014;--panel-2:#0A0C10;--line:#1C2027;--ink:#E7E9ED;--ink-2:#9AA1AC;--ink-3:#6A707B;--em"
+  },
+  {
+    "file": "TEELI-Phase-5-Differentiators.html",
+    "size": 13699,
+    "title": "TEELI Phase 5 — Differentiators",
+    "headings": [
+      "T5.1 &middot; Print-ready certificate",
+      "T5.2 &middot; Show me where it's broken &mdash; problem-area overlay",
+      "T5.3 &middot; Per-mesh issues panel replaces the scene tree",
+      "T5.4 &middot; Full UI refresh &mdash; the only task where visual change is in scope",
+      "T5.5 &middot; Turntable MP4 + GIF",
+      "T5.6 &middot; Batch upload queue",
+      "T5.7 &middot; Notification bell wiring"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>TEELI Phase 5 — Differentiators</title> <style> :root{--bg:#08090C;--panel:#0E1014;--panel-2:#0A0C10;--line:#1C2027;--ink:#E7E9ED;--ink-2:#9AA1AC;--ink-3:#6A707B"
+  },
+  {
+    "file": "TEELI-Phase-Briefs-1-to-5.html",
+    "size": 27066,
+    "title": "TEELI Phase Briefs 1–5 — Complete Implementation Handbook",
+    "headings": [
+      "T1.1 · Diagnosis trigger contract",
+      "T1.2 · Repair panel stale-state fix",
+      "T1.3 · Pricing page stops advertising things that aren't true",
+      "T1.4 · Toolbar: remove Scale / Orient / Frame — founder decision D1, final",
+      "T1.5 · Light clutter pass — strictly limited",
+      "T2.1 · Failed work never charges — mechanics only, no marketing model",
+      "T2.2 · Apply founder's price points",
+      "T2.3 · Founder verification tasks (agent supports, founder executes)"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>TEELI Phase Briefs 1–5 — Complete Implementation Handbook</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E"
+  },
+  {
+    "file": "TEELI-Production-Readiness-Master-Plan.html",
+    "size": 24698,
+    "title": "TEELI — Production Readiness Master Plan",
+    "headings": [],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>TEELI — Production Readiness Master Plan</title> <style> :root{ --bg:#08090C; --panel:#0E1014; --panel-2:#0A0C10; --line:#1C2027; --ink:#E7E9ED; --ink-2:#9AA"
+  },
+  {
+    "file": "TEELI-Studio-Agent-TaskPack-Sprint1.html",
+    "size": 30497,
+    "title": "TEELI 3D Studio — AI Agent Task Pack (Sprint 1) · fake UI → real working",
+    "headings": [
+      "REMOVE / HIDE",
+      "ADD (missing)",
+      "FIX (state bugs)",
+      "Sprint 1 ka antim sach (founder ke liye)",
+      "Aapke 3 active documents (baaki sab archive)"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"hi\" class=\"dark\"> <head> <meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>TEELI 3D Studio — AI Agent Task Pack (Sprint 1) · fake UI → real working</title> <script src=\"https://cdn.tailwindcss.com\"></script> <script>tailwi"
+  },
+  {
+    "file": "TEELI-Studio-AI-Agent-Build-Spec.html",
+    "size": 72208,
+    "title": "TEELI 3D Studio — AI-Agent Build Spec · Production (STRICT MODE)",
+    "headings": [
+      "5.1 · Upload (existing route harden)",
+      "5.2 · Jobs",
+      "5.3 · Internal HMAC (W4/W7) — exact algorithm",
+      "5.4 · Error taxonomy (shared enum)",
+      "5.5 · diagnosis JSON shape (right panel isi se bante hai)",
+      "Rate limits (Upstash sliding window) — exact",
+      "Upload/file hardening",
+      "AuthZ + platform"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"hi\" class=\"dark\"> <head> <meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>TEELI 3D Studio — AI-Agent Build Spec · Production (STRICT MODE)</title> <script src=\"https://cdn.tailwindcss.com\"></script> <script>tailwind.confi"
+  },
+  {
+    "file": "teeli-studio.html",
+    "size": 76898,
+    "title": "Teeli Studio — Fix &amp; Render 3D, Automatically",
+    "headings": [],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>Teeli Studio — Fix &amp; Render 3D, Automatically</title> <!-- ████ TEELI 3D STUDIO — UI PROTOTYPE v1.0 · June 2026 ████ Design system: Figma-clean × Apple"
+  },
+  {
+    "file": "TEELI-WP0-P3-Hygiene-Close-Brief.html",
+    "size": 9449,
+    "title": "TEELI WP-0 — P3 Hygiene Close · agent brief · 15 Sep 2026",
+    "headings": [
+      "1 · Verified state (15 Sep, do not re-derive — re-check only if you touch it)",
+      "2 · Tasks — one commit each, in this order",
+      "3 · Hard rules for this WP",
+      "4 · Untouched by design",
+      "5 · Rollback pointers (valid today)",
+      "6 · Traps that have already cost days"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>TEELI WP-0 — P3 Hygiene Close · agent brief · 15 Sep 2026</title> <style> body{font:15px/1.5 system-ui,Segoe UI,Roboto,sans-serif;color:#1b1f24;max-width:900px"
+  },
+  {
+    "file": "TEELI-WP2-PR-W2-lite-Brief.html",
+    "size": 17328,
+    "title": "WP-2 PR-W2-lite Brief — Teeli Platform (v2, 16 Sep 2026 22:05 IST)",
+    "headings": [
+      "Baseline at main@4912d32 (verified 16 Sep, CI run 35113877818)",
+      "Tasks — strict order, one commit each",
+      "Out of scope — do not touch (rule 7)",
+      "Rules that bite in this WP (self-contained — no other file needed)",
+      "Report format — send ONCE at the PR boundary",
+      "Founder decisions required"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <title>WP-2 PR-W2-lite Brief — Teeli Platform (v2, 16 Sep 2026 22:05 IST)</title> <style> body { font-family: system-ui, sans-serif; max-width: 900px; margin: 32px auto; padding: 0 20px; color: #1a1a1a; font-size: 13px; line-height: 1."
+  },
+  {
+    "file": "TEELI-WP3-SB2-2-Migration-PR-W2b-Money-Brief.html",
+    "size": 35400,
+    "title": "WP-3 SB2-2 Migration + PR-W2b Money Brief — Teeli Platform (v2, 18 Sep 2026 09:50 PM IST)",
+    "headings": [
+      "Baseline at main@f7fe4a4 (verified 18 Sep · [CI 35322932523] [LOCAL] [DB 09:50–10:20Z])",
+      "Reconciliation — tracker row (8 Sep) vs master plan (15 Sep) vs HEAD (18 Sep)",
+      "PR-A — migration PR (branch fix/wp3-ledger-jobref-migration off main@f7fe4a4; agent never applies)",
+      "PR-B — code PR (branch fix/wp3-money-policy off main AFTER PR-A merged and B applied)",
+      "Out of scope — do not touch (rule 7)",
+      "Rules that bite in this WP (self-contained)",
+      "Research verification (RESEARCH DUTY) — read on 18 Sep 2026 against the installed versions",
+      "Report format — full report ONCE per PR boundary (part A after S3, part B after S8); after every other agent step only the mini-report from the ladder"
+    ],
+    "snippet": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <title>WP-3 SB2-2 Migration + PR-W2b Money Brief — Teeli Platform (v2, 18 Sep 2026 09:50 PM IST)</title> <style> body { font-family: system-ui, sans-serif; max-width: 900px; margin: 32px auto; padding: 0 20px; color: #1a1a1a; font-size"
+  }
+]

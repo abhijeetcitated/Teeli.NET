@@ -1,5 +1,8 @@
 import { MetadataRoute } from 'next';
 import { getAllBlogPosts } from '@/lib/blog';
+import { getAllGlossaryTerms } from '@/lib/glossary';
+import { getAllTools } from '@/lib/tools';
+import { getAllComparisons } from '@/lib/compare';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const blogs = getAllBlogPosts();
@@ -207,6 +210,69 @@ export default function sitemap(): MetadataRoute.Sitemap {
       images: images.length > 0 ? images : undefined,
     };
   });
+
+  // Glossary Pages
+  const glossaryIndex: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/glossary`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    },
+  ];
+
+  const glossaryTerms = getAllGlossaryTerms();
+  const glossaryPages: MetadataRoute.Sitemap = glossaryTerms.map((t) => ({
+    url: `${baseUrl}/glossary/${t.slug}`,
+    lastModified: new Date(t.updatedDate),
+    changeFrequency: 'weekly' as const,
+    priority: 0.85,
+  }));
+
+  // Tools Pages
+  const tools = getAllTools();
+  const toolsPages: MetadataRoute.Sitemap = tools.map((t) => ({
+    url: `${baseUrl}/tools/${t.slug}`,
+    lastModified: new Date(t.lastUpdated),
+    changeFrequency: 'weekly' as const,
+    priority: 0.9,
+  }));
+
+  const toolsIndex: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/tools`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.95,
+    },
+  ];
+
+  // Compare Pages
+  const comparisons = getAllComparisons();
+  const comparePages: MetadataRoute.Sitemap = comparisons.map((c) => ({
+    url: `${baseUrl}/compare/${c.slug}`,
+    lastModified: new Date(c.updatedDate),
+    changeFrequency: 'weekly' as const,
+    priority: 0.85,
+  }));
+
+  const compareIndex: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/compare`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    },
+  ];
   
-  return [...staticPages, ...blogPages];
+  return [
+    ...staticPages,
+    ...glossaryIndex,
+    ...glossaryPages,
+    ...toolsIndex,
+    ...toolsPages,
+    ...compareIndex,
+    ...comparePages,
+    ...blogPages,
+  ];
 }

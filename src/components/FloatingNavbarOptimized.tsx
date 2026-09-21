@@ -199,6 +199,21 @@ export default function FloatingNavbarOptimized() {
               </div>
             ))}
           </div>
+
+          {/* CTA Button */}
+          <div className="pl-2">
+            <a
+              href="https://app.teeli.net/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 text-black hover:opacity-90 transition-all flex items-center gap-1.5 shadow-md hover:shadow-emerald-400/20"
+            >
+              <span>3D Studio</span>
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+          </div>
         </nav>
       </header>
 
@@ -262,6 +277,19 @@ export default function FloatingNavbarOptimized() {
                 </div>
               ))}
             </nav>
+            <div className="p-4 pt-2 border-t border-white/10">
+              <a
+                href="https://app.teeli.net/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-400 text-black font-bold text-sm"
+              >
+                <span>Launch 3D Studio</span>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </a>
+            </div>
           </div>
         )}
       </header>
