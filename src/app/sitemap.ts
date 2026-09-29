@@ -4,195 +4,76 @@ import { getAllGlossaryTerms } from '@/lib/glossary';
 import { getAllTools } from '@/lib/tools';
 import { getAllComparisons } from '@/lib/compare';
 
+// Google uses <lastmod> only when it is "consistently and verifiably accurate" and
+// ignores <priority>/<changefreq>, so no entry carries the build time or those tags.
+// https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap
+// - Static pages: the date their copy last changed (update it when you edit the page).
+// - List pages: the newest date among the items they list.
+// - Content pages: their own date field.
+
+// Last sitewide change (header nav links, PR #3) — pages untouched since then.
+const SITE_UPDATED = '2026-09-21';
+
+// Content date → YYYY-MM-DD. "Sep 25, 2026" is read as the calendar day it names,
+// so the result does not shift with the build machine's timezone.
+function toDay(value?: string): string | undefined {
+  if (!value) return undefined;
+  if (/^\d{4}-\d{2}-\d{2}/.test(value)) return value.slice(0, 10);
+  const parsed = new Date(value);
+  if (isNaN(parsed.getTime())) return undefined;
+  const month = String(parsed.getMonth() + 1).padStart(2, '0');
+  const day = String(parsed.getDate()).padStart(2, '0');
+  return `${parsed.getFullYear()}-${month}-${day}`;
+}
+
+function newest(days: (string | undefined)[]): string | undefined {
+  return days.filter((day): day is string => Boolean(day)).sort().pop();
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const blogs = getAllBlogPosts();
-  
+  const glossaryTerms = getAllGlossaryTerms();
+  const tools = getAllTools();
+  const comparisons = getAllComparisons();
+
   // Base URLs
   const baseUrl = 'https://teeli.net';
-  
+
+  const newestPost = newest(blogs.map((post) => toDay(post.date)));
+
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/blog/popular`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.85,
-    },
-    {
-      url: `${baseUrl}/blog/topics`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.85,
-    },
-    {
-      url: `${baseUrl}/blog/tags`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/resources`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/resources/guides`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.75,
-    },
-    {
-      url: `${baseUrl}/blog/resources/tools`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.75,
-    },
-    {
-      url: `${baseUrl}/blog/resources/downloads`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.75,
-    },
-    {
-      url: `${baseUrl}/blog/resources/docs`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.75,
-    },
-    {
-      url: `${baseUrl}/blog/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/blog/archive`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/docs`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/company/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/solutions/ai-rendering`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/solutions/cloud-gpu`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/solutions/sustainability`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/technology/rendering-engine`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/projects/case-studies`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/projects/showreel`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/projects/viewer`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/insights/press`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/insights/reports`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/privacy`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/terms`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/cookies`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
+    { url: baseUrl, lastModified: '2026-09-29' }, // hero drop-zone copy (S1)
+    { url: `${baseUrl}/blog`, lastModified: newestPost },
+    { url: `${baseUrl}/blog/popular`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/blog/topics`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/blog/tags`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/blog/resources`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/blog/resources/guides`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/blog/resources/tools`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/blog/resources/downloads`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/blog/resources/docs`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/blog/about`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/blog/archive`, lastModified: newestPost },
+    { url: `${baseUrl}/docs`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/company/about`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/contact`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/solutions/ai-rendering`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/solutions/cloud-gpu`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/solutions/sustainability`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/technology/rendering-engine`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/projects/case-studies`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/projects/showreel`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/projects/viewer`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/insights/press`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/insights/reports`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/privacy`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/terms`, lastModified: SITE_UPDATED },
+    { url: `${baseUrl}/cookies`, lastModified: SITE_UPDATED },
   ];
-  
+
   // Blog post URLs with image metadata (Google Image Search SEO)
   const blogPages: MetadataRoute.Sitemap = blogs.map((post) => {
-    // Parse date string (e.g., "Jan 20, 2025" to Date object)
-    const dateStr = post.date;
-    let lastModified = new Date();
-    
-    try {
-      // Simple date parsing for "Mon DD, YYYY" format
-      const parsed = new Date(dateStr);
-      if (!isNaN(parsed.getTime())) {
-        lastModified = parsed;
-      }
-    } catch {
-      // Use current date if parsing fails
-      lastModified = new Date();
-    }
-    
     // Build images array for sitemap (helps Google discover images faster)
     const images: string[] = [];
     if (post.image) {
@@ -201,12 +82,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     if (post.thumbnail && post.thumbnail !== post.image) {
       images.push(`https://teeli.net${post.thumbnail}`);
     }
-    
+
     return {
       url: `${baseUrl}/blog/${post.slug}`,
-      lastModified,
-      changeFrequency: 'weekly' as const,
-      priority: post.featured ? 0.9 : 0.8, // Featured posts get higher priority
+      lastModified: toDay(post.date),
       images: images.length > 0 ? images : undefined,
     };
   });
@@ -215,56 +94,41 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const glossaryIndex: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/glossary`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.9,
+      lastModified: newest(glossaryTerms.map((t) => toDay(t.updatedDate))),
     },
   ];
 
-  const glossaryTerms = getAllGlossaryTerms();
   const glossaryPages: MetadataRoute.Sitemap = glossaryTerms.map((t) => ({
     url: `${baseUrl}/glossary/${t.slug}`,
-    lastModified: new Date(t.updatedDate),
-    changeFrequency: 'weekly' as const,
-    priority: 0.85,
+    lastModified: toDay(t.updatedDate),
   }));
 
   // Tools Pages
-  const tools = getAllTools();
   const toolsPages: MetadataRoute.Sitemap = tools.map((t) => ({
     url: `${baseUrl}/tools/${t.slug}`,
-    lastModified: new Date(t.lastUpdated),
-    changeFrequency: 'weekly' as const,
-    priority: 0.9,
+    lastModified: toDay(t.lastUpdated),
   }));
 
   const toolsIndex: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/tools`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.95,
+      lastModified: newest(tools.map((t) => toDay(t.lastUpdated))),
     },
   ];
 
   // Compare Pages
-  const comparisons = getAllComparisons();
   const comparePages: MetadataRoute.Sitemap = comparisons.map((c) => ({
     url: `${baseUrl}/compare/${c.slug}`,
-    lastModified: new Date(c.updatedDate),
-    changeFrequency: 'weekly' as const,
-    priority: 0.85,
+    lastModified: toDay(c.updatedDate),
   }));
 
   const compareIndex: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/compare`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.9,
+      lastModified: newest(comparisons.map((c) => toDay(c.updatedDate))),
     },
   ];
-  
+
   return [
     ...staticPages,
     ...glossaryIndex,

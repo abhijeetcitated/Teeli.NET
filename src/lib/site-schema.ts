@@ -1,4 +1,4 @@
-import { LINKEDIN_COMPANY_URL, REDDIT_PROFILE_URL, TEELI_APP_URL } from './social-links';
+import { LINKEDIN_COMPANY_URL, TEELI_APP_URL } from './social-links';
 
 /**
  * Sitewide Schema.org entity graph (Organization + WebSite + SoftwareApplication).
@@ -19,7 +19,8 @@ export function generateSiteSchemaGraph(): object {
     '@type': 'Organization',
     '@id': `${SITE_URL}/#organization`,
     name: 'TEELI.NET',
-    alternateName: 'Teeli',
+    // Brand disambiguation: AI engines confuse "Teeli" with teeli.com (a tea-filter shop).
+    alternateName: 'TEELI.NET',
     url: SITE_URL,
     logo: {
       '@type': 'ImageObject',
@@ -29,12 +30,8 @@ export function generateSiteSchemaGraph(): object {
       caption: 'TEELI.NET',
     },
     image: { '@id': `${SITE_URL}/#logo` },
-    description: SITE_DESCRIPTION,
-    sameAs: [
-      'https://twitter.com/teeli_net',
-      LINKEDIN_COMPANY_URL,
-      REDDIT_PROFILE_URL,
-    ],
+    description: 'Browser-based 3D file check and mesh repair for 3D printing (STL, GLB, OBJ)',
+    sameAs: [LINKEDIN_COMPANY_URL, 'https://github.com/abhijeetcitated'],
   };
 
   const website = {
