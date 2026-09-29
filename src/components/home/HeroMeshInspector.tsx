@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { UploadCloud, CheckCircle2, AlertTriangle, ArrowRight, RefreshCw, Layers, ShieldCheck, Sparkles } from 'lucide-react';
 
@@ -48,45 +48,16 @@ export default function HeroMeshInspector() {
   const [selectedSample, setSelectedSample] = useState<SampleModel>(sampleModels[0]);
   const [isScanning, setIsScanning] = useState(false);
   const [hasScanned, setHasScanned] = useState(true);
-  const [customFileName, setCustomFileName] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const runDiagnostic = (model: SampleModel, customName?: string) => {
+  const runDiagnostic = (model: SampleModel) => {
     setIsScanning(true);
     setHasScanned(false);
-    if (customName) {
-      setCustomFileName(customName);
-    } else {
-      setCustomFileName(null);
-      setSelectedSample(model);
-    }
+    setSelectedSample(model);
 
     setTimeout(() => {
       setIsScanning(false);
       setHasScanned(true);
     }, 1100);
-  };
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      runDiagnostic(
-        {
-          id: "custom",
-          name: file.name,
-          format: file.name.split('.').pop()?.toUpperCase() || "3D",
-          originalEdges: Math.floor(Math.random() * 40) + 18,
-          openLoops: Math.floor(Math.random() * 4) + 1,
-          issueText: "Non-manifold boundaries detected",
-          repairResult: "Watertight 2-Manifold Certified",
-        },
-        file.name
-      );
-    }
-  };
-
-  const triggerBrowse = () => {
-    fileInputRef.current?.click();
   };
 
   return (
@@ -115,19 +86,10 @@ export default function HeroMeshInspector() {
           </span>
         </div>
 
-        {/* Hidden File Input */}
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileUpload}
-          accept=".stl,.obj,.3mf,.blend"
-          className="hidden"
-        />
-
-        {/* Interactive Dropzone */}
-        <div
-          onClick={triggerBrowse}
-          className="group cursor-pointer relative border-2 border-dashed border-cyan-500/30 hover:border-cyan-400/70 rounded-2xl p-5 text-center bg-cyan-500/[0.02] hover:bg-cyan-500/[0.06] transition-all duration-300 mb-5"
+        {/* Dropzone = link to the real check in the app (this card cannot process files) */}
+        <a
+          href="https://app.teeli.net/check?source=embed:teeli.net-home"
+          className="group block cursor-pointer relative border-2 border-dashed border-cyan-500/30 hover:border-cyan-400/70 rounded-2xl p-5 text-center bg-cyan-500/[0.02] hover:bg-cyan-500/[0.06] transition-all duration-300 mb-5"
         >
           <div className="flex flex-col items-center justify-center">
             <div className="w-11 h-11 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:scale-110 group-hover:bg-cyan-500/20 transition-all duration-300 mb-2.5">
@@ -140,14 +102,14 @@ export default function HeroMeshInspector() {
               or <span className="text-cyan-400 underline underline-offset-2">browse from computer</span>
             </p>
             <div className="flex items-center gap-1.5 justify-center">
-              {['.STL', '.OBJ', '.3MF', '.BLEND'].map((ext) => (
+              {['.STL', '.GLB', '.OBJ (zip)'].map((ext) => (
                 <span key={ext} className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/5 border border-white/10 text-starlight/70">
                   {ext}
                 </span>
               ))}
             </div>
           </div>
-        </div>
+        </a>
 
         {/* 1-Click Sample Model Buttons */}
         <div className="mb-5">
@@ -156,7 +118,7 @@ export default function HeroMeshInspector() {
           </div>
           <div className="grid grid-cols-3 gap-2">
             {sampleModels.map((sample) => {
-              const isCurrent = (customFileName === null && selectedSample.id === sample.id);
+              const isCurrent = selectedSample.id === sample.id;
               return (
                 <button
                   key={sample.id}
@@ -192,7 +154,7 @@ export default function HeroMeshInspector() {
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <div className="text-xs font-mono font-bold text-white truncate max-w-[210px] sm:max-w-[260px]">
-                    {customFileName || selectedSample.name}
+                    {selectedSample.name}
                   </div>
                   <div className="text-[11px] text-red-400 flex items-center gap-1.5 mt-0.5">
                     <AlertTriangle className="w-3 h-3 shrink-0" />

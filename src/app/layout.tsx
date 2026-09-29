@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: "TEELI.NET — Fix & Render 3D Files Automatically",
-    template: "%s | TEELI.NET",
+    template: "%s | TEELI.NET 3D file repair",
   },
   description: SITE_DESCRIPTION,
   applicationName: "TEELI.NET",
