@@ -12,7 +12,7 @@ import { LINKEDIN_COMPANY_URL, TEELI_APP_URL } from './social-links';
 const SITE_URL = 'https://teeli.net';
 
 export const SITE_DESCRIPTION =
-  'Teeli is a browser-based app for repairing, previewing, and cloud-rendering 3D models — upload a model, run geometry diagnostics, repair non-manifold meshes, preview with WebGPU, and render with Blender Cycles on cloud GPUs, billed with simple credits.';
+  'Browser-based 3D file check and mesh repair for 3D printing (STL, GLB, zipped OBJ): non-manifold edges, holes, flipped normals, watertightness, units.';
 
 export function generateSiteSchemaGraph(): object {
   const organization = {
@@ -50,17 +50,16 @@ export function generateSiteSchemaGraph(): object {
     name: 'Teeli',
     url: TEELI_APP_URL,
     applicationCategory: 'DesignApplication',
-    applicationSubCategory: '3D Rendering',
+    applicationSubCategory: '3D printing file check and repair',
     operatingSystem: 'Web browser',
-    description:
-      'Browser SaaS for 3D model import, geometry repair (Assimp, Trimesh, LibIGL), WebGPU preview, and cloud rendering with headless Blender Cycles. Outputs PNG, JPEG, MP4, and turntables. Credit-based billing.',
+    description: SITE_DESCRIPTION,
     featureList: [
-      '3D model import (Assimp)',
-      'Geometry diagnostics and non-manifold repair (Trimesh, LibIGL)',
-      'In-browser WebGPU preview (Babylon.js)',
-      'Cloud rendering with headless Blender Cycles on GPU workers',
-      'PNG / JPEG / MP4 / turntable export',
-      'AI-assisted denoising',
+      'Checks STL, GLB and zipped OBJ files',
+      'Non-manifold edge check and repair',
+      'Hole check and repair',
+      'Flipped normal check and repair',
+      'Watertightness check',
+      'Units check',
       'Credit-based billing',
     ],
     publisher: { '@id': `${SITE_URL}/#organization` },

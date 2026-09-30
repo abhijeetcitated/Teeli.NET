@@ -21,7 +21,7 @@ export async function generateMetadata({
 
   if (!tool) {
     return {
-      title: 'Tool Not Found | TEELI',
+      title: 'Tool Not Found',
       description: 'The requested 3D repair tool could not be found.',
     };
   }
@@ -29,7 +29,7 @@ export async function generateMetadata({
   const url = `https://teeli.net/tools/${tool.slug}`;
 
   return {
-    title: `${tool.metaTitle} | TEELI`,
+    title: tool.metaTitle,
     description: tool.metaDescription,
     alternates: {
       canonical: url,
@@ -185,7 +185,6 @@ export default async function ToolDetailPage({
 
           {/* 4. Interactive Widget Component (Above the fold conversion) */}
           <ToolUploadDropzone
-            format={tool.format}
             slug={tool.slug}
             sizeCapMB={tool.trustStrip.sizeCapMB}
           />
@@ -494,6 +493,11 @@ export default async function ToolDetailPage({
                   </h3>
                   <div className="overflow-x-auto rounded-2xl border border-zinc-800 bg-zinc-900/40 shadow-xl">
                     <table className="w-full text-left text-xs sm:text-sm">
+                      {tool.verificationCaption && (
+                        <caption className="caption-bottom py-2.5 px-4 text-left text-[11px] text-zinc-400">
+                          {tool.verificationCaption}
+                        </caption>
+                      )}
                       <thead className="border-b border-zinc-800 bg-zinc-900/80 text-xs uppercase text-zinc-400 tracking-wider">
                         <tr>
                           <th className="py-3.5 px-4 font-bold text-white">Quality Inspection Metric</th>

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { getAllTools } from '@/lib/tools';
 
 export const metadata: Metadata = {
-  title: 'Free 3D Mesh Repair & Slicer Verification Tools | TEELI',
+  title: 'Free 3D Mesh Repair & Slicer Verification Tools',
   description:
     'Web-based utilities to fix non-manifold edges, seal boundary holes, verify watertight 3D models, and prepare files for 3D printing without manual cleanup.',
   alternates: {

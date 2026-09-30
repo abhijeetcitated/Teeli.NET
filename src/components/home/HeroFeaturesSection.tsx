@@ -57,9 +57,8 @@ const features = [
     icon: CommandIcon,
     title: "Universal 3D & Slicer Formats",
     points: [
-      "Full support for STL, OBJ, GLB/GLTF, 3MF, BLEND",
+      "Checks STL, GLB and zipped OBJ files (3MF coming)",
       "Direct export for Bambu Studio, Orca, & Cura",
-      "Certified 3MF print-ready packages",
       "Clean asset conversion for Web3D & AR"
     ],
     gradient: "from-yellow-500 via-orange-500 to-red-500",
