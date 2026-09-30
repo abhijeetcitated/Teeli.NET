@@ -497,7 +497,7 @@ export default async function GlossaryTermPage({
                   <div className="mt-4 pt-4 border-t border-zinc-800 text-[11px] text-zinc-400 flex items-center justify-between">
                     <span>✓ Free diagnosis</span>
                     <span>✓ No account needed</span>
-                    <span>✓ 100MB cap</span>
+                    <span>✓ 200 MB free cap</span>
                   </div>
                 </div>
 

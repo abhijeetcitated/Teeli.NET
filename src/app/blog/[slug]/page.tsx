@@ -3,6 +3,7 @@ import { getBlogPostBySlug, getAllBlogPosts, getRelatedBlogPosts } from '@/lib/b
 import type { Metadata } from 'next';
 import BlogPostClient from './BlogPostClient';
 import { parseMarkdownToAST } from '@/lib/markdown-parser';
+import { imageMimeType } from '@/lib/seo-schema';
 import fs from 'fs';
 import path from 'path';
 
@@ -116,7 +117,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
           width: 1200,
           height: 630,
           alt: socialImageAlt,
-          type: 'image/webp',
+          type: imageMimeType(socialImageUrl),
         },
       ],
     },

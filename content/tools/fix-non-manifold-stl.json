@@ -235,12 +235,6 @@
       "impact": "Satisfies Euler-Poincaré identity 3F = 2E for reliable toolpath generation"
     },
     {
-      "metric": "Multi-Color / AMS Painting",
-      "before": "Original painted layers",
-      "after": "Preserved (Boundary fix)",
-      "impact": "Bambu AMS and Prusa MMU painted filament layers remain 100% intact"
-    },
-    {
       "metric": "Dimensional Tolerances",
       "before": "±0.000 mm deviation",
       "after": "±0.000 mm deviation",
@@ -371,7 +365,7 @@
       "bulletPoints": [
         "Windows users: Built-in Netfabb DLL attempts automatic repair.",
         "Mac & Linux users: Built-in repair is completely disabled.",
-        "Solution: Upload your STL to TEELI to repair boundary loops in your browser."
+        "Solution: Upload your STL to TEELI to check and repair boundary loops on TEELI servers, from your browser."
       ]
     },
     {
@@ -421,9 +415,10 @@
     },
     {
       "question": "Can TEELI repair multi-color painted STL files for Bambu AMS?",
-      "answer": "Yes! Legacy repair tools like Meshmixer's 'Make Solid' remesh the entire model into voxels, completely stripping painted color layers. TEELI repairs only the defective boundary edges, preserving your vertex colors, texture coordinates, and Bambu AMS multi-filament painting.",
+      "answer": "An STL file carries no colour or paint data, so a repaired STL loses nothing there: repair it, re-import it into Bambu Studio and re-apply the AMS painting. Painted 3MF projects are not accepted yet (3MF import is on the roadmap).",
       "bulletPoints": [
-        "Boundary-only repair: Preserves intact vertex attributes."
+        "STL is geometry only — there is no paint to strip.",
+        "Painted 3MF projects: not accepted yet."
       ]
     },
     {
@@ -446,5 +441,5 @@
       "href": "/blog/mesh-repair"
     }
   ],
-  "lastUpdated": "2026-09-21"
+  "lastUpdated": "2026-09-30"
 }

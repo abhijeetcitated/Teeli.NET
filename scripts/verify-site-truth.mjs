@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-// S1 "site truth" checks (a)–(d) and S1.1 fixup checks (e)–(j) against a running server
-// (`npm run build && npm run start`). (f), (g) and (i) also read this checkout's content/ and src/.
+// S1 "site truth" checks (a)–(d), S1.1 fixup checks (e)–(j) and S1.1b checks (k)–(m) against a running
+// server (`npm run build && npm run start`). (f), (g), (i), (k) and (l) also read this checkout's content/ and src/.
 // Usage: node scripts/verify-site-truth.mjs [baseUrl]      (default http://localhost:3000)
 //        TODAY=YYYY-MM-DD overrides the local calendar day used for the lastmod checks.
 // Node 22+ built-ins only. Exits 1 when any check fails.
 
-import { readdirSync, readFileSync } from 'node:fs';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -17,6 +17,32 @@ const TOOL_EMBED = 'https://app.teeli.net/embed/check?source=tools:fix-non-manif
 const CONTENT_PATHS = ['/glossary/watertight-mesh', '/blog/mesh-repair'];
 // "BLEND" hits in src/ that are code identifiers, not copy: { file: 'src/…', pattern: /\bNAME\b/ }
 const ALLOWED_BLEND_IDENTIFIERS = [];
+// List pages take the lastmod of the newest item they list (src/app/sitemap.ts) → prefix of those items.
+const LIST_PAGES = new Map([
+  ['https://teeli.net/blog', 'https://teeli.net/blog/'],
+  ['https://teeli.net/blog/archive', 'https://teeli.net/blog/'],
+  ['https://teeli.net/glossary', 'https://teeli.net/glossary/'],
+  ['https://teeli.net/tools', 'https://teeli.net/tools/'],
+  ['https://teeli.net/compare', 'https://teeli.net/compare/'],
+]);
+// Static pages that sit directly under a list prefix: they are not listed items.
+const STATIC_UNDER_LISTS = new Set(
+  ['popular', 'topics', 'tags', 'resources', 'about', 'archive'].map((page) => `https://teeli.net/blog/${page}`),
+);
+// A listed item is exactly one path segment below its list prefix and not one of those static pages.
+const isListedItem = (url, prefix) => url.startsWith(prefix) && !url.slice(prefix.length).includes('/') && !STATIC_UNDER_LISTS.has(url);
+// "in your browser" hits that are true statements about browser storage, not product claims.
+const ALLOWED_IN_YOUR_BROWSER = [
+  { file: 'src/app/cookies/page.tsx', text: 'Cookies are small files stored in your browser.' },
+  { file: 'src/app/cookies/page.tsx', text: "saved in your browser's localStorage" },
+];
+// "AMS" lines allowed in the tool JSON: Bambu's own Fix model limitation (line 115) and the FAQ
+// question + answer prescribed in S1.1b 1(b) (the answer itself says "re-apply the AMS painting"). Whole lines.
+const ALLOWED_TOOL_AMS = [
+  "\"limitations\": \"⚠️ Windows Only. Feature disabled on macOS and Linux. Voxel remeshing strips multi-color AMS paint.\"",
+  "\"question\": \"Can TEELI repair multi-color painted STL files for Bambu AMS?\",",
+  "\"answer\": \"An STL file carries no colour or paint data, so a repaired STL loses nothing there: repair it, re-import it into Bambu Studio and re-apply the AMS painting. Painted 3MF projects are not accepted yet (3MF import is on the roadmap).\",",
+];
 
 let failures = 0;
 
@@ -53,11 +79,16 @@ const attr = (tag, name) => {
 // Site-absolute URLs are checked against BASE, so a local build verifies itself.
 const toPath = (url) => (url.startsWith('https://teeli.net') ? url.slice('https://teeli.net'.length) || '/' : url);
 
-function grepTree(dir, needle) {
+// grep -rn for a directory or a single file under ROOT
+function grepTree(target, needle) {
+  const start = join(ROOT, target);
+  const files = statSync(start).isFile()
+    ? [start]
+    : readdirSync(start, { withFileTypes: true, recursive: true })
+        .filter((entry) => entry.isFile())
+        .map((entry) => join(entry.parentPath ?? entry.path, entry.name));
   const hits = [];
-  for (const entry of readdirSync(join(ROOT, dir), { withFileTypes: true, recursive: true })) {
-    if (!entry.isFile()) continue;
-    const file = join(entry.parentPath ?? entry.path, entry.name);
+  for (const file of files) {
     readFileSync(file, 'utf8')
       .split('\n')
       .forEach((text, i) => {
@@ -67,10 +98,31 @@ function grepTree(dir, needle) {
   return hits;
 }
 
+// All JSON-LD nodes on a page (@graph flattened)
+const jsonLdNodes = (html) =>
+  [...html.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].flatMap(([, json]) => {
+    try {
+      const data = JSON.parse(json);
+      return data['@graph'] ?? (Array.isArray(data) ? data : [data]);
+    } catch {
+      return [];
+    }
+  });
+
+function findImageObjects(node, found = []) {
+  if (Array.isArray(node)) node.forEach((child) => findImageObjects(child, found));
+  else if (node && typeof node === 'object') {
+    if (node['@type'] === 'ImageObject') found.push(node);
+    Object.values(node).forEach((child) => findImageObjects(child, found));
+  }
+  return found;
+}
+
 async function main() {
   console.log(`verify-site-truth  base=${BASE}  today=${TODAY}`);
 
-  // (a) sitemap: at most 2 URLs dated today, none in the future, no priority/changefreq
+  // (a) sitemap: at most 3 URLs dated today (list pages that follow a same-day item aside), none in the
+  // future, no priority/changefreq
   const sitemap = await get('/sitemap.xml');
   check(sitemap.status === 200, 'GET /sitemap.xml', `HTTP ${sitemap.status}`);
   const urls = [...sitemap.body.matchAll(/<url>([\s\S]*?)<\/url>/g)].map(([, block]) => ({
@@ -88,7 +140,21 @@ async function main() {
   const malformed = dated.filter((u) => !/^\d{4}-\d{2}-\d{2}$/.test(u.day));
   check(urls.length > 0, '(a) sitemap lists URLs', String(urls.length));
   check(malformed.length === 0, '(a) every lastmod is a YYYY-MM-DD date', malformed.map((u) => u.loc).join(', '));
-  check(today.length <= 2, "(a) at most 2 URLs carry today's lastmod", `${today.length}: ${today.map((u) => u.loc).join(', ') || '-'}`);
+  // S1.1b edited 3 content files on one day, so the limit is 3. List pages are not counted: their lastmod is
+  // the newest item they list, so each one dated today must list an item dated today instead.
+  const todayLists = today.filter((u) => LIST_PAGES.has(u.loc));
+  const todayOthers = today.filter((u) => !LIST_PAGES.has(u.loc));
+  const unbacked = todayLists.filter((list) => !todayOthers.some((u) => isListedItem(u.loc, LIST_PAGES.get(list.loc))));
+  check(
+    todayOthers.length <= 3,
+    "(a) at most 3 URLs carry today's lastmod (list pages not counted)",
+    `${todayOthers.length}: ${todayOthers.map((u) => u.loc).join(', ') || '-'}`,
+  );
+  check(
+    unbacked.length === 0,
+    '(a) every list page dated today lists an item dated today',
+    `list pages dated today: ${todayLists.map((u) => u.loc).join(', ') || '-'}${unbacked.length ? `; unbacked: ${unbacked.map((u) => u.loc).join(', ')}` : ''}`,
+  );
   check(future.length === 0, '(a) no lastmod in the future', future.map((u) => `${u.loc} ${u.day}`).join(', '));
   check(!/<(priority|changefreq)>/.test(sitemap.body), '(a) no <priority> / <changefreq>');
 
@@ -110,17 +176,7 @@ async function main() {
   );
 
   // (c) Organization JSON-LD carries the brand disambiguation
-  const ldNodes = [...home.body.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].flatMap(
-    ([, json]) => {
-      try {
-        const data = JSON.parse(json);
-        return data['@graph'] ?? [data];
-      } catch {
-        return [];
-      }
-    },
-  );
-  const org = ldNodes.find((node) => node['@type'] === 'Organization');
+  const org = jsonLdNodes(home.body).find((node) => node['@type'] === 'Organization');
   check(
     home.body.includes('"alternateName":"TEELI.NET"') && org?.alternateName === 'TEELI.NET',
     '(c) Organization JSON-LD has "alternateName":"TEELI.NET"',
@@ -188,6 +244,45 @@ async function main() {
     if (status !== 200) broken.push(`${path} HTTP ${status} (on ${[...from].join(', ')})`);
   }
   check(broken.length === 0, `(j) all ${sources.size} internal hrefs on the 3 pages return 200`, broken.join('; '));
+
+  // (k) the homepage fake scan is gone (source and rendered page)
+  const fakeScan = ['isScanning', 'sampleModels', 'Euler'].flatMap((needle) => grepTree('src/components/home', needle));
+  check(fakeScan.length === 0, '(k) grep "isScanning|sampleModels|Euler" src/components/home has 0 hits', fakeScan.map((h) => `${h.file}:${h.line}`).join(', '));
+  const homeFake = ['Analyzing Euler', '100% Preserved'].filter((text) => home.body.includes(text));
+  check(homeFake.length === 0, '(k) / contains neither "Analyzing Euler" nor "100% Preserved"', homeFake.join(', '));
+  const panelMissing = ['What the free check reports', 'Every number in your report comes from your file — nothing is simulated.'].filter(
+    (text) => !home.body.includes(text),
+  );
+  check(panelMissing.length === 0, '(k) / renders the static "What the free check reports" panel', panelMissing.join(' | '));
+
+  // (l) no "in your browser" / "100MB" claims; "AMS" in the tool JSON only where allowed
+  const browserHits = ['content', 'src'].flatMap((dir) => grepTree(dir, 'in your browser'));
+  const browserAllowed = browserHits.filter((h) => ALLOWED_IN_YOUR_BROWSER.some((a) => a.file === h.file && h.text.includes(a.text)));
+  const browserClaims = browserHits.filter((h) => !browserAllowed.includes(h));
+  console.log(`      allowed "in your browser" hits: ${browserAllowed.map((h) => `${h.file}:${h.line}`).join(', ') || 'none'}`);
+  check(browserClaims.length === 0, '(l) grep "in your browser" content/ src/ has 0 claim hits', browserClaims.map((h) => `${h.file}:${h.line}`).join(', '));
+  const capHits = ['src', 'content'].flatMap((dir) => grepTree(dir, '100MB'));
+  check(capHits.length === 0, '(l) grep "100MB" src/ content/ has 0 hits', capHits.map((h) => `${h.file}:${h.line}`).join(', '));
+  const amsHits = grepTree('content/tools/fix-non-manifold-stl.json', 'AMS');
+  const amsAllowed = amsHits.filter((h) => ALLOWED_TOOL_AMS.includes(h.text));
+  const amsClaims = amsHits.filter((h) => !amsAllowed.includes(h));
+  console.log(`      allowed "AMS" lines in the tool JSON: ${amsAllowed.map((h) => `${h.line}`).join(', ') || 'none'}`);
+  check(amsClaims.length === 0, '(l) grep "AMS" fix-non-manifold-stl.json has only the allowed lines', amsClaims.map((h) => `${h.line}: ${h.text.slice(0, 80)}`).join(' | '));
+
+  // (m) the post's JSON-LD ImageObjects declare the Content-Type their URL actually returns
+  const imageObjects = findImageObjects(jsonLdNodes(postPage.body)).filter((img) => img.encodingFormat);
+  const imageChecks = [];
+  for (const img of imageObjects) {
+    const url = img.contentUrl ?? img.url;
+    const { status, type } = await get(toPath(url));
+    const served = type.split(';')[0].trim().toLowerCase();
+    imageChecks.push({ ok: status === 200 && served === img.encodingFormat, text: `${url} declares ${img.encodingFormat}, serves HTTP ${status} ${served || '-'}` });
+  }
+  check(
+    imageChecks.length > 0 && imageChecks.every((c) => c.ok),
+    `(m) /blog/mesh-repair JSON-LD ImageObject encodingFormat = served Content-Type (${imageChecks.length} checked)`,
+    imageChecks.map((c) => c.text).join('; ') || 'no ImageObject with encodingFormat',
+  );
 
   console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll checks passed');
   // exitCode, not process.exit(): exiting while fetch sockets close aborts Node on Windows (libuv assert).
