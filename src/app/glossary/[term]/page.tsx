@@ -20,7 +20,7 @@ export async function generateMetadata({
 
   if (!data) {
     return {
-      title: 'Term Not Found | TEELI 3D Glossary',
+      title: 'Term Not Found',
       description: 'The requested 3D geometry term could not be found.',
     };
   }
@@ -28,7 +28,7 @@ export async function generateMetadata({
   const url = `https://teeli.net/glossary/${data.slug}`;
 
   return {
-    title: `${data.metaTitle} | TEELI`,
+    title: data.metaTitle,
     description: data.metaDescription,
     alternates: {
       canonical: url,
@@ -73,6 +73,10 @@ export default async function GlossaryTermPage({
   if (!data) {
     notFound();
   }
+
+  // Only link related terms that are published (unpublished slugs would 404).
+  const publishedSlugs = new Set(getAllGlossaryTerms().map((t) => t.slug));
+  const relatedTerms = data.relatedTerms.filter((t) => publishedSlugs.has(t.slug));
 
   // Structured JSON-LD Schema (Article + DefinedTerm + FAQPage + BreadcrumbList)
   const jsonLd = {
@@ -465,7 +469,7 @@ export default async function GlossaryTermPage({
                     Check Your 3D File Online
                   </h3>
                   <p className="text-xs text-zinc-300 leading-relaxed mb-6">
-                    Don&apos;t guess what broke your print. Upload your STL, OBJ, or 3MF to inspect non-manifold edges, flipped normals, and watertightness instantly.
+                    Don&apos;t guess what broke your print. Upload your STL, GLB or zipped OBJ to inspect non-manifold edges, flipped normals, and watertightness instantly.
                   </p>
 
                   <a
@@ -498,13 +502,14 @@ export default async function GlossaryTermPage({
                 </div>
 
                 {/* Related Terms Box */}
+                {relatedTerms.length > 0 && (
                 <div className="p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800">
                   <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                     Related Geometry Terms
                   </h4>
                   <div className="flex flex-wrap gap-2">
-                    {data.relatedTerms.map((t, idx) => (
+                    {relatedTerms.map((t, idx) => (
                       <Link
                         key={idx}
                         href={`/glossary/${t.slug}`}
@@ -515,16 +520,7 @@ export default async function GlossaryTermPage({
                     ))}
                   </div>
                 </div>
-
-                {/* Sticky High-RPM Ad Slot Placeholder */}
-                <div className="p-6 rounded-2xl bg-zinc-900/30 border border-dashed border-zinc-800 text-center">
-                  <div className="text-[10px] uppercase tracking-widest text-zinc-500 mb-2">
-                    Sponsored Resource
-                  </div>
-                  <div className="h-48 rounded-xl bg-zinc-950/60 flex items-center justify-center text-zinc-600 text-xs">
-                    Reserved for High-RPM 300x250 Tech Display Ad
-                  </div>
-                </div>
+                )}
               </div>
             </aside>
           </div>

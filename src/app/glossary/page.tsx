@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { getAllGlossaryTerms } from '@/lib/glossary';
 
 export const metadata: Metadata = {
-  title: '3D Mesh & Geometry Glossary (2026) | TEELI',
+  title: '3D Mesh & Geometry Glossary (2026)',
   description:
     'Comprehensive technical reference for 3D printing geometry errors, slicer troubleshooting (Bambu, Cura, PrusaSlicer), mesh repair terms, and file specifications.',
   alternates: {

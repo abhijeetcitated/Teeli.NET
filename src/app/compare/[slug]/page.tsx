@@ -20,7 +20,7 @@ export async function generateMetadata({
 
   if (!comp) {
     return {
-      title: 'Comparison Not Found | TEELI',
+      title: 'Comparison Not Found',
       description: 'The requested 3D comparison could not be found.',
     };
   }
@@ -28,7 +28,7 @@ export async function generateMetadata({
   const url = `https://teeli.net/compare/${comp.slug}`;
 
   return {
-    title: `${comp.metaTitle} | TEELI`,
+    title: comp.metaTitle,
     description: comp.metaDescription,
     alternates: {
       canonical: url,

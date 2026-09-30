@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { getAllComparisons } from '@/lib/compare';
 
 export const metadata: Metadata = {
-  title: '3D Format & Slicer Benchmarks (2026) | TEELI',
+  title: '3D Format & Slicer Benchmarks (2026)',
   description:
     'Independent technical comparisons of 3D file formats (STL, OBJ, 3MF, STEP, GLB) and slicer software (Bambu Studio, Cura, PrusaSlicer, Orca).',
   alternates: {

@@ -35,8 +35,8 @@ const sampleModels: SampleModel[] = [
   },
   {
     id: "enclosure",
-    name: "CoreXY_PrintHead_Mount.3mf",
-    format: "3MF",
+    name: "CoreXY_PrintHead_Mount.glb",
+    format: "GLB",
     originalEdges: 26,
     openLoops: 2,
     issueText: "Slicer Warning: Object has open boundaries",
@@ -96,10 +96,10 @@ export default function HeroMeshInspector() {
               <UploadCloud className="w-5 h-5" />
             </div>
             <p className="text-sm font-bold text-white mb-0.5">
-              Drop 3D file to inspect geometry
+              Check your 3D file free
             </p>
             <p className="text-xs text-starlight/60 mb-2">
-              or <span className="text-cyan-400 underline underline-offset-2">browse from computer</span>
+              <span className="text-cyan-400 underline underline-offset-2">opens the TEELI checker</span> · STL · GLB · zipped OBJ
             </p>
             <div className="flex items-center gap-1.5 justify-center">
               {['.STL', '.GLB', '.OBJ (zip)'].map((ext) => (

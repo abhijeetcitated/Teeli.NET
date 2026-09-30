@@ -36,6 +36,7 @@ export interface ToolPage {
   howTeeliFixes: string;
   repairSteps?: { step: string; name: string; desc: string; bulletPoints?: string[] }[];
   verificationTable?: { metric: string; before: string; after: string; impact: string }[];
+  verificationCaption?: string; // visible caption under the verification table
   comparisonMatrix?: {
     tool: string;
     type: string;

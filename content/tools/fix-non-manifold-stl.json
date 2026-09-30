@@ -12,7 +12,7 @@
     "free": true,
     "noSignup": true,
     "purgeHours": 24,
-    "sizeCapMB": 100
+    "sizeCapMB": 200
   },
   "highlightIssue": "non-manifold",
   "issueExplanation": "In 3D manufacturing, a printable STL file cannot simply be a collection of floating triangles—it must represent an airtight boundary dividing solid plastic from ambient air.",
@@ -142,7 +142,7 @@
       "badgeText": "The 3D model has non-manifold edges. Click here to fix.",
       "nativeBehavior": "Displays an orange exclamation warning icon next to the object in the plate tree. Clicking 'Fix model' triggers an automatic repair sequence.",
       "macLinuxLimitation": "Windows Only! The 'Fix model' feature relies exclusively on the Windows Netfabb system API. On macOS and Linux, the repair button does not exist or displays a disabled tooltip.",
-      "teeliFix": "Provides instant in-browser repair for Mac, Linux, and Windows users without modifying your plate orientation or Bambu Studio multi-plate project files."
+      "teeliFix": "Repair the exported STL/GLB/zipped OBJ, then re-import it into your slicer."
     },
     {
       "slicer": "OrcaSlicer",
@@ -247,13 +247,14 @@
       "impact": "Preserves critical mechanical snap-fits, screw holes, and bearing seats"
     }
   ],
+  "verificationCaption": "Example run on a sample file — your own report shows your own numbers",
   "comparisonMatrix": [
     {
       "tool": "TEELI Online Repair",
-      "type": "Cloud / WebAssembly",
+      "type": "Cloud (server-side)",
       "price": "Free Diagnosis / Credit Repair",
-      "macLinuxSupport": "100% Native (Browser)",
-      "preservesPainting": "Yes (Vertex & Texture Safe)",
+      "macLinuxSupport": "Any OS (browser)",
+      "preservesPainting": "Keeps UV coordinates on textured GLB/OBJ; STL carries no colour",
       "status2026": "Active · 2026 Production Standard"
     },
     {
@@ -422,14 +423,12 @@
       "question": "Can TEELI repair multi-color painted STL files for Bambu AMS?",
       "answer": "Yes! Legacy repair tools like Meshmixer's 'Make Solid' remesh the entire model into voxels, completely stripping painted color layers. TEELI repairs only the defective boundary edges, preserving your vertex colors, texture coordinates, and Bambu AMS multi-filament painting.",
       "bulletPoints": [
-        "Boundary-only repair: Preserves intact vertex attributes.",
-        "Retains Bambu AMS multi-color painted filament assignments.",
-        "Maintains UV mapping coordinates for full-color 3MF exports."
+        "Boundary-only repair: Preserves intact vertex attributes."
       ]
     },
     {
       "question": "Is TEELI's STL repair tool free to use?",
-      "answer": "Yes. Model diagnosis, defect analysis, and 3D visual inspection are 100% free with no account or credit card required. You can check any STL, OBJ, or 3MF file up to 100MB instantly in your browser.",
+      "answer": "Checking is free with no account: STL, GLB or zipped-OBJ files up to 200 MB, checked on our servers in seconds. Repairing uses credits.",
       "bulletPoints": [
         "100% free diagnosis and 3D defect visualization.",
         "Zero account creation or payment information required.",
@@ -441,14 +440,6 @@
     {
       "title": "3D Geometry Glossary: Non-Manifold Edges",
       "href": "/glossary/non-manifold-edges"
-    },
-    {
-      "title": "Online STL Viewer & Inspector",
-      "href": "/tools/stl-viewer"
-    },
-    {
-      "title": "Convert STL to 3MF (Multi-Color)",
-      "href": "/tools/stl-to-3mf"
     },
     {
       "title": "Slicer Mesh Repair Guide",
