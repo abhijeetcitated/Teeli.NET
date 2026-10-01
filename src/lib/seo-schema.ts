@@ -97,6 +97,18 @@ export function extractTables(content: string): TableData[] {
   return tables;
 }
 
+// MIME type derived from the image path, so schema/OG never claim a format the URL does not serve.
+// Unknown extensions return undefined (the property is then omitted rather than guessed).
+export function imageMimeType(path: string): string | undefined {
+  const clean = path.split(/[?#]/)[0].toLowerCase();
+  if (clean.endsWith('.webp')) return 'image/webp';
+  if (clean.endsWith('.png') || clean.endsWith('/opengraph-image')) return 'image/png';
+  if (clean.endsWith('.jpg') || clean.endsWith('.jpeg')) return 'image/jpeg';
+  if (clean.endsWith('.avif')) return 'image/avif';
+  if (clean.endsWith('.svg')) return 'image/svg+xml';
+  return undefined;
+}
+
 // Generate Article schema
 export function generateArticleSchema(post: BlogPost, canonicalUrl: string) {
   const keywords = extractKeywords(post.content || '');
@@ -117,7 +129,7 @@ export function generateArticleSchema(post: BlogPost, canonicalUrl: string) {
       "width": 1200,
       "height": 900,
       "caption": post.imageAlt || post.title,
-      "encodingFormat": "image/webp",
+      "encodingFormat": imageMimeType(primaryImage),
     });
   }
   if (thumbnailImage && thumbnailImage !== primaryImage) {
@@ -127,7 +139,7 @@ export function generateArticleSchema(post: BlogPost, canonicalUrl: string) {
       "width": 1200,
       "height": 630,
       "caption": post.thumbnailAlt || `${post.title} - Social Share Image`,
-      "encodingFormat": "image/webp",
+      "encodingFormat": imageMimeType(thumbnailImage),
       "thumbnail": thumbnailImage,
     });
   }
@@ -391,7 +403,7 @@ export function generateImageObjectSchema(post: BlogPost, canonicalUrl: string):
     "height": 900,
     "caption": post.imageAlt || post.title,
     "description": post.imageAlt || `${post.title} - Visual representation`,
-    "encodingFormat": "image/webp",
+    "encodingFormat": imageMimeType(imageUrl),
     "author": {
       "@type": "Person",
       "name": post.author
@@ -433,7 +445,7 @@ export function generateThumbnailImageSchema(post: BlogPost, canonicalUrl: strin
     "height": 630,
     "caption": post.thumbnailAlt || `${post.title} - Social Share Image`,
     "description": post.thumbnailAlt || `Share image for ${post.title}`,
-    "encodingFormat": "image/webp",
+    "encodingFormat": imageMimeType(thumbnailUrl),
     "thumbnail": thumbnailUrl,
     "author": {
       "@type": "Person",

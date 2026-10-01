@@ -205,7 +205,7 @@ export default function AIRenderingPage() {
               {
                 icon: Layers,
                 title: "Material Intelligence",
-                description: "PBR-aware processing helps preserve material response through repair and export steps in your browser workflow.",
+                description: "PBR-aware processing helps preserve material response through repair and export steps.",
                 connections: ["PBR materials", "Texture handling", "Export readiness"]
               }
             ].map((feature, index) => (

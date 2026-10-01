@@ -38,7 +38,7 @@ export default function ToolsIndexPage() {
             Free 3D Mesh Repair Tools
           </h1>
           <p className="text-lg text-zinc-300 leading-relaxed">
-            Fix broken 3D models directly in your browser. Eliminate non-manifold edges, inverted normals, and unprintable defects before slicing.
+            Check and repair broken 3D models on TEELI servers, from your browser. Eliminate non-manifold edges, inverted normals, and unprintable defects before slicing.
           </p>
         </div>
 
