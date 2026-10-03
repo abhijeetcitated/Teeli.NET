@@ -291,7 +291,8 @@ export default async function GlossaryTermPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <article className="min-h-screen bg-black text-zinc-100 pt-24 pb-20">
+      <main className="min-h-screen bg-black text-zinc-100 pt-24 pb-20">
+      <article>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumbs */}
           <nav
@@ -501,6 +502,32 @@ export default async function GlossaryTermPage({
                   </div>
                 </div>
 
+                {/* Related Tools Box */}
+                {data.relatedTools && data.relatedTools.length > 0 && (
+                <div className="p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800">
+                  <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    Related Tools
+                  </h4>
+                  <ul className="space-y-3">
+                    {data.relatedTools.map((tool) => (
+                      <li key={tool.url}>
+                        {tool.url.startsWith('/') ? (
+                          <Link href={tool.url} className="text-sm font-semibold text-emerald-300 hover:text-emerald-200 underline underline-offset-2">
+                            {tool.name}
+                          </Link>
+                        ) : (
+                          <a href={tool.url} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-emerald-300 hover:text-emerald-200 underline underline-offset-2">
+                            {tool.name}
+                          </a>
+                        )}
+                        <p className="text-xs text-zinc-400 mt-1 leading-relaxed">{tool.description}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                )}
+
                 {/* Related Terms Box */}
                 {relatedTerms.length > 0 && (
                 <div className="p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800">
@@ -526,6 +553,7 @@ export default async function GlossaryTermPage({
           </div>
         </div>
       </article>
+      </main>
     </>
   );
 }

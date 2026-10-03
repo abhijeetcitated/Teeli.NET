@@ -4,12 +4,12 @@
   "headline": "Watertight mesh: what it is and how to make a 3D model watertight",
   "metaTitle": "Watertight Mesh: What It Means & How to Fix It (2026 Slicer Guide)",
   "metaDescription": "A watertight mesh is a completely sealed 3D surface with no holes or gaps. Learn why Bambu & Cura demand it, how to verify it, and 4 ways to make an STL watertight.",
-  "updatedDate": "2026-09-30",
+  "updatedDate": "2026-10-03",
   "readTime": "6 min read",
   "author": {
     "name": "Abhijeet Pratap Singh",
     "role": "Founder & 3D Pipeline Architect",
-    "url": "https://teeli.net/about",
+    "url": "https://teeli.net/company/about",
     "sameAs": [
       "https://in.linkedin.com/in/abhijeet-pratap-singh-teeli-net"
     ]

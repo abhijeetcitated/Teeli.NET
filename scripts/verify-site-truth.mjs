@@ -1,12 +1,13 @@
 #!/usr/bin/env node
-// S1 "site truth" checks (a)–(d), S1.1 fixup checks (e)–(j), S1.1b checks (k)–(m) and S4a checks (n)–(q) against
-// a running server (`npm run build && npm run start`). (f), (g), (i), (k), (l), (n), (p) and (q) also read this
-// checkout's content/ and src/.
+// S1 "site truth" checks (a)–(d), S1.1 fixup checks (e)–(j), S1.1b checks (k)–(m), S4a checks (n)–(q) and S4b
+// checks (r)–(t) against a running server (`npm run build && npm run start`). (f), (g), (i), (k), (l), (n), (p),
+// (q), (r) and (s) also read this checkout's content/, src/ and git history.
 // Usage: node scripts/verify-site-truth.mjs [baseUrl]      (default http://localhost:3000)
 //        TODAY=YYYY-MM-DD overrides the local calendar day used for the lastmod checks.
 // Node 22+ built-ins only. Exits 1 when any check fails.
 
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -20,6 +21,11 @@ const REPAIR_PAGE = '/tools/repair-stl-online';
 const REPAIR_EMBED = 'https://app.teeli.net/embed/check?source=tools:repair-stl-online';
 // Must not appear in the repair page's visible text or JSON-LD. "AMS" is case-sensitive and whole-word.
 const REPAIR_PAGE_BANNED = [/WebAssembly/i, /100MB/i, /in your browser/i, /certified/i, /guaranteed/i, /100%/, /\bAMS\b/, /Cloud Ray/i, /print-ready/i];
+const BAMBU_POST = '/blog/bambu-studio-non-manifold-edges-troubleshooting-2026';
+const NME_TERM = '/glossary/non-manifold-edges';
+const BROWSER_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36';
+// Hosts that answer scripts with a bot wall instead of the page: listed as unverifiable, not as broken.
+const BOT_WALLS = { 'in.linkedin.com': 999, 'www.linkedin.com': 999 };
 // "BLEND" hits in src/ that are code identifiers, not copy: { file: 'src/…', pattern: /\bNAME\b/ }
 const ALLOWED_BLEND_IDENTIFIERS = [];
 // List pages take the lastmod of the newest item they list (src/app/sitemap.ts) → prefix of those items.
@@ -126,7 +132,11 @@ const pageText = (html) =>
     .replace(/\s+/g, ' ')
     .trim();
 const mainText = (html) =>
-  decodeHtml((html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? '').replace(/<[^>]+>/g, ' '))
+  decodeHtml(
+    (html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? '')
+      .replace(/<(style|script)\b[\s\S]*?<\/\1>/g, ' ') // inline CSS/JS is not page text
+      .replace(/<[^>]+>/g, ' '),
+  )
     .replace(/\s+/g, ' ')
     .trim();
 const wordCount = (text) => text.split(' ').filter((word) => /[\p{L}\p{N}]/u.test(word)).length;
@@ -150,6 +160,52 @@ async function brokenInternalHrefs(pages) {
   return { total: sources.size, broken };
 }
 
+// Status of every external <a href> (any host but teeli.net), fetched like a browser and following redirects.
+async function externalStatuses(html) {
+  // The #fragment never reaches the server, so each distinct URL is fetched once.
+  const urls = [...new Set([...html.matchAll(/<a\b[^>]*\shref="(https?:\/\/[^"]+)"/g)].map(([, raw]) => decodeHtml(raw).split('#')[0]))].filter(
+    (url) => !/^https:\/\/teeli\.net(\/|$)/.test(url),
+  );
+  const results = [];
+  for (const url of urls) {
+    let status;
+    for (let attempt = 1; attempt <= 3 && (status === undefined || status === 429); attempt += 1) {
+      if (status === 429) await new Promise((resolve) => setTimeout(resolve, 3000 * attempt)); // rate limit: back off
+      try {
+        const res = await fetch(url, { redirect: 'follow', headers: { 'user-agent': BROWSER_UA }, signal: AbortSignal.timeout(20000) });
+        status = res.status;
+        await res.body?.cancel();
+      } catch (err) {
+        if (attempt === 3) status = `ERR ${err.cause?.code ?? err.name}`;
+      }
+    }
+    results.push({ url, status, walled: BOT_WALLS[new URL(url).hostname] === status });
+  }
+  return results;
+}
+
+const git = (args) =>
+  execFileSync('git', ['-C', ROOT, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }) // git's CRLF warnings are noise here
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+// What changed today: everything since the newest commit made before today's local midnight (committed or not,
+// merged or not), so a same-day merge and a post-merge run on main are judged the same way as this branch.
+function changedToday() {
+  const [base] = git(['log', '-1', '--format=%H', `--before=${TODAY} 00:00`]);
+  const files = [...git(['diff', '--name-only', base, '--', 'content/']), ...git(['ls-files', '--others', '--exclude-standard', '--', 'content/'])];
+  const urls = new Set();
+  for (const file of new Set(files)) {
+    const kind = file.match(/^content\/(blog|glossary|tools|compare)\//)?.[1];
+    if (!kind || !file.endsWith('.json') || !existsSync(join(ROOT, file))) continue;
+    urls.add(`https://teeli.net/${kind}/${JSON.parse(readFileSync(join(ROOT, file), 'utf8').trimStart()).slug}`);
+  }
+  const sitemapDiff = execFileSync('git', ['-C', ROOT, 'diff', base, '--', 'src/app/sitemap.ts'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+  if (/^\+\s*\{ url: baseUrl, lastModified:/m.test(sitemapDiff)) urls.add('https://teeli.net');
+  return { base: base.slice(0, 7), urls };
+}
+
 function findImageObjects(node, found = []) {
   if (Array.isArray(node)) node.forEach((child) => findImageObjects(child, found));
   else if (node && typeof node === 'object') {
@@ -162,8 +218,7 @@ function findImageObjects(node, found = []) {
 async function main() {
   console.log(`verify-site-truth  base=${BASE}  today=${TODAY}`);
 
-  // (a) sitemap: at most 3 URLs dated today (list pages that follow a same-day item aside), none in the
-  // future, no priority/changefreq
+  // (a) sitemap: well-formed dates, none in the future, no priority/changefreq (today's dates are judged in (s))
   const sitemap = await get('/sitemap.xml');
   check(sitemap.status === 200, 'GET /sitemap.xml', `HTTP ${sitemap.status}`);
   const urls = [...sitemap.body.matchAll(/<url>([\s\S]*?)<\/url>/g)].map(([, block]) => ({
@@ -181,19 +236,26 @@ async function main() {
   const malformed = dated.filter((u) => !/^\d{4}-\d{2}-\d{2}$/.test(u.day));
   check(urls.length > 0, '(a) sitemap lists URLs', String(urls.length));
   check(malformed.length === 0, '(a) every lastmod is a YYYY-MM-DD date', malformed.map((u) => u.loc).join(', '));
-  // S1.1b edited 3 content files on one day, so the limit is 3. List pages are not counted: their lastmod is
-  // the newest item they list, so each one dated today must list an item dated today instead.
+  // (s) the non-list URLs dated today are exactly the pages whose content changed today (plus the homepage when its
+  // sitemap date changed). List pages take the newest item's date, so each one dated today must list such an item.
   const todayLists = today.filter((u) => LIST_PAGES.has(u.loc));
   const todayOthers = today.filter((u) => !LIST_PAGES.has(u.loc));
   const unbacked = todayLists.filter((list) => !todayOthers.some((u) => isListedItem(u.loc, LIST_PAGES.get(list.loc))));
+  const changed = changedToday();
+  const datedToday = new Set(todayOthers.map((u) => u.loc));
+  const notDated = [...changed.urls].filter((url) => !datedToday.has(url));
+  const unchanged = [...datedToday].filter((url) => !changed.urls.has(url));
+  console.log(`      changed since ${changed.base} (last commit before ${TODAY}): ${[...changed.urls].join(', ') || 'none'}`);
   check(
-    todayOthers.length <= 3,
-    "(a) at most 3 URLs carry today's lastmod (list pages not counted)",
-    `${todayOthers.length}: ${todayOthers.map((u) => u.loc).join(', ') || '-'}`,
+    notDated.length === 0 && unchanged.length === 0,
+    '(s) URLs dated today = pages changed today (content files + homepage if its sitemap date changed)',
+    [notDated.length && `changed but not dated today: ${notDated.join(', ')}`, unchanged.length && `dated today but unchanged: ${unchanged.join(', ')}`]
+      .filter(Boolean)
+      .join('; ') || `${datedToday.size} URLs`,
   );
   check(
     unbacked.length === 0,
-    '(a) every list page dated today lists an item dated today',
+    '(s) every list page dated today lists an item dated today',
     `list pages dated today: ${todayLists.map((u) => u.loc).join(', ') || '-'}${unbacked.length ? `; unbacked: ${unbacked.map((u) => u.loc).join(', ')}` : ''}`,
   );
   check(future.length === 0, '(a) no lastmod in the future', future.map((u) => `${u.loc} ${u.day}`).join(', '));
@@ -361,6 +423,51 @@ async function main() {
   const zipCallouts = grepTree('content', 'OBJ, GLB or a ZIP');
   check(zipCallouts.length === 0, '(q) grep "OBJ, GLB or a ZIP" content/ has 0 hits', zipCallouts.map((h) => `${h.file}:${h.line}`).join(', '));
   check(new RegExp(`href="${escapeRegExp(REPAIR_PAGE)}"`).test(home.body), `(q) / has an href to ${REPAIR_PAGE}`);
+
+  // (r) the two pages that already rank: quotable sentence first, question H2s, tool link, honest copy, live links
+  const ranked = [
+    {
+      path: BAMBU_POST,
+      file: 'content/blog/3d-rendering/bambu-studio-non-manifold-edges-troubleshooting-2026.json',
+      words: [1300, 1700],
+      h2: ['non-manifold edge error', '1 non-manifold edge', 'Fix Model', 'crashes when I click Repair'],
+      quote: (json) => json.content.match(/:::ai-answer\s*\n([\s\S]*?)\n:::/)?.[1].trim() ?? '(no ai-answer block)',
+    },
+    {
+      path: NME_TERM,
+      file: 'content/glossary/non-manifold-edges.json',
+      words: [900, 1100],
+      h2: ['Is one non-manifold edge enough'],
+      quote: (json) => json.shortDefinition.trim(),
+    },
+  ];
+  const rankedPages = {};
+  for (const page of ranked) {
+    const res = (rankedPages[page.path] = await get(page.path));
+    const json = JSON.parse(readFileSync(join(ROOT, page.file), 'utf8').trimStart());
+    const quote = page.quote(json);
+    const text = mainText(res.body);
+    const pos = text.indexOf(quote);
+    check(pos >= 0 && pos + quote.length <= 600, `(r) ${page.path}: quotable sentence within the first 600 chars of <main>`, pos >= 0 ? `chars ${pos}–${pos + quote.length}` : `not found: ${quote.slice(0, 60)}`);
+    const h2s = [...res.body.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/g)].map(([, inner]) => decodeHtml(inner.replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim());
+    const missingH2 = page.h2.filter((needle) => !h2s.some((h2) => h2.includes(needle)));
+    check(missingH2.length === 0, `(r) ${page.path}: H2s contain ${page.h2.map((s) => `"${s}"`).join(', ')}`, missingH2.length ? `missing: ${missingH2.join(', ')}` : `${h2s.length} H2s`);
+    check(new RegExp(`href="(https://teeli\\.net)?${escapeRegExp(REPAIR_PAGE)}"`).test(res.body), `(r) ${page.path}: links to ${REPAIR_PAGE}`);
+    const bannedHits = REPAIR_PAGE_BANNED.filter((re) => re.test(pageText(res.body))).map((re) => re.source);
+    check(bannedHits.length === 0, `(r) ${page.path}: none of the banned words from (n)`, bannedHits.join(', '));
+    const external = await externalStatuses(res.body);
+    for (const link of external) console.log(`      ${link.status} ${link.url}${link.walled ? '  (bot wall: unverifiable by script, not broken)' : ''}`);
+    const brokenExternal = external.filter((link) => link.status !== 200 && !link.walled);
+    check(brokenExternal.length === 0, `(r) ${page.path}: all ${external.length} external links return 200 (bot walls listed above)`, brokenExternal.map((link) => `${link.status} ${link.url}`).join('; '));
+    const words = json.content.split(/\s+/).filter(Boolean).length;
+    check(words >= page.words[0] && words <= page.words[1], `(r) ${page.path}: content is ${page.words[0]}–${page.words[1]} words`, `${words} (rendered <main>: ${wordCount(text)})`);
+  }
+
+  // (t) both pages answer 200 and carry today's date in the sitemap
+  for (const page of ranked) {
+    const entry = urls.find((u) => u.loc === `https://teeli.net${page.path}`);
+    check(rankedPages[page.path].status === 200 && entry?.day === TODAY, `(t) ${page.path} returns 200 and its sitemap lastmod is today`, `HTTP ${rankedPages[page.path].status}, lastmod ${entry?.day ?? 'missing'}`);
+  }
 
   console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll checks passed');
   // exitCode, not process.exit(): exiting while fetch sockets close aborts Node on Windows (libuv assert).
