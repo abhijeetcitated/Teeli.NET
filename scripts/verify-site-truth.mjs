@@ -185,7 +185,7 @@ async function externalStatuses(html) {
 }
 
 const git = (args) =>
-  execFileSync('git', ['-C', ROOT, ...args], { encoding: 'utf8' })
+  execFileSync('git', ['-C', ROOT, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }) // git's CRLF warnings are noise here
     .split('\n')
     .map((line) => line.trim())
     .filter(Boolean);
@@ -201,7 +201,7 @@ function changedToday() {
     if (!kind || !file.endsWith('.json') || !existsSync(join(ROOT, file))) continue;
     urls.add(`https://teeli.net/${kind}/${JSON.parse(readFileSync(join(ROOT, file), 'utf8').trimStart()).slug}`);
   }
-  const sitemapDiff = execFileSync('git', ['-C', ROOT, 'diff', base, '--', 'src/app/sitemap.ts'], { encoding: 'utf8' });
+  const sitemapDiff = execFileSync('git', ['-C', ROOT, 'diff', base, '--', 'src/app/sitemap.ts'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
   if (/^\+\s*\{ url: baseUrl, lastModified:/m.test(sitemapDiff)) urls.add('https://teeli.net');
   return { base: base.slice(0, 7), urls };
 }
