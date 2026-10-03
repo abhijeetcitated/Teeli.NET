@@ -132,7 +132,11 @@ const pageText = (html) =>
     .replace(/\s+/g, ' ')
     .trim();
 const mainText = (html) =>
-  decodeHtml((html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? '').replace(/<[^>]+>/g, ' '))
+  decodeHtml(
+    (html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? '')
+      .replace(/<(style|script)\b[\s\S]*?<\/\1>/g, ' ') // inline CSS/JS is not page text
+      .replace(/<[^>]+>/g, ' '),
+  )
     .replace(/\s+/g, ' ')
     .trim();
 const wordCount = (text) => text.split(' ').filter((word) => /[\p{L}\p{N}]/u.test(word)).length;
@@ -158,13 +162,15 @@ async function brokenInternalHrefs(pages) {
 
 // Status of every external <a href> (any host but teeli.net), fetched like a browser and following redirects.
 async function externalStatuses(html) {
-  const urls = [...new Set([...html.matchAll(/<a\b[^>]*\shref="(https?:\/\/[^"]+)"/g)].map(([, raw]) => decodeHtml(raw)))].filter(
+  // The #fragment never reaches the server, so each distinct URL is fetched once.
+  const urls = [...new Set([...html.matchAll(/<a\b[^>]*\shref="(https?:\/\/[^"]+)"/g)].map(([, raw]) => decodeHtml(raw).split('#')[0]))].filter(
     (url) => !/^https:\/\/teeli\.net(\/|$)/.test(url),
   );
   const results = [];
   for (const url of urls) {
     let status;
-    for (let attempt = 1; attempt <= 3 && status === undefined; attempt += 1) {
+    for (let attempt = 1; attempt <= 3 && (status === undefined || status === 429); attempt += 1) {
+      if (status === 429) await new Promise((resolve) => setTimeout(resolve, 3000 * attempt)); // rate limit: back off
       try {
         const res = await fetch(url, { redirect: 'follow', headers: { 'user-agent': BROWSER_UA }, signal: AbortSignal.timeout(20000) });
         status = res.status;
