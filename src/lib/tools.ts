@@ -1,6 +1,33 @@
 import fs from 'fs';
 import path from 'path';
 
+// Narrative fields a layout section can render as its answer paragraphs (they also feed /llms-full.txt).
+export type ToolNarrativeKey = 'issueExplanation' | 'printingImpact' | 'howTeeliFixes' | 'freeAlternatives' | 'limitsOfAutoRepair';
+
+// One question-led section. A page with `layout` renders these in order instead of the default
+// (non-manifold) section set; the first two sentences under each heading answer it.
+export interface ToolSection {
+  id: string; // anchor id
+  eyebrow?: string;
+  heading: string; // H2 — a question users actually ask
+  text?: ToolNarrativeKey[]; // narrative fields rendered first, as paragraphs
+  paragraphs?: string[];
+  table?: { columns: string[]; rows: string[][] };
+  note?: string; // one sentence directly under the table
+  embed?: 'verificationTable' | 'comparisonMatrix';
+  sources?: { title: string; href: string }[]; // external references
+}
+
+export interface ToolComparisonRow {
+  tool: string;
+  type: string;
+  price: string;
+  macLinuxSupport: string;
+  preservesPainting?: string;
+  status2026?: string;
+  report?: string; // what the option tells you about the changes it made
+}
+
 export interface ToolPage {
   id: string;
   slug: string; // e.g. "fix-non-manifold-stl"
@@ -37,14 +64,9 @@ export interface ToolPage {
   repairSteps?: { step: string; name: string; desc: string; bulletPoints?: string[] }[];
   verificationTable?: { metric: string; before: string; after: string; impact: string }[];
   verificationCaption?: string; // visible caption under the verification table
-  comparisonMatrix?: {
-    tool: string;
-    type: string;
-    price: string;
-    macLinuxSupport: string;
-    preservesPainting: string;
-    status2026: string;
-  }[];
+  verificationColumns?: string[]; // four header labels (metric, before, after, impact); default = non-manifold page
+  comparisonMatrix?: ToolComparisonRow[];
+  comparisonColumns?: { key: keyof ToolComparisonRow; label: string }[]; // shown columns + labels; default = non-manifold page
   freeAlternatives: string;
   freeAlternativeGuides?: { tool: string; badge: string; steps: string[] }[];
   limitsOfAutoRepair: string;
@@ -52,6 +74,8 @@ export interface ToolPage {
   limitsTable?: { scenario: string; whyFails: string; manualFix: string; tool: string }[];
   faq: { question: string; answer: string; bulletPoints?: string[] }[];
   relatedPages: { title: string; href: string }[];
+  layout?: ToolSection[]; // question-led sections replacing the default section set
+  author?: { name: string; role?: string; url?: string };
   lastUpdated: string;
 }
 

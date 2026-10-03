@@ -43,7 +43,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
-    { url: baseUrl, lastModified: '2026-09-29' }, // hero drop-zone copy (S1)
+    { url: baseUrl, lastModified: '2026-10-03' }, // hero panel links the STL repair tool (S4a)
     { url: `${baseUrl}/blog`, lastModified: newestPost },
     { url: `${baseUrl}/blog/popular`, lastModified: SITE_UPDATED },
     { url: `${baseUrl}/blog/topics`, lastModified: SITE_UPDATED },
