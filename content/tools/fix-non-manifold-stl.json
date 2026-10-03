@@ -361,7 +361,7 @@
     },
     {
       "question": "Why does Bambu Studio show 'The 3D model has non-manifold edges'?",
-      "answer": "Bambu Studio flags STLs that have unclosed boundary edges, self-intersecting faces, or flipped normals. While Bambu Studio has a built-in 'Fix model' button on Windows, it relies on a Windows-specific Netfabb DLL and does NOT work on macOS or Linux. TEELI provides an instant in-browser repair tool compatible with all operating systems.",
+      "answer": "Bambu Studio flags STLs that have unclosed boundary edges, self-intersecting faces, or flipped normals. While Bambu Studio has a built-in 'Fix model' button on Windows, it relies on a Windows-specific Netfabb DLL and does NOT work on macOS or Linux. TEELI checks and repairs the file on its servers; you use it from the browser, on any operating system.",
       "bulletPoints": [
         "Windows users: Built-in Netfabb DLL attempts automatic repair.",
         "Mac & Linux users: Built-in repair is completely disabled.",
@@ -432,6 +432,10 @@
     }
   ],
   "relatedPages": [
+    {
+      "title": "Repair an STL File Online",
+      "href": "/tools/repair-stl-online"
+    },
     {
       "title": "3D Geometry Glossary: Non-Manifold Edges",
       "href": "/glossary/non-manifold-edges"

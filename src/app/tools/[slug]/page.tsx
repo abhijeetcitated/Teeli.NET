@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getAllTools, getToolBySlug } from '@/lib/tools';
+import { getAllTools, getToolBySlug, type ToolComparisonRow, type ToolPage, type ToolSection } from '@/lib/tools';
 import ToolUploadDropzone from '@/components/tools/ToolUploadDropzone';
 
 export async function generateStaticParams() {
@@ -61,7 +61,9 @@ export default async function ToolDetailPage({
     notFound();
   }
 
-  // Schema Markup: SoftwareApplication + FAQPage + BreadcrumbList
+  // Schema Markup: SoftwareApplication + Article + BreadcrumbList. The FAQ stays visible text only
+  // and HowTo is not used (rulebook F6).
+  const pageUrl = `https://teeli.net/tools/${tool.slug}`;
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -72,7 +74,7 @@ export default async function ToolDetailPage({
         applicationCategory: 'DesignApplication',
         applicationSubCategory: '3D mesh repair',
         operatingSystem: 'All (Web-based: Chrome, Edge, Safari, Firefox)',
-        browserRequirements: 'Requires HTML5, WebGL/WebGPU capable browser',
+        browserRequirements: 'Requires a current web browser',
         url: `https://teeli.net/tools/${tool.slug}`,
         description: tool.metaDescription,
         dateModified: tool.lastUpdated,
@@ -89,35 +91,18 @@ export default async function ToolDetailPage({
         },
       },
       {
-        '@type': 'HowTo',
-        '@id': `https://teeli.net/tools/${tool.slug}#howto`,
-        name: `How to Fix Non-Manifold ${tool.format.toUpperCase()} Files for 3D Printing`,
-        description: `Step-by-step automated workflow to inspect, identify non-manifold defects, and repair 3D meshes for Bambu Studio, OrcaSlicer, Cura, and PrusaSlicer.`,
-        totalTime: 'PT1M',
-        step: (tool.repairSteps || [
-          { step: '01', name: 'Upload 3D Mesh', desc: 'Drag and drop your 3D mesh into the cloud inspector.' },
-          { step: '02', name: 'Ray-Cast Diagnostic Check', desc: 'Automated topology algorithm scans for open boundaries and non-manifold edges.' },
-          { step: '03', name: 'Review Defect Counts', desc: 'Inspect exact non-manifold edge count and slicer compatibility report.' },
-          { step: '04', name: 'Download Watertight Solid', desc: 'Automated repair stitches detached vertices and outputs a 2-manifold print-ready file.' },
-        ]).map((s, idx) => ({
-          '@type': 'HowToStep',
-          position: idx + 1,
-          name: s.name,
-          text: s.desc,
-          url: `https://teeli.net/tools/${tool.slug}`,
-        })),
-      },
-      {
-        '@type': 'FAQPage',
-        '@id': `https://teeli.net/tools/${tool.slug}#faq`,
-        mainEntity: tool.faq.map((item) => ({
-          '@type': 'Question',
-          name: item.question,
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: item.answer,
-          },
-        })),
+        '@type': 'Article',
+        '@id': `${pageUrl}#article`,
+        headline: tool.headline,
+        description: tool.metaDescription,
+        image: 'https://teeli.net/opengraph-image',
+        dateModified: tool.lastUpdated,
+        author: tool.author
+          ? { '@type': 'Person', name: tool.author.name, ...(tool.author.url && { url: tool.author.url }) }
+          : { '@id': 'https://teeli.net/#organization' },
+        publisher: { '@id': 'https://teeli.net/#organization' },
+        mainEntityOfPage: pageUrl,
+        inLanguage: 'en-US',
       },
       {
         '@type': 'BreadcrumbList',
@@ -192,7 +177,7 @@ export default async function ToolDetailPage({
           {/* 5. Trust Strip */}
           <div className="mb-10 py-2.5 px-5 rounded-xl bg-zinc-900/60 border border-zinc-800/80 flex flex-wrap items-center justify-between gap-3 text-xs text-zinc-400">
             <span className="flex items-center gap-1.5 text-zinc-300 font-medium">
-              <span className="text-emerald-400">✓</span> 100% Free Diagnosis
+              <span className="text-emerald-400">✓</span> Free check
             </span>
             <span className="flex items-center gap-1.5 text-zinc-300 font-medium">
               <span className="text-emerald-400">✓</span> No Account or Card Needed
@@ -207,7 +192,10 @@ export default async function ToolDetailPage({
 
           {/* 6–10. Body Content Sections */}
           <div className="space-y-16 max-w-4xl text-zinc-300 leading-relaxed">
-            
+            {tool.layout ? (
+              tool.layout.map((section) => <LayoutSection key={section.id} tool={tool} section={section} />)
+            ) : (
+            <>
             {/* 6. What is non-manifold geometry? */}
             <section className="border-t border-zinc-800/80 pt-10">
               <div className="inline-block text-[11px] font-bold uppercase tracking-wider text-emerald-400 mb-2">
@@ -491,41 +479,7 @@ export default async function ToolDetailPage({
                   <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-400 mb-3 flex items-center gap-2">
                     <span>🔬</span> Quality Inspection &amp; Slicer Verification
                   </h3>
-                  <div className="overflow-x-auto rounded-2xl border border-zinc-800 bg-zinc-900/40 shadow-xl">
-                    <table className="w-full text-left text-xs sm:text-sm">
-                      {tool.verificationCaption && (
-                        <caption className="caption-bottom py-2.5 px-4 text-left text-[11px] text-zinc-400">
-                          {tool.verificationCaption}
-                        </caption>
-                      )}
-                      <thead className="border-b border-zinc-800 bg-zinc-900/80 text-xs uppercase text-zinc-400 tracking-wider">
-                        <tr>
-                          <th className="py-3.5 px-4 font-bold text-white">Quality Inspection Metric</th>
-                          <th className="py-3.5 px-4 font-bold text-red-400">Raw Upload (Corrupted STL)</th>
-                          <th className="py-3.5 px-4 font-bold text-emerald-400">After TEELI Automated Repair</th>
-                          <th className="py-3.5 px-4 font-bold">Slicer Toolpath Impact</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-zinc-800/60 text-zinc-300">
-                        {tool.verificationTable.map((v, idx) => (
-                          <tr key={idx} className="hover:bg-zinc-800/30 transition-colors">
-                            <td className="py-3.5 px-4 font-medium text-white whitespace-nowrap">
-                              {v.metric}
-                            </td>
-                            <td className="py-3.5 px-4 text-red-400 font-mono text-xs">
-                              {v.before}
-                            </td>
-                            <td className="py-3.5 px-4 text-emerald-400 font-mono text-xs font-semibold">
-                              {v.after}
-                            </td>
-                            <td className="py-3.5 px-4 text-zinc-400 text-xs">
-                              {v.impact}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                  <VerificationTable tool={tool} />
                 </div>
               )}
             </section>
@@ -543,55 +497,7 @@ export default async function ToolDetailPage({
               </p>
 
               {/* 2026 Comparison Matrix Table */}
-              {tool.comparisonMatrix && tool.comparisonMatrix.length > 0 && (
-                <div className="overflow-x-auto rounded-2xl border border-zinc-800 bg-zinc-900/40 my-6 shadow-xl">
-                  <table className="w-full text-left text-xs sm:text-sm">
-                    <thead className="border-b border-zinc-800 bg-zinc-900/80 uppercase text-zinc-400 text-[11px] tracking-wider">
-                      <tr>
-                        <th className="py-3.5 px-4 font-bold text-white">Tool Name</th>
-                        <th className="py-3.5 px-4 font-bold">Architecture Type</th>
-                        <th className="py-3.5 px-4 font-bold">Pricing Model</th>
-                        <th className="py-3.5 px-4 font-bold">Mac &amp; Linux Support</th>
-                        <th className="py-3.5 px-4 font-bold">Preserves Multi-Color</th>
-                        <th className="py-3.5 px-4 font-bold">2026 Status</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-zinc-800/60 text-zinc-300">
-                      {tool.comparisonMatrix.map((c, idx) => (
-                        <tr
-                          key={idx}
-                          className={c.tool.includes('TEELI') ? 'bg-emerald-500/5 font-medium' : 'hover:bg-zinc-800/30 transition-colors'}
-                        >
-                          <td className="py-3.5 px-4 font-semibold text-white whitespace-nowrap">
-                            {c.tool}
-                          </td>
-                          <td className="py-3.5 px-4 text-zinc-400">{c.type}</td>
-                          <td className="py-3.5 px-4 text-zinc-300">{c.price}</td>
-                          <td className="py-3.5 px-4">
-                            {c.macLinuxSupport.includes('100%') || c.macLinuxSupport.includes('Native') ? (
-                              <span className="text-emerald-400 font-medium">✓ {c.macLinuxSupport}</span>
-                            ) : (
-                              <span className="text-amber-400 font-medium">⚠️ {c.macLinuxSupport}</span>
-                            )}
-                          </td>
-                          <td className="py-3.5 px-4">
-                            {c.preservesPainting.includes('Yes') ? (
-                              <span className="text-emerald-400 font-medium">✓ {c.preservesPainting}</span>
-                            ) : (
-                              <span className="text-zinc-400">{c.preservesPainting}</span>
-                            )}
-                          </td>
-                          <td className="py-3.5 px-4">
-                            <span className={c.status2026.includes('Discontinued') || c.status2026.includes('Deprecated') ? 'text-red-400 font-medium' : 'text-zinc-300'}>
-                              {c.status2026}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+              <ComparisonMatrix tool={tool} />
 
               {/* Free Alternative Step-by-Step Checklists */}
               {tool.freeAlternativeGuides && tool.freeAlternativeGuides.length > 0 && (
@@ -698,6 +604,8 @@ export default async function ToolDetailPage({
                 </div>
               )}
             </section>
+            </>
+            )}
 
             {/* 11. FAQ Section */}
             <section className="border-t border-zinc-800/80 pt-10">
@@ -761,11 +669,232 @@ export default async function ToolDetailPage({
 
             {/* 13. Last Updated */}
             <div className="border-t border-zinc-800/80 pt-6 text-xs text-zinc-500">
-              Last modified: {tool.lastUpdated} · Certified for Bambu Studio, Orca Slicer, Cura 5.x &amp; PrusaSlicer 2.9
+              {tool.author && (
+                <>
+                  By{' '}
+                  {tool.author.url ? (
+                    <a href={tool.author.url} className="underline underline-offset-2 hover:text-zinc-300">
+                      {tool.author.name}
+                    </a>
+                  ) : (
+                    tool.author.name
+                  )}
+                  {tool.author.role && `, ${tool.author.role}`} ·{' '}
+                </>
+              )}
+              Last modified: {tool.lastUpdated}
             </div>
           </div>
         </div>
       </main>
     </>
+  );
+}
+
+const DEFAULT_VERIFICATION_COLUMNS = [
+  'Quality Inspection Metric',
+  'Raw Upload (Corrupted STL)',
+  'After TEELI Automated Repair',
+  'Slicer Toolpath Impact',
+];
+
+function VerificationTable({ tool }: { tool: ToolPage }) {
+  if (!tool.verificationTable || tool.verificationTable.length === 0) return null;
+  const [metric, before, after, impact] = tool.verificationColumns ?? DEFAULT_VERIFICATION_COLUMNS;
+  return (
+    <div className="overflow-x-auto rounded-2xl border border-zinc-800 bg-zinc-900/40 shadow-xl">
+      <table className="w-full text-left text-xs sm:text-sm">
+        {tool.verificationCaption && (
+          <caption className="caption-bottom py-2.5 px-4 text-left text-[11px] text-zinc-400">
+            {tool.verificationCaption}
+          </caption>
+        )}
+        <thead className="border-b border-zinc-800 bg-zinc-900/80 text-xs uppercase text-zinc-400 tracking-wider">
+          <tr>
+            <th className="py-3.5 px-4 font-bold text-white">{metric}</th>
+            <th className="py-3.5 px-4 font-bold text-red-400">{before}</th>
+            <th className="py-3.5 px-4 font-bold text-emerald-400">{after}</th>
+            <th className="py-3.5 px-4 font-bold">{impact}</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-zinc-800/60 text-zinc-300">
+          {tool.verificationTable.map((v, idx) => (
+            <tr key={idx} className="hover:bg-zinc-800/30 transition-colors">
+              <td className="py-3.5 px-4 font-medium text-white whitespace-nowrap">
+                {v.metric}
+              </td>
+              <td className="py-3.5 px-4 text-red-400 font-mono text-xs">
+                {v.before}
+              </td>
+              <td className="py-3.5 px-4 text-emerald-400 font-mono text-xs font-semibold">
+                {v.after}
+              </td>
+              <td className="py-3.5 px-4 text-zinc-400 text-xs">
+                {v.impact}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+const DEFAULT_COMPARISON_COLUMNS: { key: keyof ToolComparisonRow; label: string }[] = [
+  { key: 'tool', label: 'Tool Name' },
+  { key: 'type', label: 'Architecture Type' },
+  { key: 'price', label: 'Pricing Model' },
+  { key: 'macLinuxSupport', label: 'Mac & Linux Support' },
+  { key: 'preservesPainting', label: 'Preserves Multi-Color' },
+  { key: 'status2026', label: '2026 Status' },
+];
+
+function ComparisonCell({ column, row }: { column: keyof ToolComparisonRow; row: ToolComparisonRow }) {
+  const value = row[column] ?? '';
+  switch (column) {
+    case 'tool':
+      return <td className="py-3.5 px-4 font-semibold text-white whitespace-nowrap">{value}</td>;
+    case 'type':
+      return <td className="py-3.5 px-4 text-zinc-400">{value}</td>;
+    case 'macLinuxSupport':
+      return (
+        <td className="py-3.5 px-4">
+          {['Any OS', '100%', 'Native'].some((ok) => value.includes(ok)) ? (
+            <span className="text-emerald-400 font-medium">✓ {value}</span>
+          ) : (
+            <span className="text-amber-400 font-medium">⚠️ {value}</span>
+          )}
+        </td>
+      );
+    case 'preservesPainting':
+      return (
+        <td className="py-3.5 px-4">
+          {value.includes('Yes') ? (
+            <span className="text-emerald-400 font-medium">✓ {value}</span>
+          ) : (
+            <span className="text-zinc-400">{value}</span>
+          )}
+        </td>
+      );
+    case 'status2026':
+      return (
+        <td className="py-3.5 px-4">
+          <span className={value.includes('Discontinued') || value.includes('Deprecated') ? 'text-red-400 font-medium' : 'text-zinc-300'}>
+            {value}
+          </span>
+        </td>
+      );
+    default:
+      return <td className="py-3.5 px-4 text-zinc-300">{value}</td>;
+  }
+}
+
+function ComparisonMatrix({ tool }: { tool: ToolPage }) {
+  if (!tool.comparisonMatrix || tool.comparisonMatrix.length === 0) return null;
+  const columns = tool.comparisonColumns ?? DEFAULT_COMPARISON_COLUMNS;
+  return (
+    <div className="overflow-x-auto rounded-2xl border border-zinc-800 bg-zinc-900/40 my-6 shadow-xl">
+      <table className="w-full text-left text-xs sm:text-sm">
+        <thead className="border-b border-zinc-800 bg-zinc-900/80 uppercase text-zinc-400 text-[11px] tracking-wider">
+          <tr>
+            {columns.map((column, idx) => (
+              <th key={column.key} className={`py-3.5 px-4 font-bold${idx === 0 ? ' text-white' : ''}`}>
+                {column.label}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-zinc-800/60 text-zinc-300">
+          {tool.comparisonMatrix.map((row, idx) => (
+            <tr
+              key={idx}
+              className={row.tool.includes('TEELI') ? 'bg-emerald-500/5 font-medium' : 'hover:bg-zinc-800/30 transition-colors'}
+            >
+              {columns.map((column) => (
+                <ComparisonCell key={column.key} column={column.key} row={row} />
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// A question-led section from `tool.layout`: answer paragraphs first, then the optional table,
+// note, embedded structured block and external sources.
+function LayoutSection({ tool, section }: { tool: ToolPage; section: ToolSection }) {
+  const paragraphs = [...(section.text ?? []).map((key) => tool[key]), ...(section.paragraphs ?? [])];
+  return (
+    <section id={section.id} className="border-t border-zinc-800/80 pt-10">
+      {section.eyebrow && (
+        <div className="inline-block text-[11px] font-bold uppercase tracking-wider text-emerald-400 mb-2">
+          {section.eyebrow}
+        </div>
+      )}
+      <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-4 tracking-tight">
+        {section.heading}
+      </h2>
+      {paragraphs.map((text, idx) => (
+        <p
+          key={idx}
+          className={idx === 0 ? 'text-base sm:text-lg text-zinc-200 mb-4 font-normal' : 'text-sm sm:text-base text-zinc-300 mb-4'}
+        >
+          {text}
+        </p>
+      ))}
+
+      {section.table && (
+        <div className="overflow-x-auto rounded-2xl border border-zinc-800 bg-zinc-900/40 shadow-xl my-6">
+          <table className="w-full text-left text-xs sm:text-sm">
+            <thead className="border-b border-zinc-800 bg-zinc-900/80 uppercase text-zinc-400 text-[11px] tracking-wider">
+              <tr>
+                {section.table.columns.map((column, idx) => (
+                  <th key={idx} className={`py-3.5 px-4 font-bold${idx === 0 ? ' text-white' : ''}`}>
+                    {column}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-zinc-800/60 text-zinc-300">
+              {section.table.rows.map((row, rowIdx) => (
+                <tr key={rowIdx} className="hover:bg-zinc-800/30 transition-colors">
+                  {row.map((cell, cellIdx) => (
+                    <td
+                      key={cellIdx}
+                      className={cellIdx === 0 ? 'py-3.5 px-4 font-semibold text-white whitespace-nowrap' : 'py-3.5 px-4 text-zinc-300'}
+                    >
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {section.note && <p className="text-sm text-zinc-400 mb-4">{section.note}</p>}
+
+      {section.embed === 'verificationTable' && (
+        <div className="my-6">
+          <VerificationTable tool={tool} />
+        </div>
+      )}
+      {section.embed === 'comparisonMatrix' && <ComparisonMatrix tool={tool} />}
+
+      {section.sources && section.sources.length > 0 && (
+        <p className="text-xs text-zinc-500 mt-4">
+          Sources:{' '}
+          {section.sources.map((source, idx) => (
+            <span key={source.href}>
+              {idx > 0 && ' · '}
+              <a href={source.href} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-zinc-300">
+                {source.title}
+              </a>
+            </span>
+          ))}
+        </p>
+      )}
+    </section>
   );
 }

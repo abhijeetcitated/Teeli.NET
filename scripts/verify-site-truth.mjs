@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// S1 "site truth" checks (a)–(d), S1.1 fixup checks (e)–(j) and S1.1b checks (k)–(m) against a running
-// server (`npm run build && npm run start`). (f), (g), (i), (k) and (l) also read this checkout's content/ and src/.
+// S1 "site truth" checks (a)–(d), S1.1 fixup checks (e)–(j), S1.1b checks (k)–(m) and S4a checks (n)–(q) against
+// a running server (`npm run build && npm run start`). (f), (g), (i), (k), (l), (n), (p) and (q) also read this
+// checkout's content/ and src/.
 // Usage: node scripts/verify-site-truth.mjs [baseUrl]      (default http://localhost:3000)
 //        TODAY=YYYY-MM-DD overrides the local calendar day used for the lastmod checks.
 // Node 22+ built-ins only. Exits 1 when any check fails.
@@ -15,6 +16,10 @@ const TODAY = process.env.TODAY ?? localDay(new Date());
 const CHECK_URL = 'https://app.teeli.net/check?source=embed:teeli.net-home';
 const TOOL_EMBED = 'https://app.teeli.net/embed/check?source=tools:fix-non-manifold-stl';
 const CONTENT_PATHS = ['/glossary/watertight-mesh', '/blog/mesh-repair'];
+const REPAIR_PAGE = '/tools/repair-stl-online';
+const REPAIR_EMBED = 'https://app.teeli.net/embed/check?source=tools:repair-stl-online';
+// Must not appear in the repair page's visible text or JSON-LD. "AMS" is case-sensitive and whole-word.
+const REPAIR_PAGE_BANNED = [/WebAssembly/i, /100MB/i, /in your browser/i, /certified/i, /guaranteed/i, /100%/, /\bAMS\b/, /Cloud Ray/i, /print-ready/i];
 // "BLEND" hits in src/ that are code identifiers, not copy: { file: 'src/…', pattern: /\bNAME\b/ }
 const ALLOWED_BLEND_IDENTIFIERS = [];
 // List pages take the lastmod of the newest item they list (src/app/sitemap.ts) → prefix of those items.
@@ -108,6 +113,42 @@ const jsonLdNodes = (html) =>
       return [];
     }
   });
+
+// Visible text plus JSON-LD; <style> and the RSC payload scripts are not page copy.
+const pageText = (html) =>
+  decodeHtml(
+    html
+      .replace(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g, ' $1 ')
+      .replace(/<script\b[\s\S]*?<\/script>/g, ' ')
+      .replace(/<style\b[\s\S]*?<\/style>/g, ' ')
+      .replace(/<[^>]+>/g, ' '),
+  )
+    .replace(/\s+/g, ' ')
+    .trim();
+const mainText = (html) =>
+  decodeHtml((html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? '').replace(/<[^>]+>/g, ' '))
+    .replace(/\s+/g, ' ')
+    .trim();
+const wordCount = (text) => text.split(' ').filter((word) => /[\p{L}\p{N}]/u.test(word)).length;
+
+// Every internal href (site-absolute or root-relative) on the given pages, fetched once each.
+async function brokenInternalHrefs(pages) {
+  const sources = new Map();
+  for (const [page, { body }] of Object.entries(pages)) {
+    for (const [, raw] of body.matchAll(/\shref="([^"]*)"/g)) {
+      const path = toPath(decodeHtml(raw)).split('#')[0];
+      if (!path.startsWith('/') || path.startsWith('//')) continue; // external, mailto:, tel:, #fragment
+      if (!sources.has(path)) sources.set(path, new Set());
+      sources.get(path).add(page);
+    }
+  }
+  const broken = [];
+  for (const [path, from] of sources) {
+    const { status } = await get(path);
+    if (status !== 200) broken.push(`${path} HTTP ${status} (on ${[...from].join(', ')})`);
+  }
+  return { total: sources.size, broken };
+}
 
 function findImageObjects(node, found = []) {
   if (Array.isArray(node)) node.forEach((child) => findImageObjects(child, found));
@@ -229,21 +270,8 @@ async function main() {
   check(randomHits.length === 0, '(i) grep "Math.random" src/components/tools has 0 hits', randomHits.map((h) => `${h.file}:${h.line}`).join(', '));
 
   // (j) every internal href on the three content pages returns 200
-  const sources = new Map();
-  for (const [page, { body }] of Object.entries({ '/tools/fix-non-manifold-stl': tool, ...pages })) {
-    for (const [, raw] of body.matchAll(/\shref="([^"]*)"/g)) {
-      const path = toPath(decodeHtml(raw)).split('#')[0];
-      if (!path.startsWith('/') || path.startsWith('//')) continue; // external, mailto:, tel:, #fragment
-      if (!sources.has(path)) sources.set(path, new Set());
-      sources.get(path).add(page);
-    }
-  }
-  const broken = [];
-  for (const [path, from] of sources) {
-    const { status } = await get(path);
-    if (status !== 200) broken.push(`${path} HTTP ${status} (on ${[...from].join(', ')})`);
-  }
-  check(broken.length === 0, `(j) all ${sources.size} internal hrefs on the 3 pages return 200`, broken.join('; '));
+  const contentLinks = await brokenInternalHrefs({ '/tools/fix-non-manifold-stl': tool, ...pages });
+  check(contentLinks.broken.length === 0, `(j) all ${contentLinks.total} internal hrefs on the 3 pages return 200`, contentLinks.broken.join('; '));
 
   // (k) the homepage fake scan is gone (source and rendered page)
   const fakeScan = ['isScanning', 'sampleModels', 'Euler'].flatMap((needle) => grepTree('src/components/home', needle));
@@ -283,6 +311,56 @@ async function main() {
     `(m) /blog/mesh-repair JSON-LD ImageObject encodingFormat = served Content-Type (${imageChecks.length} checked)`,
     imageChecks.map((c) => c.text).join('; ') || 'no ImageObject with encodingFormat',
   );
+
+  // (n) the repair-stl-online tool page: real embed, definition first, honest copy, schema, live links
+  const repair = await get(REPAIR_PAGE);
+  check(repair.status === 200, `(n) GET ${REPAIR_PAGE}`, `HTTP ${repair.status}`);
+  const repairIframes = [...repair.body.matchAll(/<iframe\b[^>]*>/g)].map(([tag]) => attr(tag, 'src') ?? '');
+  check(repairIframes.some((src) => src.startsWith(REPAIR_EMBED)), `(n) iframe src starts with ${REPAIR_EMBED}`, repairIframes.join(', ') || 'no iframe');
+  const repairJson = JSON.parse(readFileSync(join(ROOT, 'content/tools/repair-stl-online.json'), 'utf8').trimStart());
+  const firstSentence = repairJson.answerParagraph.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? repairJson.answerParagraph;
+  const main = mainText(repair.body);
+  const at = main.indexOf(firstSentence);
+  check(
+    at >= 0 && at + firstSentence.length <= 800,
+    '(n) first sentence of answerParagraph is within the first 800 chars of <main>',
+    at >= 0 ? `chars ${at}–${at + firstSentence.length}` : 'not found',
+  );
+  const mainWords = wordCount(main);
+  const faqStart = main.indexOf('Frequently Asked Questions');
+  const faqEnd = main.indexOf('Related Tools & Geometry Guides');
+  const faqWords = faqStart >= 0 && faqEnd > faqStart ? wordCount(main.slice(faqStart, faqEnd)) : 0;
+  console.log(`      <main> words: ${mainWords} (FAQ section ${faqWords}, everything else ${mainWords - faqWords})`);
+  check(mainWords >= 800 && mainWords <= 1600, '(n) <main> word count is 800–1,600', String(mainWords));
+  check(mainWords - faqWords >= 800 && mainWords - faqWords <= 1200, '(n) body without the FAQ is 800–1,200 words', String(mainWords - faqWords));
+  const repairText = pageText(repair.body);
+  const bannedFound = REPAIR_PAGE_BANNED.filter((re) => re.test(repairText)).map((re) => re.source);
+  check(
+    bannedFound.length === 0,
+    '(n) page has none of WebAssembly / 100MB / in your browser / certified / guaranteed / 100% / AMS / Cloud Ray / print-ready',
+    bannedFound.join(', '),
+  );
+  const repairTypes = jsonLdNodes(repair.body).map((node) => node['@type']);
+  check(['Article', 'BreadcrumbList'].every((type) => repairTypes.includes(type)), '(n) JSON-LD has Article and BreadcrumbList', repairTypes.join(', '));
+  const repairTitle = decodeHtml(repair.body.match(/<title>([^<]*)<\/title>/)?.[1] ?? '');
+  check(repairTitle.split('TEELI.NET').length - 1 === 1, '(n) <title> has "TEELI.NET" exactly once', repairTitle);
+  const repairLinks = await brokenInternalHrefs({ [REPAIR_PAGE]: repair });
+  check(repairLinks.broken.length === 0, `(n) all ${repairLinks.total} internal hrefs on ${REPAIR_PAGE} return 200`, repairLinks.broken.join('; '));
+
+  // (o) the tools index lists the new page
+  const toolsIndex = await get('/tools');
+  check(new RegExp(`href="(https://teeli\\.net)?${escapeRegExp(REPAIR_PAGE)}"`).test(toolsIndex.body), `(o) GET /tools lists ${REPAIR_PAGE}`, `HTTP ${toolsIndex.status}`);
+
+  // (p) the non-manifold tool links the new page
+  const fixJson = JSON.parse(readFileSync(join(ROOT, 'content/tools/fix-non-manifold-stl.json'), 'utf8').trimStart());
+  check(fixJson.relatedPages.some((page) => page.href === REPAIR_PAGE), `(p) fix-non-manifold-stl.json relatedPages contains ${REPAIR_PAGE}`);
+
+  // (q) fold-in honesty fixes
+  const inBrowser = ['content', 'src'].flatMap((dir) => grepTree(dir, 'in-browser'));
+  check(inBrowser.length === 0, '(q) grep "in-browser" content/ src/ has 0 hits', inBrowser.map((h) => `${h.file}:${h.line}`).join(', '));
+  const zipCallouts = grepTree('content', 'OBJ, GLB or a ZIP');
+  check(zipCallouts.length === 0, '(q) grep "OBJ, GLB or a ZIP" content/ has 0 hits', zipCallouts.map((h) => `${h.file}:${h.line}`).join(', '));
+  check(new RegExp(`href="${escapeRegExp(REPAIR_PAGE)}"`).test(home.body), `(q) / has an href to ${REPAIR_PAGE}`);
 
   console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll checks passed');
   // exitCode, not process.exit(): exiting while fetch sockets close aborts Node on Windows (libuv assert).

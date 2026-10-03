@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { UploadCloud } from 'lucide-react';
 
 // The six checks the real free check (app.teeli.net/check) reports. This card runs nothing itself.
@@ -78,6 +79,13 @@ export default function HeroMeshInspector() {
             Every number in your report comes from your file — nothing is simulated.
           </p>
         </div>
+
+        <Link
+          href="/tools/repair-stl-online"
+          className="mt-3 inline-block text-xs font-semibold text-cyan-400 underline underline-offset-2 hover:text-cyan-300"
+        >
+          Repair an STL file online →
+        </Link>
 
         {/* Footer Guarantee */}
         <div className="mt-3.5 flex items-center justify-between text-[11px] text-starlight/50 px-1">

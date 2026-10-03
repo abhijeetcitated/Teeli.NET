@@ -1,0 +1,191 @@
+{
+  "id": "repair-stl-online",
+  "slug": "repair-stl-online",
+  "name": "Repair STL File Online",
+  "action": "repair-stl",
+  "format": "stl",
+  "headline": "Repair an STL File Online — Check It Free, See Exactly What Is Wrong, Then Fix It",
+  "metaTitle": "Repair STL File Online – Free Check, Then Fix (STL Fixer)",
+  "metaDescription": "Repair an STL file online: a free check counts open holes, non-manifold edges and flipped normals, then fix it. STL, GLB, zipped OBJ up to 200 MB. Any OS.",
+  "answerParagraph": "STL repair closes open holes, removes non-manifold and duplicate geometry and fixes flipped normals so the mesh is watertight and slices correctly for 3D printing. Upload your file below — the check is free and runs on TEELI servers; the report shows the count of every defect before you decide to repair.",
+  "trustStrip": {
+    "free": true,
+    "noSignup": true,
+    "purgeHours": 24,
+    "sizeCapMB": 200
+  },
+  "highlightIssue": "broken-stl",
+  "issueExplanation": "An STL usually refuses to slice because the mesh is not a closed solid: an open hole, a non-manifold edge or a face pointing inward leaves the slicer unable to tell inside from outside. The free check runs the six tests below on your file and reports a pass, warning or fail for each one, with the count of every defect it finds.",
+  "printingImpact": "Sometimes. A few non-manifold edges far from any wall often print fine, but an open hole or a non-manifold edge on a wall can leave that wall missing or let infill leak through it. The report gives you the count and the type of every defect, so you make that call with numbers instead of guessing — and if the defects sit on a visible wall, repair before you slice.",
+  "howTeeliFixes": "The repair welds duplicate vertices, closes open holes with planar caps, fixes the winding of flipped normals and removes zero-area faces. It runs several passes and keeps the best result, and it protects cutouts you modelled on purpose (planar boolean holes), telling you how many it protected so you can confirm nothing intended was filled.",
+  "verificationTable": [
+    {
+      "metric": "holes.stl (engine test fixture, check run 27 Sep 2026)",
+      "before": "Health 75 · watertight FAIL (1 open hole) · normals all outward · no duplicate vertices · no degenerate triangles",
+      "after": "Health 100 · watertight PASS",
+      "impact": "The one open hole is closed; the repair was a production job on the same file"
+    },
+    {
+      "metric": "pinched_boundary.glb (cut from a real customer asset)",
+      "before": "44 boundary rings · 36 open holes",
+      "after": "0 open holes · 0 non-manifold edges · watertight",
+      "impact": "A naive fill closes the holes but creates 52 non-manifold edges, so this file is now a permanent regression test in the engine"
+    }
+  ],
+  "verificationCaption": "Real engine results on test files — your own report shows your own numbers",
+  "verificationColumns": ["File", "Before", "After repair", "Impact"],
+  "comparisonMatrix": [
+    {
+      "tool": "TEELI online repair",
+      "type": "Cloud (server-side)",
+      "price": "Free check; repair 10 credits",
+      "macLinuxSupport": "Any OS (browser)",
+      "report": "Report names every defect and its count"
+    },
+    {
+      "tool": "Slicer Fix Model (Bambu Studio, PrusaSlicer, OrcaSlicer)",
+      "type": "Built-in",
+      "price": "Included with the slicer",
+      "macLinuxSupport": "Windows only in Bambu Studio and PrusaSlicer; any OS in OrcaSlicer 2.4+",
+      "report": "Repairs in place inside the slicer"
+    },
+    {
+      "tool": "Blender 3D-Print Toolbox",
+      "type": "Desktop",
+      "price": "Free",
+      "macLinuxSupport": "Any OS",
+      "report": "Manual, full control, 10–20 min"
+    }
+  ],
+  "comparisonColumns": [
+    { "key": "tool", "label": "Option" },
+    { "key": "type", "label": "Runs" },
+    { "key": "macLinuxSupport", "label": "Operating systems" },
+    { "key": "price", "label": "Cost" },
+    { "key": "report", "label": "What you get" }
+  ],
+  "freeAlternatives": "Use an online check and repair when you want a report of every defect on any operating system, the slicer's Fix Model when you are on Windows and only need a quick fix, and Blender when you want full manual control. The table compares the three on where they run, what they cost and what they tell you.",
+  "limitsOfAutoRepair": "It does not fix self-intersections yet, change wall thickness or invent geometry that is missing from the file. An STL carries no colour or paint, so nothing is lost there; painted 3MF projects are not accepted yet.",
+  "layout": [
+    {
+      "id": "why-wont-my-stl-slice",
+      "eyebrow": "The six checks",
+      "heading": "Why won't my STL slice? Non-manifold edges, open holes, flipped normals",
+      "text": ["issueExplanation"],
+      "table": {
+        "columns": ["Check", "What it means", "Result"],
+        "rows": [
+          ["Watertight", "Open holes or non-manifold edges", "Pass / warn / fail"],
+          ["Normals", "Faces pointing inward", "Pass / warn / fail"],
+          ["Duplicate vertices", "Points a weld would merge", "Pass / warn / fail"],
+          ["Degenerate triangles", "Zero-area faces", "Pass / warn / fail"],
+          ["Self-intersections", "Faces crossing each other (reported \"not checked\" above 200k triangles)", "Pass / warn / fail"],
+          ["Scale / units", "Model-size sanity (STL has no unit; millimetres are assumed and the report says so)", "Pass / warn / fail"]
+        ]
+      },
+      "note": "The check does not measure wall thickness yet, so a wall that is too thin to print will not show up in the report."
+    },
+    {
+      "id": "fix-model-missing-mac-linux",
+      "eyebrow": "Mac & Linux",
+      "heading": "Fix Model is missing on Mac or Linux — what now?",
+      "paragraphs": [
+        "Bambu Studio's Fix Model and PrusaSlicer's Windows repair both call a repair service that Microsoft ships only with Windows, so on macOS and Linux the option is simply not there. Check and repair the file on TEELI servers instead — you use it from any browser on any OS — then re-import the repaired STL into your slicer.",
+        "OrcaSlicer had the same gap (OrcaSlicer issue #12116, on Linux) until version 2.4.0 in June 2026 moved its Fix Model to CGAL, which also runs on Linux and macOS, so updating OrcaSlicer is the other way out. Bambu Studio is still Windows-only for this: BambuStudio issue #11174 from June 2026 shows the repair option missing on a Mac."
+      ],
+      "sources": [
+        { "title": "Bambu Lab Wiki: Fix Model", "href": "https://wiki.bambulab.com/en/software/bambu-studio/fix-model" },
+        { "title": "Prusa Knowledge Base: Corrupted 3D models for printing", "href": "https://help.prusa3d.com/article/corrupted-3d-models-for-printing_2205" }
+      ]
+    },
+    {
+      "id": "safe-to-ignore-non-manifold",
+      "eyebrow": "Warnings",
+      "heading": "Is it safe to ignore a non-manifold warning?",
+      "text": ["printingImpact"]
+    },
+    {
+      "id": "what-repair-changes",
+      "eyebrow": "What repair does",
+      "heading": "What the repair changes — and what it never touches",
+      "text": ["howTeeliFixes", "limitsOfAutoRepair"]
+    },
+    {
+      "id": "real-results",
+      "eyebrow": "Proof",
+      "heading": "Real results on real files",
+      "paragraphs": [
+        "Both rows below come from TEELI's own geometry engine, not from a mock-up. holes.stl is a test file with one open hole; pinched_boundary.glb is geometry cut from a real customer asset that a naive hole fill makes worse."
+      ],
+      "embed": "verificationTable"
+    },
+    {
+      "id": "online-vs-slicer-vs-blender",
+      "eyebrow": "Compare",
+      "heading": "Repair STL online vs slicer Fix Model vs Blender",
+      "text": ["freeAlternatives"],
+      "embed": "comparisonMatrix",
+      "sources": [
+        { "title": "Blender 4.1 manual: 3D-Print Toolbox", "href": "https://docs.blender.org/manual/en/4.1/addons/mesh/3d_print_toolbox.html" }
+      ]
+    },
+    {
+      "id": "meshmixer-netfabb-3d-builder",
+      "eyebrow": "Old tools",
+      "heading": "Meshmixer, Netfabb Online and 3D Builder — gone or Windows-only",
+      "paragraphs": [
+        "Meshmixer is no longer developed: meshmixer.com now redirects to Autodesk's app store. Netfabb Online's domain no longer resolves (both checked 30 Sep 2026). Microsoft 3D Builder exists only in the Windows Store, and the slicers' Fix Model depends on Microsoft's Windows-only, Netfabb-based repair service. Many guides still recommend all three."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "question": "Is it free?",
+      "answer": "The check is free with no account: STL, GLB or zipped OBJ up to 200 MB. Repair costs 10 credits; a new account starts with 25 credits, enough for two repairs. If a repair fails or makes no progress, the credits are released; if it improves the file without reaching fully watertight, it is charged and the report says exactly what remained."
+    },
+    {
+      "question": "Where does my file go?",
+      "answer": "Checked on TEELI servers; guest files and results are deleted 24 hours after upload; the result link is visible only to whoever has it."
+    },
+    {
+      "question": "Does it work on Mac and Linux?",
+      "answer": "Yes, it is a browser page."
+    },
+    {
+      "question": "Does repair strip my paint?",
+      "answer": "STL has no paint data; painted 3MF is not accepted yet."
+    },
+    {
+      "question": "Can I repair a 3MF?",
+      "answer": "Export STL from your slicer, repair, re-import."
+    },
+    {
+      "question": "How long does it take?",
+      "answer": "The check usually finishes in seconds (production median 17 s measured 25 Sep 2026); repair time depends on file size."
+    }
+  ],
+  "relatedPages": [
+    {
+      "title": "Fix Non-Manifold STL Online",
+      "href": "/tools/fix-non-manifold-stl"
+    },
+    {
+      "title": "Glossary: Non-Manifold Edges",
+      "href": "/glossary/non-manifold-edges"
+    },
+    {
+      "title": "Glossary: Watertight Mesh",
+      "href": "/glossary/watertight-mesh"
+    },
+    {
+      "title": "How to Fix an STL File in 2026",
+      "href": "/blog/mesh-repair"
+    }
+  ],
+  "author": {
+    "name": "Abhijeet Pratap Singh",
+    "role": "Founder & 3D Pipeline Architect",
+    "url": "https://teeli.net/company/about"
+  },
+  "lastUpdated": "2026-10-03"
+}

@@ -109,6 +109,11 @@ export function imageMimeType(path: string): string | undefined {
   return undefined;
 }
 
+// Hero image height: the site OG image (next/og, /opengraph-image) is 1200 × 630; post heroes are 1200 × 900.
+function heroImageHeight(path: string): number {
+  return path.split(/[?#]/)[0].endsWith('/opengraph-image') ? 630 : 900;
+}
+
 // Generate Article schema
 export function generateArticleSchema(post: BlogPost, canonicalUrl: string) {
   const keywords = extractKeywords(post.content || '');
@@ -127,7 +132,7 @@ export function generateArticleSchema(post: BlogPost, canonicalUrl: string) {
       "@type": "ImageObject",
       "url": primaryImage,
       "width": 1200,
-      "height": 900,
+      "height": heroImageHeight(primaryImage),
       "caption": post.imageAlt || post.title,
       "encodingFormat": imageMimeType(primaryImage),
     });
@@ -400,7 +405,7 @@ export function generateImageObjectSchema(post: BlogPost, canonicalUrl: string):
     "contentUrl": imageUrl,
     "url": imageUrl,
     "width": 1200,
-    "height": 900,
+    "height": heroImageHeight(imageUrl),
     "caption": post.imageAlt || post.title,
     "description": post.imageAlt || `${post.title} - Visual representation`,
     "encodingFormat": imageMimeType(imageUrl),

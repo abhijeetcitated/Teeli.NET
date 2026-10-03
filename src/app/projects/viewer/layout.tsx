@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     url: 'https://teeli.net/projects/viewer',
     title: '3D Viewer | TEELI.NET',
-    description: 'Interactive in-browser WebGPU preview of 3D models.',
+    description: 'Interactive preview of 3D models.',
   },
 };
 
